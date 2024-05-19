@@ -1,10 +1,15 @@
+import { Header } from "../../components/Header";
 import "./Home.css";
 
 const Home = () => {
     return (
-        <div>
-            <h1>Financial Manager</h1>
-        </div>)
-}
+        <>
+            <Header title="Olá Gabriel, aqui você encontra o resumo de suas informações financeiras."/>
+            <div>
+                
+            </div>
+        </>
+    )
+};
 
 export { Home };
