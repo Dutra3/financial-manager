@@ -21,6 +21,4 @@ const SideBar = () => {
     )
 };
 
-
 export { SideBar };
-
