@@ -4,7 +4,7 @@ interface HeaderProps {
     title: string;
 }
 
-const Header: React.FC<HeaderProps> = ({title}) => {
+const Header: React.FC<HeaderProps> = ({ title }) => {
     return (
         <div>
             <h1>{title}</h1>
