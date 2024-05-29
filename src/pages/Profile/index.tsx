@@ -4,13 +4,15 @@ import "./Profile.css";
 
 const Profile = () => {
     return (
-        <>
-            <Header title="Olá, Gabriel. Você está na aba de Perfil. Aqui você encontra seus dados pessoais, como nome, salário e metas."/>
+        <main className="profile-container">
             <SideBar page="profile"/>
-            <div>
-                <h1>Profile Page</h1>
+            <div className="main-content">
+                <Header title="Olá, Gabriel. Você está na aba de Perfil. Aqui você encontra seus dados pessoais, como nome, salário e metas."/>
+                <div>
+                    <h1>Profile Page</h1>
+                </div>
             </div>
-        </>
+        </main>
     )
 };
 
