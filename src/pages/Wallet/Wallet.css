@@ -1,0 +1,11 @@
+.wallet-container {
+    display: flex;
+    background-color: var(--background-color);
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #121212;
+    color: white;
+  }
