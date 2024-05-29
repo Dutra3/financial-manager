@@ -8,7 +8,7 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ page }) => {
     return (
         <div className="sidebar">
-            <div className="logo">DT Software House</div>
+            <div className="logo">Financial Manager</div>
             <nav>
                 <ul>
                     <li>
