@@ -1,4 +1,4 @@
-
+import "./Card.css";
 
 interface CardProps {
     title: string;
@@ -7,9 +7,9 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ title, amount }) => {
     return (
-        <div>
-            <h1>{title}</h1>
-            <p>{amount}</p>
+        <div className="card-body">
+            <h1 className="card-title">{title}</h1>
+            <p className="card-amount">{amount}</p>
         </div>
     )
 };

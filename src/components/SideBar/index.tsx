@@ -1,22 +1,30 @@
 import { Link } from 'react-router-dom';
+import "./SideBar.css"
 
-const SideBar = () => {
+interface SideBarProps {
+    page: string;
+}
+
+const SideBar: React.FC<SideBarProps> = ({ page }) => {
     return (
-        <div>
-            <ul>
+        <div className="sidebar">
+            <div className="logo">DT Software House</div>
+            <nav>
+                <ul>
+                    <li>
+                        <Link to="/" className={page == "dashboard" ? "active" : ""}>Dashboard</Link>
+                    </li>
+                    <li>
+                        <Link to="/transactions" className={page == "transactions" ? "active" : ""}>Transactions</Link>
+                    </li>
+                    <li>
+                        <Link to="/wallet" className={page == "wallet" ? "active" : ""}>Wallet</Link>
+                    </li>
                 <li>
-                    <Link to="/">Dashboard</Link>
-                </li>
-                <li>
-                    <Link to="/transactions">Transactions</Link>
-                </li>
-                <li>
-                    <Link to="/wallet">Wallet</Link>
-                </li>
-                <li>
-                    <Link to="/profile">Profile</Link>
-                </li>
-            </ul>
+                        <Link to="/profile" className={page == "profile" ? "active" : ""}>Profile</Link>
+                    </li>
+                </ul>
+            </nav>
         </div>
     )
 };

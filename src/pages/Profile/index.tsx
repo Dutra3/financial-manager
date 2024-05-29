@@ -6,7 +6,7 @@ const Profile = () => {
     return (
         <>
             <Header title="Olá, Gabriel. Você está na aba de Perfil. Aqui você encontra seus dados pessoais, como nome, salário e metas."/>
-            <SideBar />
+            <SideBar page="profile"/>
             <div>
                 <h1>Profile Page</h1>
             </div>
