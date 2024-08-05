@@ -20,7 +20,7 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
                     <li>
                         <Link to="/wallet" className={page == "wallet" ? "active" : ""}>Wallet</Link>
                     </li>
-                <li>
+                    <li>
                         <Link to="/profile" className={page == "profile" ? "active" : ""}>Profile</Link>
                     </li>
                 </ul>
