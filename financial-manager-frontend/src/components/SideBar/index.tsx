@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import "./SideBar.css"
+import "./SideBar.css";
+import "../Logo";
+import { Logo } from '../Logo';
 
 interface SideBarProps {
     page: string;
@@ -8,7 +10,9 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ page }) => {
     return (
         <div className="sidebar">
-            <div className="logo">Financial Manager</div>
+            <div className="logo">
+                <Logo />
+            </div>
             <nav>
                 <ul>
                     <li>
