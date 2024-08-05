@@ -1,12 +1,31 @@
 :root {
+    --primary-color: #f0f0f0;
+    --secondary-color: #2a56e9;
+    --background-color: #ffffff;
+    --text-color: #000000;
+}
+
+.dark-theme {
     --primary-color: #191a1b;
     --secondary-color: #2a56e9;
     --background-color: #000000;
     --text-color: #ffffff;
 }
 
+.light-theme {
+    --primary-color: #f0f0f0;
+    --secondary-color: #2a56e9;
+    --background-color: #ffffff;
+    --text-color: #000000;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}

@@ -47,7 +47,7 @@
 
 .sidebar nav ul li a:hover,
 .sidebar nav ul li a.active {
-  background-color: #333;
+  background-color: var(--highlight-color, #333);
   color: white;
   cursor: pointer;
 }

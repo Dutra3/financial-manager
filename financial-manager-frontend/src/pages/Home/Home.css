@@ -1,12 +1,19 @@
 .home-container {
-    display: flex;
-    background-color: var(--background-color);
-    height: 100vh;
-  }
-  
-  .main-content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #121212;
-    color: white;
-  }
+  display: flex;
+  background-color: var(--background-color);
+  height: 100vh;
+}
+
+.home-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.dashboard-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
