@@ -45,9 +45,9 @@
   margin-right: 4px;
 }
 
-.sidebar nav ul li a:hover,
+.sidebar nav ul li a:hover, 
 .sidebar nav ul li a.active {
-  background-color: var(--secondary-color, #333);
+  background-color: var(--secondary-color); /*verify this color option later: #333*/
   color: white;
   cursor: pointer;
 }

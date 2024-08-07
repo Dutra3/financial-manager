@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
     return (
         <div className="header-container">
             <div className="header-title">
-                <h1>{title}</h1>
+                <h2>{title}</h2>
             </div>
             <div className="header-toggle">
                 <button onClick={toggleTheme} className="theme-toggle-button">
