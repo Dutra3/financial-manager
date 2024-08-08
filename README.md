@@ -51,7 +51,7 @@ The **Financial Manager** is a web application designed to help users manage the
 
 ### Backend
 - **Java**: Version 17
-- **Spring Boot**: Version 3
+- **Spring Boot**: Version 3.3.0
 
 ## Installation
 
