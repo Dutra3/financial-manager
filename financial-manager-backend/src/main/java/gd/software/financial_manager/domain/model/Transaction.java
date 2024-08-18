@@ -7,21 +7,30 @@ import java.util.UUID;
 public class Transaction {
 
     private UUID id;
+    private String name;
     private String description;
     private BigDecimal amount;
     private LocalDate paymentDate;
     private TransactionType type;
+    private Category category;
 
-    public Transaction(UUID id, String description, BigDecimal amount, LocalDate paymentDate, TransactionType type) {
+    public Transaction(UUID id, String name, String description, BigDecimal amount, LocalDate paymentDate,
+                       TransactionType type, Category category) {
         this.id = id;
+        this.name = name;
         this.description = description;
         this.amount = amount;
         this.paymentDate = paymentDate;
         this.type = type;
+        this.category = category;
     }
 
     public UUID id() {
         return id;
+    }
+
+    public String name() {
+        return name;
     }
 
     public String description() {
@@ -38,5 +47,9 @@ public class Transaction {
 
     public TransactionType type() {
         return type;
+    }
+
+    public Category category() {
+        return category;
     }
 }
