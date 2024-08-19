@@ -9,17 +9,22 @@ public class Profile {
     private UUID id;
     private String name;
     private String profession;
-    private BigDecimal salary;
+    private BigDecimal netSalary;
     private LocalDate payDay;
+    private BigDecimal initialBalance;
     private BigDecimal financialGoal;
+    private MonthlyBudget monthlyBudget;
 
-    public Profile(UUID id, String name, String profession, BigDecimal salary, LocalDate payDay, BigDecimal financialGoal) {
+    public Profile(UUID id, String name, String profession, BigDecimal netSalary, LocalDate payDay, BigDecimal financialGoal,
+                   BigDecimal initialBalance, MonthlyBudget monthlyBudget) {
         this.id = id;
         this.name = name;
         this.profession = profession;
-        this.salary = salary;
+        this.netSalary = netSalary;
         this.payDay = payDay;
         this.financialGoal = financialGoal;
+        this.initialBalance = initialBalance;
+        this.monthlyBudget = monthlyBudget;
     }
 
     public UUID id() {
@@ -34,8 +39,8 @@ public class Profile {
         return profession;
     }
 
-    public BigDecimal salary() {
-        return salary;
+    public BigDecimal netSalary() {
+        return netSalary;
     }
 
     public LocalDate payDay() {
@@ -44,5 +49,13 @@ public class Profile {
 
     public BigDecimal financialGoal() {
         return financialGoal;
+    }
+
+    public BigDecimal initialBalance() {
+        return initialBalance;
+    }
+
+    public MonthlyBudget monthlyBudget() {
+        return monthlyBudget;
     }
 }
