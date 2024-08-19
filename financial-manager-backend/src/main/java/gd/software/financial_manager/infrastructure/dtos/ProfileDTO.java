@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public record ProfileDTO(
-        @NotNull UUID id,
+        UUID id,
         @NotBlank String name,
         @NotBlank String profession,
         @NotNull BigDecimal salary,

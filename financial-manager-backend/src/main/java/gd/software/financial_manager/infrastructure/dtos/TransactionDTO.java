@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public record TransactionDTO(
-        @NotNull UUID id,
+        UUID id,
         @NotBlank String description,
         @NotNull BigDecimal amount,
         @NotNull LocalDate paymentDate,
