@@ -9,13 +9,15 @@ public class Bond {
     private String name;
     private String description;
     private BigDecimal quantity;
+    private BigDecimal price;
     private BigDecimal averagePrice;
 
-    public Bond(UUID id, String name, String description, BigDecimal quantity, BigDecimal averagePrice) {
+    public Bond(UUID id, String name, String description, BigDecimal quantity, BigDecimal price, BigDecimal averagePrice) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
+        this.price = price;
         this.averagePrice = averagePrice;
     }
 
@@ -33,6 +35,10 @@ public class Bond {
 
     public BigDecimal quantity() {
         return quantity;
+    }
+
+    public BigDecimal price() {
+        return price;
     }
 
     public BigDecimal averagePrice() {

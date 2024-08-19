@@ -9,16 +9,19 @@ public class Stock {
     private String name;
     private String description;
     private BigDecimal quantity;
+    private BigDecimal price;
     private BigDecimal averagePrice;
     private BigDecimal priceToBookRatio;
     private BigDecimal dividend;
     private BigDecimal dividendYield;
 
-    public Stock(UUID id, String name, String description, BigDecimal quantity, BigDecimal averagePrice, BigDecimal priceToBookRatio, BigDecimal dividend, BigDecimal dividendYield) {
+    public Stock(UUID id, String name, String description, BigDecimal quantity, BigDecimal price, BigDecimal averagePrice,
+                 BigDecimal priceToBookRatio, BigDecimal dividend, BigDecimal dividendYield) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
+        this.price = price;
         this.averagePrice = averagePrice;
         this.priceToBookRatio = priceToBookRatio;
         this.dividend = dividend;
@@ -39,6 +42,10 @@ public class Stock {
 
     public BigDecimal quantity() {
         return quantity;
+    }
+
+    public BigDecimal price() {
+        return price;
     }
 
     public BigDecimal averagePrice() {
