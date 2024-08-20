@@ -21,6 +21,14 @@ public class Bond {
         this.averagePrice = averagePrice;
     }
 
+    public Bond(UUID id, String name, String description, BigDecimal quantity, BigDecimal price) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
     public UUID id() {
         return id;
     }
