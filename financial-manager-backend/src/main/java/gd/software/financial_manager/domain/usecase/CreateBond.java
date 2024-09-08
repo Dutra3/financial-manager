@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class CreateBond {
 
@@ -19,6 +21,15 @@ public class CreateBond {
 
     public Bond use(Bond bond) {
         logger.info("Creating bond {}.", bond.name());
-        return allBonds.save(bond);
+        Optional<Bond> optionalBond = allBonds.findBondByTicker(bond.ticker());
+        if (optionalBond.isPresent()) {
+            var bondDB = optionalBond.get();
+            bondDB.setQuantity(bondDB.quantity().add(bond.quantity()));
+            bondDB.calculateAveragePrice(bond.quantity(), bond.price());
+
+            return allBonds.save(bondDB);
+        } else {
+            return allBonds.save(bond);
+        }
     }
 }

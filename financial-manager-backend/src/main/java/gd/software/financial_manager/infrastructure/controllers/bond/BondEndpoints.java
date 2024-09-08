@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bonds")
 public class BondEndpoints {
 
-    private static final Logger logger = LoggerFactory.getLogger(CreateBond.class);
+    private static final Logger logger = LoggerFactory.getLogger(BondEndpoints.class);
 
     @Autowired
     private CreateBond createBond;
@@ -28,7 +28,7 @@ public class BondEndpoints {
         Bond bond = DtoToBond.convert(bondDTO);
         Bond savedBond = createBond.use(bond);
 
-        logger.info("Saved bond {}.", savedBond.name());
+        logger.info("Saved bond {}.", savedBond.ticker());
 
         return ResponseEntity.ok(BondToDTO.convert(savedBond));
     }

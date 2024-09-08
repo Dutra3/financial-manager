@@ -12,10 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class AllBondsPersistent implements AllBonds {
 
-    private static final Logger logger = LoggerFactory.getLogger(CreateBond.class);
+    private static final Logger logger = LoggerFactory.getLogger(AllBondsPersistent.class);
 
     @Autowired
     BondRepository repository;
@@ -28,5 +30,12 @@ public class AllBondsPersistent implements AllBonds {
         logger.info("Saved bond {}.", savedBondRow.getName());
 
         return RowToBond.convert(savedBondRow);
+    }
+
+    @Override
+    public Optional<Bond> findBondByTicker(String ticker) {
+        logger.info("Find Bond with ticker {}", ticker);
+
+        return repository.findByTicker(ticker).map(RowToBond::convert);
     }
 }

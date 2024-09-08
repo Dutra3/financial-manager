@@ -23,6 +23,9 @@ public class BondRow {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Column(nullable = false, length = 100)
+    private String ticker;
+
     @Column(length = 255)
     private String description;
 
