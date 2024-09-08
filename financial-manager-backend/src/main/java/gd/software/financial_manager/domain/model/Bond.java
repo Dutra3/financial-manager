@@ -79,6 +79,10 @@ public class Bond {
         return transactionDate;
     }
 
+    public void setTransactionDate(LocalDate transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
     public BigDecimal averagePrice() {
         return averagePrice;
     }

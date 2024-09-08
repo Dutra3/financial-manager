@@ -25,6 +25,7 @@ public class CreateBond {
         if (optionalBond.isPresent()) {
             var bondDB = optionalBond.get();
             bondDB.setQuantity(bondDB.quantity().add(bond.quantity()));
+            bondDB.setTransactionDate(bondDB.transactionDate());
             bondDB.calculateAveragePrice(bond.quantity(), bond.price());
 
             return allBonds.save(bondDB);

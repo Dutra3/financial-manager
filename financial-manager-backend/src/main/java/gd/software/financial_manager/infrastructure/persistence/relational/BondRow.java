@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -34,4 +35,7 @@ public class BondRow {
 
     @Column(precision = 8, scale = 4)
     private BigDecimal price;
+
+    @Column(nullable = false)
+    private LocalDate transactionDate;
 }
