@@ -1,31 +1,28 @@
 package gd.software.financial_manager.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class Stock {
 
     private UUID id;
     private String name;
+    private String ticker;
     private String description;
     private BigDecimal quantity;
     private BigDecimal price;
-    private BigDecimal averagePrice;
-    private BigDecimal priceToBookRatio;
-    private BigDecimal dividend;
-    private BigDecimal dividendYield;
+    private LocalDate transactionDate;
 
-    public Stock(UUID id, String name, String description, BigDecimal quantity, BigDecimal price, BigDecimal averagePrice,
-                 BigDecimal priceToBookRatio, BigDecimal dividend, BigDecimal dividendYield) {
+    public Stock(UUID id, String name, String ticker, String description, BigDecimal quantity, BigDecimal price,
+                 LocalDate transactionDate) {
         this.id = id;
         this.name = name;
+        this.ticker = ticker;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
-        this.averagePrice = averagePrice;
-        this.priceToBookRatio = priceToBookRatio;
-        this.dividend = dividend;
-        this.dividendYield = dividendYield;
+        this.transactionDate = transactionDate;
     }
 
     public UUID id() {
@@ -36,6 +33,10 @@ public class Stock {
         return name;
     }
 
+    public String ticker() {
+        return ticker;
+    }
+
     public String description() {
         return description;
     }
@@ -44,23 +45,19 @@ public class Stock {
         return quantity;
     }
 
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
+    }
+
     public BigDecimal price() {
         return price;
     }
 
-    public BigDecimal averagePrice() {
-        return averagePrice;
+    public LocalDate transactionDate() {
+        return transactionDate;
     }
 
-    public BigDecimal priceToBookRatio() {
-        return priceToBookRatio;
-    }
-
-    public BigDecimal dividend() {
-        return dividend;
-    }
-
-    public BigDecimal dividendYield() {
-        return dividendYield;
+    public void setTransactionDate(LocalDate transactionDate) {
+        this.transactionDate = transactionDate;
     }
 }
