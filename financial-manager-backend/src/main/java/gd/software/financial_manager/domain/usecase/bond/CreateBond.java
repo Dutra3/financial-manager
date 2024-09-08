@@ -1,4 +1,4 @@
-package gd.software.financial_manager.domain.usecase;
+package gd.software.financial_manager.domain.usecase.bond;
 
 import gd.software.financial_manager.domain.model.Bond;
 import gd.software.financial_manager.domain.usecase.collections.AllBonds;

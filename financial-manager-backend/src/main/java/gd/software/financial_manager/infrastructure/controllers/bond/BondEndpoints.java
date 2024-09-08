@@ -1,7 +1,7 @@
 package gd.software.financial_manager.infrastructure.controllers.bond;
 
 import gd.software.financial_manager.domain.model.Bond;
-import gd.software.financial_manager.domain.usecase.CreateBond;
+import gd.software.financial_manager.domain.usecase.bond.CreateBond;
 import gd.software.financial_manager.infrastructure.converts.BondToDTO;
 import gd.software.financial_manager.infrastructure.converts.DtoToBond;
 import gd.software.financial_manager.infrastructure.dtos.BondDTO;
