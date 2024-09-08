@@ -1,7 +1,6 @@
 package gd.software.financial_manager.infrastructure.persistence;
 
 import gd.software.financial_manager.domain.model.Bond;
-import gd.software.financial_manager.domain.usecase.CreateBond;
 import gd.software.financial_manager.domain.usecase.collections.AllBonds;
 import gd.software.financial_manager.infrastructure.converts.BondToRow;
 import gd.software.financial_manager.infrastructure.converts.RowToBond;
