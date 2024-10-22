@@ -1,0 +1,87 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--background-color);
+}
+  
+.login-form {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+  
+.login-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+.form-group {
+    margin-bottom: 20px;
+}
+  
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+  
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+  
+input::placeholder {
+    color: var(--text-color);
+    opacity: 0.7;
+}
+  
+input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 4px rgba(42, 86, 233, 0.5);
+}
+  
+.login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+  
+.login-button:hover {
+    background-color: var(--secondary-color);
+    opacity: 0.9;
+}
+  
+.forgot-password-button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: center;
+}
+  
+.forgot-password-button:hover {
+    text-decoration: underline;
+    color: var(--text-color);
+}
