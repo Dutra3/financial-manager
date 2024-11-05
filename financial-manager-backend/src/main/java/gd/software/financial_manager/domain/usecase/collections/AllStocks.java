@@ -3,10 +3,11 @@ package gd.software.financial_manager.domain.usecase.collections;
 import gd.software.financial_manager.domain.model.Stock;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface AllStocks {
 
-    Stock save(Stock stock);
-
     Optional<Stock> findStockByTicker(String ticker);
+
+    Optional<Stock> by(UUID id);
 }

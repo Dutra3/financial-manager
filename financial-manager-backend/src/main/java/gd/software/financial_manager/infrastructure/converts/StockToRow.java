@@ -11,9 +11,12 @@ public class StockToRow {
                 .name(stock.name())
                 .ticker(stock.ticker())
                 .description(stock.description())
-                .quantity(stock.quantity())
+                .type(stock.type())
+                .industrySegment(stock.industrySegment())
+                .tagAlong(stock.tagAlong())
                 .price(stock.price())
-                .transactionDate(stock.transactionDate())
+                .isBesst(stock.isBesst())
+                .isNewMarket(stock.isNewMarket())
                 .build();
     }
 }

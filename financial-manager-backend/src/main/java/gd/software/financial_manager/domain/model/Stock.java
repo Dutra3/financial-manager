@@ -1,7 +1,6 @@
 package gd.software.financial_manager.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.UUID;
 
 public class Stock {
@@ -10,19 +9,29 @@ public class Stock {
     private String name;
     private String ticker;
     private String description;
-    private BigDecimal quantity;
+    private String type;
+    private String industrySegment;
+    private BigDecimal tagAlong;
     private BigDecimal price;
-    private LocalDate transactionDate;
+    private Boolean isBesst;
+    private Boolean isNewMarket;
 
-    public Stock(UUID id, String name, String ticker, String description, BigDecimal quantity, BigDecimal price,
-                 LocalDate transactionDate) {
+    public Stock(UUID id) {
+        this.id = id;
+    }
+
+    public Stock(UUID id, String name, String ticker, String description, String type, String industrySegment,
+                 BigDecimal tagAlong, BigDecimal price, Boolean isBesst, Boolean isNewMarket) {
         this.id = id;
         this.name = name;
         this.ticker = ticker;
         this.description = description;
-        this.quantity = quantity;
+        this.type = type;
+        this.industrySegment = industrySegment;
+        this.tagAlong = tagAlong;
         this.price = price;
-        this.transactionDate = transactionDate;
+        this.isBesst = isBesst;
+        this.isNewMarket = isNewMarket;
     }
 
     public UUID id() {
@@ -41,23 +50,27 @@ public class Stock {
         return description;
     }
 
-    public BigDecimal quantity() {
-        return quantity;
+    public String type() {
+        return type;
     }
 
-    public void setQuantity(BigDecimal quantity) {
-        this.quantity = quantity;
+    public String industrySegment() {
+        return industrySegment;
+    }
+
+    public BigDecimal tagAlong() {
+        return tagAlong;
     }
 
     public BigDecimal price() {
         return price;
     }
 
-    public LocalDate transactionDate() {
-        return transactionDate;
+    public Boolean isBesst() {
+        return isBesst;
     }
 
-    public void setTransactionDate(LocalDate transactionDate) {
-        this.transactionDate = transactionDate;
+    public Boolean isNewMarket() {
+        return isNewMarket;
     }
 }
