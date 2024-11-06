@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,5 +31,11 @@ public class AllStocksPersistent implements AllStocks {
     public Optional<Stock> by(UUID id) {
         logger.info("Find Stock with id {}", id);
         return repository.findById(id).map(RowToStock::convert);
+    }
+
+    @Override
+    public List<Stock> all() {
+        logger.info("Find all Stocks");
+        return repository.findAll().stream().map(RowToStock::convert).toList();
     }
 }

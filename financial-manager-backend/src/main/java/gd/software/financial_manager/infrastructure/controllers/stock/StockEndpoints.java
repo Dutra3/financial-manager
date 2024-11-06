@@ -3,6 +3,7 @@ package gd.software.financial_manager.infrastructure.controllers.stock;
 import gd.software.financial_manager.domain.model.Stock;
 import gd.software.financial_manager.domain.model.StockTransaction;
 import gd.software.financial_manager.domain.usecase.stock.CreateStockTransaction;
+import gd.software.financial_manager.domain.usecase.stock.FetchAllStock;
 import gd.software.financial_manager.domain.usecase.stock.FetchStock;
 import gd.software.financial_manager.infrastructure.converts.DtoToStockTransaction;
 import gd.software.financial_manager.infrastructure.converts.StockToResponse;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +31,9 @@ public class StockEndpoints {
 
     @Autowired
     private FetchStock fetchStock;
+
+    @Autowired
+    private FetchAllStock fetchAllStock;
 
     @PostMapping
     public ResponseEntity<StockTransactionDTO> save(@RequestBody StockTransactionDTO stockDTO) {
@@ -44,6 +49,14 @@ public class StockEndpoints {
     public ResponseEntity<StockResponse> fetchStock(@PathVariable UUID id) throws Exception {
         Stock stock = fetchStock.use(id);
         logger.info("Get stock {}.", stock.ticker());
+
+        return ResponseEntity.status(HttpStatus.OK).body((StockToResponse.convert(stock)));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<StockResponse>> fetchAllStock() {
+        List<Stock> stock = fetchAllStock.use();
+        logger.info("Get all stocks.");
 
         return ResponseEntity.status(HttpStatus.OK).body((StockToResponse.convert(stock)));
     }
