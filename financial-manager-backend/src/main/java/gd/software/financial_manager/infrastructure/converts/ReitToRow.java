@@ -11,10 +11,9 @@ public class ReitToRow {
                 .name(reit.name())
                 .ticker(reit.ticker())
                 .description(reit.description())
-                .quantity(reit.quantity())
+                .type(reit.type())
+                .industrySegment(reit.industrySegment())
                 .price(reit.price())
-                .transactionDate(reit.transactionDate())
-                .averagePrice(reit.averagePrice())
                 .build();
     }
 }

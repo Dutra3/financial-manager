@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -13,28 +14,24 @@ import java.util.UUID;
 @Setter
 @ToString
 @Entity
-@Table(name = "gd_reit")
-public class ReitRow {
+@Table(name = "gd_reit_transaction")
+public class ReitTransactionRow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @Column(nullable = false, length = 100)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reit_id", nullable = false)
+    @ToString.Exclude
+    private ReitRow reit;
 
-    @Column(nullable = false, length = 100)
-    private String ticker;
-
-    @Column(length = 255)
-    private String description;
-
-    @Column(length = 255)
-    private String type;
-
-    @Column(length = 255)
-    private String industrySegment;
+    @Column(precision = 8, scale = 4)
+    private BigDecimal quantity;
 
     @Column(precision = 8, scale = 4)
     private BigDecimal price;
+
+    @Column(nullable = false)
+    private LocalDate transactionDate;
 }

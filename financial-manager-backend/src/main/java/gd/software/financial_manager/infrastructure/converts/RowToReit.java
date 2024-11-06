@@ -6,8 +6,7 @@ import gd.software.financial_manager.infrastructure.persistence.relational.ReitR
 public class RowToReit {
 
     public static Reit convert(ReitRow reitRow) {
-        return new Reit(reitRow.getId(), reitRow.getName(), reitRow.getTicker(), reitRow.getDescription(),
-                reitRow.getQuantity(), reitRow.getPrice(), reitRow.getTransactionDate(), reitRow.getAveragePrice()
-        );
+        return new Reit(reitRow.getId(), reitRow.getName(), reitRow.getTicker(), reitRow.getDescription(), reitRow.getType(),
+                reitRow.getIndustrySegment(), reitRow.getPrice());
     }
 }
