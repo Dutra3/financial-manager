@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class AllStockTransactionsPersistent implements AllStockTransactions {
 
-    private static final Logger logger = LoggerFactory.getLogger(AllStocksPersistent.class);
+    private static final Logger logger = LoggerFactory.getLogger(AllStockTransactionsPersistent.class);
 
     @Autowired
     StockTransactionRepository repository;

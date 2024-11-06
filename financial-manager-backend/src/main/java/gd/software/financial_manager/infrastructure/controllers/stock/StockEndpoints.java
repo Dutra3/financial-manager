@@ -36,8 +36,8 @@ public class StockEndpoints {
     private FetchAllStock fetchAllStock;
 
     @PostMapping
-    public ResponseEntity<StockTransactionDTO> save(@RequestBody StockTransactionDTO stockDTO) {
-        StockTransaction stockTransaction = DtoToStockTransaction.convert(stockDTO);
+    public ResponseEntity<StockTransactionDTO> save(@RequestBody StockTransactionDTO stockTransactionDTO) {
+        StockTransaction stockTransaction = DtoToStockTransaction.convert(stockTransactionDTO);
         StockTransaction savedStockTransaction = createStockTransaction.use(stockTransaction);
 
         logger.info("Saved stock transaction {}.", savedStockTransaction.stock().ticker());
