@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -19,8 +20,13 @@ public class FetchStock {
         this.allStocks = allStocks;
     }
 
-    public Stock use(UUID id) throws Exception {
+    public Stock by(UUID id) throws Exception {
         logger.info("Find stock with id {}",id);
         return allStocks.by(id).orElseThrow(() -> new Exception("cant_find_stock_with_id"));
+    }
+
+    public List<Stock> all() {
+        logger.info("Fetch all stocks");
+        return allStocks.all();
     }
 }

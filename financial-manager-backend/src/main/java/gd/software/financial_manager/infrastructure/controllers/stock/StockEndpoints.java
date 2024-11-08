@@ -3,7 +3,6 @@ package gd.software.financial_manager.infrastructure.controllers.stock;
 import gd.software.financial_manager.domain.model.Stock;
 import gd.software.financial_manager.domain.model.StockTransaction;
 import gd.software.financial_manager.domain.usecase.stock.CreateStockTransaction;
-import gd.software.financial_manager.domain.usecase.stock.FetchAllStock;
 import gd.software.financial_manager.domain.usecase.stock.FetchStock;
 import gd.software.financial_manager.infrastructure.converts.DtoToStockTransaction;
 import gd.software.financial_manager.infrastructure.converts.StockToResponse;
@@ -32,9 +31,6 @@ public class StockEndpoints {
     @Autowired
     private FetchStock fetchStock;
 
-    @Autowired
-    private FetchAllStock fetchAllStock;
-
     @PostMapping
     public ResponseEntity<StockTransactionDTO> save(@RequestBody StockTransactionDTO stockTransactionDTO) {
         StockTransaction stockTransaction = DtoToStockTransaction.convert(stockTransactionDTO);
@@ -47,7 +43,7 @@ public class StockEndpoints {
 
     @GetMapping("/{id}")
     public ResponseEntity<StockResponse> fetchStock(@PathVariable UUID id) throws Exception {
-        Stock stock = fetchStock.use(id);
+        Stock stock = fetchStock.by(id);
         logger.info("Get stock {}.", stock.ticker());
 
         return ResponseEntity.status(HttpStatus.OK).body((StockToResponse.convert(stock)));
@@ -55,10 +51,9 @@ public class StockEndpoints {
 
     @GetMapping
     public ResponseEntity<List<StockResponse>> fetchAllStocks() {
-        List<Stock> stocks = fetchAllStock.use();
+        List<Stock> stocks = fetchStock.all();
         logger.info("Get all stocks.");
 
         return ResponseEntity.status(HttpStatus.OK).body(StockToResponse.convert(stocks));
     }
-
 }
