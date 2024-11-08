@@ -54,11 +54,11 @@ public class StockEndpoints {
     }
 
     @GetMapping
-    public ResponseEntity<List<StockResponse>> fetchAllStock() {
-        List<Stock> stock = fetchAllStock.use();
+    public ResponseEntity<List<StockResponse>> fetchAllStocks() {
+        List<Stock> stocks = fetchAllStock.use();
         logger.info("Get all stocks.");
 
-        return ResponseEntity.status(HttpStatus.OK).body((StockToResponse.convert(stock)));
+        return ResponseEntity.status(HttpStatus.OK).body(StockToResponse.convert(stocks));
     }
 
 }

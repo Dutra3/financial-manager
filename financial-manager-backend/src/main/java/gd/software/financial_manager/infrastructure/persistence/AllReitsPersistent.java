@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -36,5 +37,11 @@ public class AllReitsPersistent implements AllReits {
         logger.info("Find Reit with ticker {}", ticker);
 
         return repository.findByTicker(ticker).map(RowToReit::convert);
+    }
+
+    @Override
+    public List<Reit> all() {
+        logger.info("Find all Reits");
+        return repository.findAll().stream().map(RowToReit::convert).toList();
     }
 }

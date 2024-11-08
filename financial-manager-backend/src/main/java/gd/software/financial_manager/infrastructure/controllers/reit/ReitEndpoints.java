@@ -1,19 +1,22 @@
 package gd.software.financial_manager.infrastructure.controllers.reit;
 
+import gd.software.financial_manager.domain.model.Reit;
 import gd.software.financial_manager.domain.model.ReitTransaction;
 import gd.software.financial_manager.domain.usecase.reit.CreateReitTransaction;
+import gd.software.financial_manager.domain.usecase.reit.FetchReit;
 import gd.software.financial_manager.infrastructure.converts.DtoToReitTransaction;
+import gd.software.financial_manager.infrastructure.converts.ReitToResponse;
 import gd.software.financial_manager.infrastructure.converts.ReitTransactionToDTO;
+import gd.software.financial_manager.infrastructure.dtos.ReitResponse;
 import gd.software.financial_manager.infrastructure.dtos.ReitTransactionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/reits")
@@ -24,6 +27,9 @@ public class ReitEndpoints {
     @Autowired
     private CreateReitTransaction createReitTransaction;
 
+    @Autowired
+    private FetchReit fetchReit;
+
     @PostMapping
     public ResponseEntity<ReitTransactionDTO> save(@RequestBody ReitTransactionDTO reitTransactionDTO) {
         ReitTransaction reitTransaction = DtoToReitTransaction.convert(reitTransactionDTO);
@@ -32,5 +38,13 @@ public class ReitEndpoints {
         logger.info("Saved reit transaction {}.", savedReitTransaction.reit().ticker());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ReitTransactionToDTO.convert(savedReitTransaction));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReitResponse>> fetchAllReits() {
+        List<Reit> reits = fetchReit.all();
+        logger.info("Get all reits.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(ReitToResponse.convert(reits));
     }
 }
