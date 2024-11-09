@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/reits")
@@ -38,6 +39,11 @@ public class ReitEndpoints {
         logger.info("Saved reit transaction {}.", savedReitTransaction.reit().ticker());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ReitTransactionToDTO.convert(savedReitTransaction));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReitResponse> fetchReit(@PathVariable UUID id) throws Exception {
+        return null;
     }
 
     @GetMapping
