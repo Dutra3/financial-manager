@@ -22,7 +22,7 @@ public class AllStockTransactionsPersistent implements AllStockTransactions {
         StockTransactionRow stockTransactionRow = StockTransactionToRow.convert(stockTransaction);
 
         StockTransactionRow savedStockTransactionRow = repository.save(stockTransactionRow);
-        logger.info("Saved stock transaction {}", savedStockTransactionRow);
+        logger.info("Saved stock transaction {}.", savedStockTransactionRow);
 
         return RowToStockTransaction.convert(savedStockTransactionRow);
     }

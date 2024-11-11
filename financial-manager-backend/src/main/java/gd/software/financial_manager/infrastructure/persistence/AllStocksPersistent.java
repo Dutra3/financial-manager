@@ -23,19 +23,19 @@ public class AllStocksPersistent implements AllStocks {
 
     @Override
     public Optional<Stock> findStockByTicker(String ticker) {
-        logger.info("Find Stock with ticker {}", ticker);
+        logger.info("Find Stock with ticker {}.", ticker);
         return repository.findByTicker(ticker).map(RowToStock::convert);
     }
 
     @Override
     public Optional<Stock> by(UUID id) {
-        logger.info("Find Stock with id {}", id);
+        logger.info("Find Stock with id {}.", id);
         return repository.findById(id).map(RowToStock::convert);
     }
 
     @Override
     public List<Stock> all() {
-        logger.info("Find all Stocks");
+        logger.info("Find all Stocks.");
         return repository.findAll().stream().map(RowToStock::convert).toList();
     }
 }

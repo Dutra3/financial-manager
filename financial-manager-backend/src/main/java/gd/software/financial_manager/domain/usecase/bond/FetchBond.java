@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -20,7 +21,12 @@ public class FetchBond {
     }
 
     public Bond by(UUID id) throws Exception {
-        logger.info("Find bond with id {}", id);
+        logger.info("Find bond with id {}.", id);
         return allBonds.by(id).orElseThrow(() -> new Exception("cant_find_bond_with_id"));
+    }
+
+    public List<Bond> all() {
+        logger.info("Fetch all bonds");
+        return allBonds.all();
     }
 }

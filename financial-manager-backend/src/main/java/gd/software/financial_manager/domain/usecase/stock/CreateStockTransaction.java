@@ -18,7 +18,7 @@ public class CreateStockTransaction {
     }
 
     public StockTransaction use(StockTransaction stockTransaction) {
-        logger.info("Creating stock transaction for {}", stockTransaction.stock().name());
+        logger.info("Creating stock transaction for {}.", stockTransaction.stock().name());
         return allStockTransactions.save(stockTransaction);
     }
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,15 +22,14 @@ public class AllBondsPersistent implements AllBonds {
     BondRepository repository;
 
     @Override
-    public Optional<Bond> findBondByTicker(String ticker) {
-        logger.info("Find Bond with ticker {}", ticker);
-
-        return repository.findByTicker(ticker).map(RowToBond::convert);
+    public Optional<Bond> by(UUID id) {
+        logger.info("Find Bond with id {}.", id);
+        return repository.findById(id).map(RowToBond::convert);
     }
 
     @Override
-    public Optional<Bond> by(UUID id) {
-        logger.info("Find Bond with id {}", id);
-        return repository.findById(id).map(RowToBond::convert);
+    public List<Bond> all() {
+        logger.info("Find all Bonds.");
+        return repository.findAll().stream().map(RowToBond::convert).toList();
     }
 }
