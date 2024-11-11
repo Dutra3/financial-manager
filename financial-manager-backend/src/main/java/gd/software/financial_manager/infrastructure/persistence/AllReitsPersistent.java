@@ -2,9 +2,7 @@ package gd.software.financial_manager.infrastructure.persistence;
 
 import gd.software.financial_manager.domain.model.Reit;
 import gd.software.financial_manager.domain.usecase.collections.AllReits;
-import gd.software.financial_manager.infrastructure.converts.ReitToRow;
 import gd.software.financial_manager.infrastructure.converts.RowToReit;
-import gd.software.financial_manager.infrastructure.persistence.relational.ReitRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.ReitRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class AllReitsPersistent implements AllReits {
@@ -23,20 +22,16 @@ public class AllReitsPersistent implements AllReits {
     ReitRepository repository;
 
     @Override
-    public Reit save(Reit reit) {
-        ReitRow reitRow = ReitToRow.convert(reit);
-
-        ReitRow savedReitRow = repository.save(reitRow);
-        logger.info("Saved reit {}.", savedReitRow.getName());
-
-        return RowToReit.convert(savedReitRow);
-    }
-
-    @Override
     public Optional<Reit> findReitByTicker(String ticker) {
         logger.info("Find Reit with ticker {}", ticker);
 
         return repository.findByTicker(ticker).map(RowToReit::convert);
+    }
+
+    @Override
+    public Optional<Reit> by(UUID id) {
+        logger.info("Find Reit with id {}", id);
+        return repository.findById(id).map(RowToReit::convert);
     }
 
     @Override

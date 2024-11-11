@@ -46,7 +46,7 @@ public class StockEndpoints {
         Stock stock = fetchStock.by(id);
         logger.info("Get stock {}.", stock.ticker());
 
-        return ResponseEntity.status(HttpStatus.OK).body((StockToResponse.convert(stock)));
+        return ResponseEntity.status(HttpStatus.OK).body(StockToResponse.convert(stock));
     }
 
     @GetMapping

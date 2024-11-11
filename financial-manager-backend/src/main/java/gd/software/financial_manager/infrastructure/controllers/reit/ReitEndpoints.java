@@ -43,7 +43,9 @@ public class ReitEndpoints {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReitResponse> fetchReit(@PathVariable UUID id) throws Exception {
-        return null;
+        Reit reit = fetchReit.by(id);
+        logger.info("Get reit {}.", reit.ticker());
+        return ResponseEntity.status(HttpStatus.OK).body(ReitToResponse.convert(reit));
     }
 
     @GetMapping

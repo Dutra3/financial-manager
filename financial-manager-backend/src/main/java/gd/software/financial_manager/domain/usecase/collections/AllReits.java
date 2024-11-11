@@ -4,12 +4,13 @@ import gd.software.financial_manager.domain.model.Reit;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface AllReits {
 
-    Reit save(Reit reit);
-
     Optional<Reit> findReitByTicker(String ticker);
+
+    Optional<Reit> by(UUID id);
 
     List<Reit> all();
 }
