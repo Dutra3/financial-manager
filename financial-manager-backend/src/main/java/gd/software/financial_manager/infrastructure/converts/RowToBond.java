@@ -6,6 +6,6 @@ import gd.software.financial_manager.infrastructure.persistence.relational.BondR
 public class RowToBond {
 
     public static Bond convert(BondRow row) {
-        return new Bond(row.getId(), row.getName(), row.getTicker(), row.getDescription(), row.getQuantity(), row.getPrice(), null);
+        return new Bond(row.getId(), row.getName(), row.getDescription(), row.getType(), row.getIndustrySegment(), row.getPrice());
     }
 }

@@ -2,17 +2,17 @@ package gd.software.financial_manager.infrastructure.controllers.bond;
 
 import gd.software.financial_manager.domain.model.Bond;
 import gd.software.financial_manager.domain.usecase.bond.CreateBond;
-import gd.software.financial_manager.infrastructure.converts.BondToDTO;
-import gd.software.financial_manager.infrastructure.converts.DtoToBond;
-import gd.software.financial_manager.infrastructure.dtos.BondDTO;
+import gd.software.financial_manager.domain.usecase.bond.FetchBond;
+import gd.software.financial_manager.infrastructure.converts.BondToResponse;
+import gd.software.financial_manager.infrastructure.dtos.BondResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/bonds")
@@ -23,13 +23,14 @@ public class BondEndpoints {
     @Autowired
     private CreateBond createBond;
 
-    @PostMapping
-    public ResponseEntity<BondDTO> save(@RequestBody BondDTO bondDTO) {
-        Bond bond = DtoToBond.convert(bondDTO);
-        Bond savedBond = createBond.use(bond);
+    @Autowired
+    private FetchBond fetchBond;
 
-        logger.info("Saved bond {}.", savedBond.ticker());
+    @GetMapping("/{id}")
+    public ResponseEntity<BondResponse> fetchStock(@PathVariable UUID id) throws Exception {
+        Bond bond = fetchBond.by(id);
+        logger.info("Get bond {}.", bond.name());
 
-        return ResponseEntity.ok(BondToDTO.convert(savedBond));
+        return ResponseEntity.status(HttpStatus.OK).body(BondToResponse.convert(bond));
     }
 }
