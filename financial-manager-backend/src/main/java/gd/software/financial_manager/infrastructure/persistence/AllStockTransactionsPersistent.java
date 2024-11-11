@@ -15,7 +15,7 @@ public class AllStockTransactionsPersistent implements AllStockTransactions {
     private static final Logger logger = LoggerFactory.getLogger(AllStockTransactionsPersistent.class);
 
     @Autowired
-    StockTransactionRepository repository;
+    private StockTransactionRepository repository;
 
     @Override
     public StockTransaction save(StockTransaction stockTransaction) {

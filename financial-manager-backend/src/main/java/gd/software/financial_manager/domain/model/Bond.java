@@ -12,19 +12,16 @@ public class Bond {
     private String industrySegment;
     private BigDecimal price;
 
+    public Bond(UUID id) {
+        this.id = id;
+    }
+
     public Bond(UUID id, String name, String description, String type, String industrySegment, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
         this.industrySegment = industrySegment;
-        this.price = price;
-    }
-
-    public Bond(UUID id, String name, String description, BigDecimal price) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
         this.price = price;
     }
 
