@@ -6,7 +6,9 @@ import gd.software.financial_manager.domain.usecase.etf.CreateEtfTransaction;
 import gd.software.financial_manager.domain.usecase.etf.FetchEtf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class EtfConfig {
 
     @Bean

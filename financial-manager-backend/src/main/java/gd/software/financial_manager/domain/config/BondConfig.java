@@ -6,12 +6,14 @@ import gd.software.financial_manager.domain.usecase.collections.AllBondTransacti
 import gd.software.financial_manager.domain.usecase.collections.AllBonds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class BondConfig {
 
     @Bean
     @Autowired
-    public CreateBondTransaction createBond(AllBondTransactions allBondTransactions) {
+    public CreateBondTransaction createBondTransaction(AllBondTransactions allBondTransactions) {
         return new CreateBondTransaction(allBondTransactions);
     }
 

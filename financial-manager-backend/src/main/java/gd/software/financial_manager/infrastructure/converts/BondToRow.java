@@ -10,7 +10,8 @@ public class BondToRow {
                 .id(bond.id())
                 .name(bond.name())
                 .description(bond.description())
-                .quantity(bond.quantity())
+                .type(bond.type())
+                .industrySegment(bond.industrySegment())
                 .price(bond.price())
                 .build();
     }
