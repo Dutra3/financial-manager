@@ -9,7 +9,9 @@ import gd.software.financial_manager.infrastructure.persistence.repository.EtfTr
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AllEtfTransactionsPersistent implements AllEtfTransactions {
 
     private static final Logger logger = LoggerFactory.getLogger(AllEtfTransactionsPersistent.class);

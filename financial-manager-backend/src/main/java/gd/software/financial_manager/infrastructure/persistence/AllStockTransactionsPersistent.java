@@ -9,7 +9,9 @@ import gd.software.financial_manager.infrastructure.persistence.repository.Stock
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AllStockTransactionsPersistent implements AllStockTransactions {
 
     private static final Logger logger = LoggerFactory.getLogger(AllStockTransactionsPersistent.class);
