@@ -19,7 +19,7 @@ public class AllEtfsPersistent implements AllEtfs {
     private static final Logger logger = LoggerFactory.getLogger(AllEtfsPersistent.class);
 
     @Autowired
-    EtfRepository repository;
+    private EtfRepository repository;
 
     @Override
     public Optional<Etf> by(UUID id) {
