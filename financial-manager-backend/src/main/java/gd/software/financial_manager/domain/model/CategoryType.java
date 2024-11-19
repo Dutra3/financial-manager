@@ -1,5 +1,5 @@
 package gd.software.financial_manager.domain.model;
 
-public enum TransactionType {
+public enum CategoryType {
     DEBIT, CREDIT
 }
