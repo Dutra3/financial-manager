@@ -11,4 +11,6 @@ public interface AllCategories {
     Optional<Category> by(UUID id);
 
     List<Category> all();
+
+    void remove(UUID id);
 }

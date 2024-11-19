@@ -32,4 +32,9 @@ public class AllCategoriesPersistent implements AllCategories {
         logger.info("Find all Categories.");
         return repository.findAll().stream().map(RowToCategory::convert).toList();
     }
+
+    @Override
+    public void remove(UUID id) {
+        repository.deleteById(id);
+    }
 }
