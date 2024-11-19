@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,5 +25,11 @@ public class AllCategoriesPersistent implements AllCategories {
     public Optional<Category> by(UUID id) {
         logger.info("Find Category with id {}.", id);
         return repository.findById(id).map(RowToCategory::convert);
+    }
+
+    @Override
+    public List<Category> all() {
+        logger.info("Find all Categories.");
+        return repository.findAll().stream().map(RowToCategory::convert).toList();
     }
 }

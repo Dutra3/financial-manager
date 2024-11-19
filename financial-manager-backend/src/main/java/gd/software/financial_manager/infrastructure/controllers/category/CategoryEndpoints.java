@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,5 +32,13 @@ public class CategoryEndpoints {
         logger.info("Get category {}.", category.name());
 
         return ResponseEntity.status(HttpStatus.OK).body(CategoryToResponse.convert(category));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryResponse>> fetchAllCategories() {
+        List<Category> categories = fetchCategory.all();
+        logger.info("Get all categories.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(CategoryToResponse.convert(categories));
     }
 }
