@@ -2,7 +2,9 @@ package gd.software.financial_manager.infrastructure.persistence;
 
 import gd.software.financial_manager.domain.model.Category;
 import gd.software.financial_manager.domain.usecase.collections.AllCategories;
+import gd.software.financial_manager.infrastructure.converts.CategoryToRow;
 import gd.software.financial_manager.infrastructure.converts.RowToCategory;
+import gd.software.financial_manager.infrastructure.persistence.relational.CategoryRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,16 @@ public class AllCategoriesPersistent implements AllCategories {
 
     @Autowired
     private CategoryRepository repository;
+
+    @Override
+    public Category save(Category category) {
+        CategoryRow categoryRow = CategoryToRow.convert(category);
+
+        CategoryRow savedCategoryRow = repository.save(categoryRow);
+        logger.info("Saved category {}.", savedCategoryRow);
+
+        return RowToCategory.convert(savedCategoryRow);
+    }
 
     @Override
     public Optional<Category> by(UUID id) {

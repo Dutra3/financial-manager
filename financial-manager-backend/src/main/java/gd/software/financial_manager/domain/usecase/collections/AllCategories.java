@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface AllCategories {
 
+    Category save(Category category);
+
     Optional<Category> by(UUID id);
 
     List<Category> all();
