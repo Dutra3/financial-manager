@@ -3,16 +3,33 @@ import { Home } from "../pages/Home";
 import { Profile } from "../pages/Profile";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
-import { MainLogin } from "../pages/Login";
+import { Login } from "../pages/Login";
+import { PrivateRoute } from "./PrivateRoute";
 
 const AppRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<Home />}/>
-            <Route path="/profile" element={<Profile />}/>
-            <Route path="/transactions" element={<Transactions />}/>
-            <Route path="/wallet" element={<Wallet />}/>
-            <Route path="/login" element={<MainLogin />}/>
+            <Route path="/login" element={<Login />}/>
+            <Route path="/" element={
+                <PrivateRoute>
+                    <Home />
+                </PrivateRoute>}
+            />
+            <Route path="/profile" element={
+                <PrivateRoute>
+                    <Profile />
+                </PrivateRoute>}
+            />
+            <Route path="/transactions" element={
+                <PrivateRoute>
+                    <Transactions />
+                </PrivateRoute>}
+            />
+            <Route path="/wallet" element={
+                <PrivateRoute>
+                    <Wallet />
+                </PrivateRoute>}
+            />
         </Routes>
     )
 };

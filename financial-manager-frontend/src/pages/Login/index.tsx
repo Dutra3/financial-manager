@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FaGoogle, FaApple } from 'react-icons/fa';
 import './Login.css';
 
-const MainLogin = () => {
+const Login = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -88,4 +88,4 @@ const MainLogin = () => {
     );
 };
 
-export { MainLogin };
+export { Login };
