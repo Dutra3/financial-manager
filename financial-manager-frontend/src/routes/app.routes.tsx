@@ -4,12 +4,14 @@ import { Profile } from "../pages/Profile";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
 import { Login } from "../pages/Login";
+import { ForgotPassword } from "../pages/ForgotPassword";
 import { PrivateRoute } from "./PrivateRoute";
 
 const AppRoutes = () => {
     return (
         <Routes>
             <Route path="/login" element={<Login />}/>
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/" element={
                 <PrivateRoute>
                     <Home />

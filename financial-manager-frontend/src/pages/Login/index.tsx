@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaApple } from 'react-icons/fa';
 import './Login.css';
 
 const Login = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    const navigate = useNavigate();
 
     const handleLogin = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
@@ -16,6 +19,10 @@ const Login = () => {
     const handleSocialLogin = (platform: string): void => {
         console.log(`Login with ${platform}`);
     };
+
+    const handleForgotPassword = (): void => {
+        navigate("/forgot-password");
+    }
 
     return (
         <div className="login-container">
@@ -78,7 +85,7 @@ const Login = () => {
                     <button
                         type="button"
                         className="forgot-password-button"
-                        onClick={() => console.log('Forgot password clicked')}
+                        onClick={handleForgotPassword}
                     >
                         Forgot Password?
                     </button>
