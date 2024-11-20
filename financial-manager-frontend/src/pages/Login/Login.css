@@ -1,87 +1,156 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    display: flex;
+    width: 100%;
+}
+
+#root {
+    width: 100%;
+}
+
 .login-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.left-section, .right-section {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: var(--background-color);
+    padding: 20px;
+    width: 50%;
+    background-color: var(--secondary-color);
 }
-  
-.login-form {
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-}
-  
-.login-form h2 {
+
+.left-section {
+    color: var(--primary-color);
     text-align: center;
-    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
-  
+
+.login-form {
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    height: 55%;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+h2 {
+    margin: 28px 0;
+    color: var(--text-color);
+    font-size: 1.5rem;
+}
+
 .form-group {
-    margin-bottom: 20px;
+    width: 80%;
+    margin-bottom: 16px;
 }
-  
+
 label {
     display: block;
-    margin-bottom: 8px;
-    font-size: 1rem;
+    margin-bottom: 4px;
+    font-weight: bold;
     color: var(--text-color);
 }
-  
+
 input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid var(--secondary-color);
-    border-radius: 5px;
+    padding: 12px;
+    border: 1px solid var(--text-color);
+    border-radius: 8px;
     font-size: 1rem;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    box-sizing: border-box;
 }
-  
-input::placeholder {
-    color: var(--text-color);
-    opacity: 0.7;
-}
-  
+
 input:focus {
-    outline: none;
     border-color: var(--secondary-color);
-    box-shadow: 0 0 4px rgba(42, 86, 233, 0.5);
+    outline: none;
 }
-  
+
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
 .login-button {
-    width: 100%;
-    padding: 10px;
     background-color: var(--secondary-color);
-    color: var(--primary-color);
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    cursor: pointer;
+    color: var(--background-color);
+    margin-top: 12px;
+    border-radius: 8px;
+    width: 80%;
 }
-  
+
 .login-button:hover {
-    background-color: var(--secondary-color);
-    opacity: 0.9;
+    background-color: #1f47c7;
 }
-  
-.forgot-password-button {
-    margin-top: 15px;
-    width: 100%;
-    padding: 10px;
-    background-color: transparent;
-    border: none;
-    color: var(--secondary-color);
+
+.social-login-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 24px 0;
+    width: 80%;
+}
+
+.social-login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid var(--text-color);
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    font-size: 1rem;
+    color: var(--text-color);
     cursor: pointer;
-    font-size: 0.9rem;
-    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
-  
+
+.social-login-button.google {
+    color: #db4437;
+    border-color: #db4437;
+}
+
+.social-login-button.apple {
+    color: var(--text-color);
+    border-color: #000;
+}
+
+.social-login-button:hover {
+    background-color: lighten(var(--primary-color), 5%);
+}
+
+.forgot-password-button {
+    margin-top: 8px;
+    width: 130px;
+    background-color: transparent;
+    color: var(--secondary-color);
+    text-align: center;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    display: inline;
+}
+
 .forgot-password-button:hover {
     text-decoration: underline;
-    color: var(--text-color);
+    color: darken(var(--secondary-color), 10%);
 }
