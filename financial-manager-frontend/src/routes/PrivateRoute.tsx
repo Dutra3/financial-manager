@@ -6,7 +6,7 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-    const isAuthenticated = !!localStorage.getItem("authToken");
+    const isAuthenticated = !!localStorage.getItem("authToken") || !!localStorage.getItem("googleAuthToken");
 
     return isAuthenticated ? (
         <>{children}</>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaApple } from 'react-icons/fa';
+import { useGoogleLogin, CredentialResponse } from '@react-oauth/google';
 import './Login.css';
 
 const Login = () => {
@@ -19,6 +20,19 @@ const Login = () => {
     const handleSocialLogin = (platform: string): void => {
         console.log(`Login with ${platform}`);
     };
+
+    const handleGoogleLoginSuccess = (tokenResponse: { access_token: string }): void => {
+        localStorage.setItem('googleAuthToken', tokenResponse.access_token);
+    };
+
+    const handleGoogleLoginError = (): void => {
+        console.error('Login Failed: An error occurred during the login process.');
+    };
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: handleGoogleLoginSuccess,
+        onError: handleGoogleLoginError,
+    });
 
     const handleForgotPassword = (): void => {
         navigate("/forgot-password");
@@ -69,7 +83,7 @@ const Login = () => {
                         <button
                             type="button"
                             className="social-login-button google"
-                            onClick={() => handleSocialLogin('Google')}
+                            onClick={() => googleLogin()}
                         >
                             <FaGoogle className="social-icon" /> Login with Google
                         </button>
