@@ -24,6 +24,8 @@ const Login = () => {
     const handleGoogleLoginSuccess = (tokenResponse: { access_token: string }): void => {
         localStorage.setItem('googleAuthToken', tokenResponse.access_token);
         console.log(tokenResponse);
+
+        navigate('/');
     };
 
     const handleGoogleLoginError = (): void => {
