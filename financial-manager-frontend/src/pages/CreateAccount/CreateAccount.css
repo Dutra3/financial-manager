@@ -1,0 +1,82 @@
+.create-account-container {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.create-account-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--background-color);
+    padding: 30px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 400px;
+}
+
+.create-account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.return-button {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    width: 20%;
+    text-align: left;
+}
+
+.return-button:hover {
+    color: var(--primary-color);
+}
+
+.create-account-header h2 {
+    color: var(--text-color);
+    font-size: 1.8rem;
+    width: 80%;
+    text-align: left;
+    margin: 0;
+    display: inline;
+}
+
+.create-account-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.create-account-final-button {
+    background-color: var(--secondary-color);
+    color: var(--background-color);
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    max-width: 250px;
+    align-self: center;
+}
+
+.create-account-final-button:hover {
+    background-color: #1f47c7;
+}
