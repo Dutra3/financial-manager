@@ -5,6 +5,7 @@ import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
 import { Login } from "../pages/Login";
 import { ForgotPassword } from "../pages/ForgotPassword";
+import { CreateAccount } from "../pages/CreateAccount";
 import { PrivateRoute } from "./PrivateRoute";
 
 const AppRoutes = () => {
@@ -12,6 +13,7 @@ const AppRoutes = () => {
         <Routes>
             <Route path="/login" element={<Login />}/>
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/create-account" element={<CreateAccount />} />
             <Route path="/" element={
                 <PrivateRoute>
                     <Home />

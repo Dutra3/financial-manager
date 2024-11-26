@@ -41,6 +41,10 @@ const Login = () => {
         navigate("/forgot-password");
     }
 
+    const handleCreateAccount = (): void => {
+        navigate("/create-account");
+    };
+
     return (
         <div className="login-container">
             <div className="left-section">
@@ -53,7 +57,6 @@ const Login = () => {
             <div className="right-section">
                 <form className="login-form" onSubmit={handleLogin}>
                     <h2>Login</h2>
-
                     <div className="form-group">
                         <label htmlFor="username">Email</label>
                         <input
@@ -65,7 +68,6 @@ const Login = () => {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
@@ -77,11 +79,9 @@ const Login = () => {
                             required
                         />
                     </div>
-
                     <button type="submit" className="login-button">
                         Login
                     </button>
-
                     <div className="social-login-container">
                         <button
                             type="button"
@@ -98,13 +98,19 @@ const Login = () => {
                             <FaApple className="social-icon" /> Login with Apple
                         </button>
                     </div>
-
                     <button
                         type="button"
                         className="forgot-password-button"
                         onClick={handleForgotPassword}
                     >
                         Forgot Password?
+                    </button>
+                    <button
+                        type="button"
+                        className="create-account-button"
+                        onClick={handleCreateAccount}
+                    >
+                        Create Account
                     </button>
                 </form>
             </div>

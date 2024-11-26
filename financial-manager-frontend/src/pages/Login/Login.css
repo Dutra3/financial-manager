@@ -154,3 +154,21 @@ button {
     text-decoration: underline;
     color: darken(var(--secondary-color), 10%);
 }
+
+.create-account-button {
+    margin-top: 8px;
+    width: 130px;
+    background-color: transparent;
+    color: var(--secondary-color);
+    text-align: center;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    display: inline;
+}
+
+.create-account-button:hover {
+    text-decoration: underline;
+    color: darken(var(--secondary-color), 10%);
+}
