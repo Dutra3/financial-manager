@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaApple } from 'react-icons/fa';
-import { useGoogleLogin, CredentialResponse } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import './Login.css';
 
 const Login = () => {
@@ -23,6 +23,7 @@ const Login = () => {
 
     const handleGoogleLoginSuccess = (tokenResponse: { access_token: string }): void => {
         localStorage.setItem('googleAuthToken', tokenResponse.access_token);
+        console.log(tokenResponse);
     };
 
     const handleGoogleLoginError = (): void => {
@@ -52,13 +53,13 @@ const Login = () => {
                     <h2>Login</h2>
 
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Email</label>
                         <input
                             type="text"
-                            id="username"
+                            id="email"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            placeholder="Enter your username"
+                            placeholder="Enter your email"
                             required
                         />
                     </div>

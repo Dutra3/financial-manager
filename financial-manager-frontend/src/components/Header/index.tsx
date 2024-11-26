@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import "./Header.css";
@@ -12,6 +13,8 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
         const savedTheme = localStorage.getItem('theme');
         return savedTheme === 'dark';
     });
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -31,6 +34,13 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
         setIsDarkMode(isDarkMode);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('googleAuthToken');
+        
+        navigate("/login");
+    };
+
     return (
         <div className="header-container">
             <div className="header-title">
@@ -39,6 +49,9 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
             <div className="header-toggle">
                 <button onClick={toggleTheme} className="theme-toggle-button">
                     {isDarkMode ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
+                </button>
+                <button onClick={handleLogout} className="logout-button">
+                    Logout
                 </button>
             </div>
         </div>
