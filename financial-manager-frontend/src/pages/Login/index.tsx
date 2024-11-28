@@ -17,10 +17,6 @@ const Login = () => {
         console.log('Password:', password);
     };
 
-    const handleSocialLogin = (platform: string): void => {
-        console.log(`Login with ${platform}`);
-    };
-
     const handleGoogleLoginSuccess = (tokenResponse: { access_token: string }): void => {
         localStorage.setItem('googleAuthToken', tokenResponse.access_token);
         console.log(tokenResponse);
@@ -89,13 +85,6 @@ const Login = () => {
                             onClick={() => googleLogin()}
                         >
                             <FaGoogle className="social-icon" /> Login with Google
-                        </button>
-                        <button
-                            type="button"
-                            className="social-login-button apple"
-                            onClick={() => handleSocialLogin('Apple')}
-                        >
-                            <FaApple className="social-icon" /> Login with Apple
                         </button>
                     </div>
                     <button

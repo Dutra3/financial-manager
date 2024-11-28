@@ -128,11 +128,6 @@ button {
     border-color: #db4437;
 }
 
-.social-login-button.apple {
-    color: var(--text-color);
-    border-color: #000;
-}
-
 .social-login-button:hover {
     background-color: lighten(var(--primary-color), 5%);
 }
