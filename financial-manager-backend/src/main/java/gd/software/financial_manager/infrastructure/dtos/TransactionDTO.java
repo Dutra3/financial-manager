@@ -11,6 +11,5 @@ public record TransactionDTO(
         UUID id,
         @NotBlank String description,
         @NotNull BigDecimal amount,
-        @NotNull LocalDate paymentDate,
-        @NotNull TransactionTypeDTO type
+        @NotNull LocalDate paymentDate
 ) {}

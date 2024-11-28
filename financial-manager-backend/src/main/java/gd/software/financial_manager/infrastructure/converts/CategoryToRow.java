@@ -2,6 +2,7 @@ package gd.software.financial_manager.infrastructure.converts;
 
 import gd.software.financial_manager.domain.model.Category;
 import gd.software.financial_manager.infrastructure.persistence.relational.CategoryRow;
+import gd.software.financial_manager.infrastructure.persistence.relational.CategoryTypeRow;
 
 public class CategoryToRow {
 
@@ -9,7 +10,7 @@ public class CategoryToRow {
         return CategoryRow.builder()
                 .id(category.id())
                 .name(category.name())
-                .type(category.type().name())
+                .type(CategoryTypeRow.valueOf(category.type().name()))
                 .build();
     }
 }

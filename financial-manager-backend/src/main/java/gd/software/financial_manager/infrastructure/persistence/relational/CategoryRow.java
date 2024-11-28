@@ -24,5 +24,5 @@ public class CategoryRow {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 30, nullable = false)
-    private String type;
+    private CategoryTypeRow type;
 }

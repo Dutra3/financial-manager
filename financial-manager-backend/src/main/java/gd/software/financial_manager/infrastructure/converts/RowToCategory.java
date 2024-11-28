@@ -7,6 +7,6 @@ import gd.software.financial_manager.infrastructure.persistence.relational.Categ
 public class RowToCategory {
 
     public static Category convert(CategoryRow categoryRow) {
-        return new Category(categoryRow.getId(), categoryRow.getName(), CategoryType.valueOf(categoryRow.getType()));
+        return new Category(categoryRow.getId(), categoryRow.getName(), CategoryType.valueOf(categoryRow.getType().name()));
     }
 }
