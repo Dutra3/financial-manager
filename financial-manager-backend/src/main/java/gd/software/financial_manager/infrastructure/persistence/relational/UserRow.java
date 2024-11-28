@@ -20,9 +20,6 @@ public class UserRow {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, length = 100)
-    private String fullName;
-
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
