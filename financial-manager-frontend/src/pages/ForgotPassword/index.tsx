@@ -10,6 +10,10 @@ const ForgotPassword: React.FC = () => {
 
     const navigate = useNavigate();
 
+    const handleReturn = () => {
+        navigate('/login');
+    };
+    
     const handleForgotPassword = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         console.log(`Send recovery email to: ${email}`);
@@ -32,7 +36,12 @@ const ForgotPassword: React.FC = () => {
     return (
         <div className="forgot-password-container">
             <div className="forgot-password-data">
-                <h2>Forgot my password</h2>
+                <div className="forgot-password-header">
+                    <button className="return-button" onClick={handleReturn}>
+                        &#8592;
+                    </button>
+                    <h2>Forgot my password</h2>
+                </div>
                 {showMessage ? (
                     <div className="confirmation-message">
                         <CheckCircleIcon style={{ color: 'green', fontSize: '48px' }} />
