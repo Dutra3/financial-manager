@@ -33,7 +33,7 @@ const Transactions = () => {
         <main className="transactions-container">
             <SideBar page="transactions"/>
             <div className="transaction-content">
-            <Header title="Olá, Gabriel. Você está na aba de Transações. Aqui você encontra suas despesas e receitas passadas, além de poder cadastrar novos dados de despesas e receitas."/>
+            <Header title="Olá, Gabriel. Você está no menu de Transações. Aqui você encontra suas despesas e receitas passadas, além de poder cadastrar novos dados de despesas e receitas."/>
                 <div>
                     <h1>Transactions Page</h1>
                 </div>
@@ -65,6 +65,9 @@ const Transactions = () => {
                         <button type="submit">Create Category</button>
                     </form>
                     {message && <p>{message}</p>}
+                </div>
+                <div>
+                    <h2>Create Transaction</h2>
                 </div>
             </div>
             
