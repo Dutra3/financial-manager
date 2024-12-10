@@ -3,12 +3,15 @@ import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { getDebits } from "../../api/dashboardApi";
 import "./Home.css";
+import { useState } from "react";
 
 const Home = () => {
+    const [debits, setDebits] = useState<string>('');
 
     const getAllDebits = async () => {
         const debits = await getDebits();
         console.log(debits);
+        setDebits(debits);
     }
 
     return (
@@ -27,6 +30,11 @@ const Home = () => {
                         Get all debits.
                     </button>
                 </div>
+                {debits && (
+                    <div>
+                        <h1>{`${debits}`}</h1>
+                    </div>
+                )}
             </div>
         </main>
     );
