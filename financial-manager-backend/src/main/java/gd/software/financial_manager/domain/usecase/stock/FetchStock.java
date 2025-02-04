@@ -12,7 +12,7 @@ import java.util.UUID;
 @Component
 public class FetchStock {
 
-    private static final Logger logger = LoggerFactory.getLogger(CreateStockTransaction.class);
+    private static final Logger logger = LoggerFactory.getLogger(FetchStock.class);
 
     private final AllStocks allStocks;
 
