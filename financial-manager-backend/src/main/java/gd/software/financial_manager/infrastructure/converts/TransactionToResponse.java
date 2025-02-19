@@ -15,6 +15,6 @@ public class TransactionToResponse {
 
     private static TransactionResponse convert(Transaction transaction) {
         return new TransactionResponse(transaction.id(), transaction.name(), transaction.description(), transaction.amount(),
-                transaction.paymentDate(), "Debit", transaction.category().name());
+                transaction.paymentDate(), transaction.category().type().name(), transaction.category().name());
     }
 }
