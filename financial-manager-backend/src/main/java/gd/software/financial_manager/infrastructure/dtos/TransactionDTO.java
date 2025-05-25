@@ -9,7 +9,9 @@ import java.util.UUID;
 
 public record TransactionDTO(
         UUID id,
+        @NotBlank String name,
         @NotBlank String description,
         @NotNull BigDecimal amount,
-        @NotNull LocalDate paymentDate
+        @NotNull LocalDate paymentDate,
+        @NotNull UUID categoryId
 ) {}

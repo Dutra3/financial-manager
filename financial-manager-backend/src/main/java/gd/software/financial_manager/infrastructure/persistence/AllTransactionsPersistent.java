@@ -3,6 +3,8 @@ package gd.software.financial_manager.infrastructure.persistence;
 import gd.software.financial_manager.domain.model.Transaction;
 import gd.software.financial_manager.domain.usecase.collections.AllTransactions;
 import gd.software.financial_manager.infrastructure.converts.RowToTransaction;
+import gd.software.financial_manager.infrastructure.converts.TransactionToRow;
+import gd.software.financial_manager.infrastructure.persistence.relational.TransactionRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,17 @@ public class AllTransactionsPersistent implements AllTransactions {
 
     @Autowired
     TransactionRepository repository;
+
+    //TODO: Create a logic to save user inside transaction!
+    @Override
+    public Transaction save(Transaction transaction) {
+        TransactionRow row = TransactionToRow.convert(transaction);
+
+        logger.info("Save transaction {}", row.getName());
+        TransactionRow savedTransaction = repository.save(row);
+
+        return RowToTransaction.convert(savedTransaction);
+    }
 
     @Override
     public List<Transaction> allBy(UUID id) {

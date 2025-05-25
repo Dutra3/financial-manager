@@ -8,6 +8,10 @@ public class Category {
     private String name;
     private CategoryType type;
 
+    public Category(UUID id) {
+        this.id = id;
+    }
+
     public Category(UUID id, String name, CategoryType type) {
         this.id = id;
         this.name = name;

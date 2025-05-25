@@ -7,5 +7,7 @@ import java.util.UUID;
 
 public interface AllTransactions {
 
+    Transaction save(Transaction transaction);
+
     List<Transaction> allBy(UUID id);
 }
