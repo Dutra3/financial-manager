@@ -10,4 +10,6 @@ public interface AllTransactions {
     Transaction save(Transaction transaction);
 
     List<Transaction> allBy(UUID id);
+
+    void remove(UUID id);
 }

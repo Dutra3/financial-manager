@@ -38,4 +38,10 @@ public class AllTransactionsPersistent implements AllTransactions {
         logger.info("Find all Transactions by User id {}.", id);
         return repository.findByUserId(id).stream().map(RowToTransaction::convert).toList();
     }
+
+    @Override
+    public void remove(UUID id) {
+        logger.info("Remove Transaction by id {}.", id);
+        repository.deleteById(id);
+    }
 }
