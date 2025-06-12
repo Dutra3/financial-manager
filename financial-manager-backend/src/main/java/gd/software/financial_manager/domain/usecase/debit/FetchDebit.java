@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class FetchDebit {
 
@@ -14,7 +16,7 @@ public class FetchDebit {
 
     }
 
-    public Debit all() {
+    public List<Debit> all() {
         return null;
     }
 }
