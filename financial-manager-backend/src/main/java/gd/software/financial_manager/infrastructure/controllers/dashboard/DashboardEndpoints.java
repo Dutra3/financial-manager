@@ -23,7 +23,8 @@ public class DashboardEndpoints {
 
     @GetMapping("/{id}")
     public ResponseEntity<MonthlyDebit> fetchAllDebits(@PathVariable UUID id) {
-        List<Debit> debits = fetchDebit.all();
+        List<Debit> debits = fetchDebit.all(id);
+
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
