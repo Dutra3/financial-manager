@@ -1,5 +1,7 @@
 package gd.software.financial_manager.domain.usecase.collections;
 
+import gd.software.financial_manager.domain.model.CategoryType;
+import gd.software.financial_manager.domain.model.Debit;
 import gd.software.financial_manager.domain.model.Transaction;
 
 import java.util.List;
@@ -12,4 +14,6 @@ public interface AllTransactions {
     List<Transaction> allBy(UUID id);
 
     void remove(UUID id);
+
+    List<Debit> byUserIdAndType(UUID id, CategoryType type);
 }

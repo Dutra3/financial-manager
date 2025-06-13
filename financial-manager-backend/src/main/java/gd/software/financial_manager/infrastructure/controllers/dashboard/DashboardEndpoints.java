@@ -2,7 +2,7 @@ package gd.software.financial_manager.infrastructure.controllers.dashboard;
 
 import gd.software.financial_manager.domain.model.Debit;
 import gd.software.financial_manager.domain.usecase.debit.FetchDebit;
-import gd.software.financial_manager.infrastructure.dtos.MonthlyDebit;
+import gd.software.financial_manager.infrastructure.dtos.DebitResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +22,12 @@ public class DashboardEndpoints {
     private FetchDebit fetchDebit;
 
     @GetMapping("/{id}")
-    public ResponseEntity<MonthlyDebit> fetchAllDebits(@PathVariable UUID id) {
+    public ResponseEntity<List<DebitResponse>> fetchAllDebits(@PathVariable UUID id) {
         List<Debit> debits = fetchDebit.all(id);
+        List<DebitResponse> monthlyDebits = debits.stream()
+                .map(debit -> new DebitResponse(debit.amount()))
+                .toList();
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(monthlyDebits);
     }
 }
