@@ -1,4 +1,4 @@
-package gd.software.financial_manager.domain.usecase.debit;
+package gd.software.financial_manager.domain.usecase.credit;
 
 import gd.software.financial_manager.domain.model.CategoryType;
 import gd.software.financial_manager.domain.model.Installment;
@@ -11,17 +11,17 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class FetchDebit {
+public class FetchCredit {
 
-    private static final Logger logger = LoggerFactory.getLogger(FetchDebit.class);
+    private static final Logger logger = LoggerFactory.getLogger(FetchCredit.class);
 
     private final AllTransactions allTransactions;
 
-    public FetchDebit(AllTransactions allTransactions) {
+    public FetchCredit(AllTransactions allTransactions) {
         this.allTransactions = allTransactions;
     }
 
     public List<Installment> all(UUID id) {
-        return allTransactions.byUserIdAndType(id, CategoryType.DEBIT);
+        return allTransactions.byUserIdAndType(id, CategoryType.CREDIT);
     }
 }

@@ -2,11 +2,11 @@ package gd.software.financial_manager.domain.model;
 
 import java.math.BigDecimal;
 
-public class Debit {
+public class Installment {
 
     private BigDecimal amount;
 
-    public Debit(BigDecimal amount) {
+    public Installment(BigDecimal amount) {
         this.amount = amount;
     }
 

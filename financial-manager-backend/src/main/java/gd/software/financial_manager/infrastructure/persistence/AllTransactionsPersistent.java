@@ -1,7 +1,7 @@
 package gd.software.financial_manager.infrastructure.persistence;
 
 import gd.software.financial_manager.domain.model.CategoryType;
-import gd.software.financial_manager.domain.model.Debit;
+import gd.software.financial_manager.domain.model.Installment;
 import gd.software.financial_manager.domain.model.Transaction;
 import gd.software.financial_manager.domain.usecase.collections.AllTransactions;
 import gd.software.financial_manager.infrastructure.converts.RowToTransaction;
@@ -48,9 +48,9 @@ public class AllTransactionsPersistent implements AllTransactions {
     }
 
     @Override
-    public List<Debit> byUserIdAndType(UUID id, CategoryType type) {
+    public List<Installment> byUserIdAndType(UUID id, CategoryType type) {
         return repository.findByUserIdAndType(id, type.name()).stream()
-                .map(Debit::new)
+                .map(Installment::new)
                 .toList();
     }
 }
