@@ -1,5 +1,6 @@
 package gd.software.financial_manager.infrastructure.controllers.wallet;
 
+import gd.software.financial_manager.infrastructure.dtos.WalletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
