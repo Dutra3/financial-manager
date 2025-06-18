@@ -19,6 +19,7 @@ public class DeleteTransaction {
     }
 
     public void remove(UUID id) {
+        logger.info("Delete transaction with id {}", id);
         allTransactions.remove(id);
     }
 }
