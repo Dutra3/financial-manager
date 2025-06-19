@@ -24,7 +24,8 @@ public class WalletEndpoints {
     @GetMapping("/{id}")
     public ResponseEntity<WalletResponse> fetchWallet(@PathVariable UUID id) {
         Wallet wallet = fetchWallet.use(id);
+        logger.info("Fetch wallet with id {}", wallet.idd());
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(WalletToResponse.convert(wallet));
     }
 }
