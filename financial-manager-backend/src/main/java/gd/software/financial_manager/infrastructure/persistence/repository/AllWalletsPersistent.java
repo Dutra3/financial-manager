@@ -8,8 +8,14 @@ import java.util.UUID;
 
 public class AllWalletsPersistent implements AllWallets {
 
+    private final WalletRepository repository;
+
+    public AllWalletsPersistent(WalletRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
     public Optional<Wallet> by(UUID id) {
-        return Optional.empty();
+        return repository.findById(id);
     }
 }
