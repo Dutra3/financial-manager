@@ -17,6 +17,6 @@ public class AllWalletsPersistent implements AllWallets {
 
     @Override
     public Optional<Wallet> by(UUID id) {
-        return repository.findById(id);
+        return repository.findById(id).map(RowToWallet::convert);
     }
 }
