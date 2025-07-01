@@ -20,7 +20,7 @@ public class Wallet {
         this.reits = reits;
     }
 
-    public UUID idd() {
+    public UUID id() {
         return id;
     }
 
