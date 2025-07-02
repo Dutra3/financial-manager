@@ -2,6 +2,7 @@ package gd.software.financial_manager.infrastructure.controllers.wallet;
 
 import gd.software.financial_manager.domain.model.Wallet;
 import gd.software.financial_manager.domain.usecase.wallet.FetchWallet;
+import gd.software.financial_manager.infrastructure.converts.WalletToResponse;
 import gd.software.financial_manager.infrastructure.dtos.WalletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

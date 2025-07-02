@@ -7,6 +7,7 @@ import gd.software.financial_manager.infrastructure.persistence.relational.Stock
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 class RowToStockTest {
@@ -49,5 +50,35 @@ class RowToStockTest {
         assertThat(stock.price()).isEqualTo(PRICE);
         assertThat(stock.isBesst()).isEqualTo(IS_BESST);
         assertThat(stock.isNewMarket()).isEqualTo(IS_NEW_MARKET);
+    }
+
+    @Test
+    void should_convert_list() {
+        List<StockRow> rows = List.of(StockRow.builder()
+                .id(ID)
+                .name(NAME)
+                .ticker(TICKER)
+                .description(DESCRIPTION)
+                .type(TYPE)
+                .industrySegment(INDUSTRY_SEGMENT)
+                .tagAlong(TAG_ALONG)
+                .price(PRICE)
+                .isBesst(IS_BESST)
+                .isNewMarket(IS_NEW_MARKET)
+                .build());
+        List<Stock> stocks = RowToStock.convert(rows);
+
+        assertThat(stocks).isNotEmpty();
+        assertThat(stocks.get(0)).isNotNull();
+        assertThat(stocks.get(0).id()).isEqualTo(ID);
+        assertThat(stocks.get(0).name()).isEqualTo(NAME);
+        assertThat(stocks.get(0).ticker()).isEqualTo(TICKER);
+        assertThat(stocks.get(0).description()).isEqualTo(DESCRIPTION);
+        assertThat(stocks.get(0).type()).isEqualTo(TYPE);
+        assertThat(stocks.get(0).industrySegment()).isEqualTo(INDUSTRY_SEGMENT);
+        assertThat(stocks.get(0).tagAlong()).isEqualTo(TAG_ALONG);
+        assertThat(stocks.get(0).price()).isEqualTo(PRICE);
+        assertThat(stocks.get(0).isBesst()).isEqualTo(IS_BESST);
+        assertThat(stocks.get(0).isNewMarket()).isEqualTo(IS_NEW_MARKET);
     }
 }

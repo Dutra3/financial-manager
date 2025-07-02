@@ -7,6 +7,7 @@ import gd.software.financial_manager.infrastructure.persistence.relational.ReitR
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 class RowToReitTest {
@@ -40,5 +41,29 @@ class RowToReitTest {
         assertThat(reit.type()).isEqualTo(TYPE);
         assertThat(reit.industrySegment()).isEqualTo(INDUSTRY_SEGMENT);
         assertThat(reit.price()).isEqualTo(PRICE);
+    }
+
+    @Test
+    void should_convert_list() {
+        List<ReitRow> reitRows = List.of(ReitRow.builder()
+                .id(ID)
+                .name(NAME)
+                .ticker(TICKER)
+                .description(DESCRIPTION)
+                .type(TYPE)
+                .industrySegment(INDUSTRY_SEGMENT)
+                .price(PRICE)
+                .build());
+        List<Reit> reits = RowToReit.convert(reitRows);
+
+        assertThat(reits).isNotEmpty();
+        assertThat(reits.get(0)).isNotNull();
+        assertThat(reits.get(0).id()).isEqualTo(ID);
+        assertThat(reits.get(0).name()).isEqualTo(NAME);
+        assertThat(reits.get(0).ticker()).isEqualTo(TICKER);
+        assertThat(reits.get(0).description()).isEqualTo(DESCRIPTION);
+        assertThat(reits.get(0).type()).isEqualTo(TYPE);
+        assertThat(reits.get(0).industrySegment()).isEqualTo(INDUSTRY_SEGMENT);
+        assertThat(reits.get(0).price()).isEqualTo(PRICE);
     }
 }

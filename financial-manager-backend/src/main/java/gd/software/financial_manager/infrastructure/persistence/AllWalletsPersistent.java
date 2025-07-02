@@ -2,6 +2,7 @@ package gd.software.financial_manager.infrastructure.persistence;
 
 import gd.software.financial_manager.domain.model.Wallet;
 import gd.software.financial_manager.domain.usecase.collections.AllWallets;
+import gd.software.financial_manager.infrastructure.converts.RowToWallet;
 import gd.software.financial_manager.infrastructure.persistence.repository.WalletRepository;
 
 import java.util.Optional;

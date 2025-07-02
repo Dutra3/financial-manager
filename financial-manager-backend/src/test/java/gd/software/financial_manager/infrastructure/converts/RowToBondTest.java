@@ -5,6 +5,7 @@ import gd.software.financial_manager.infrastructure.persistence.relational.BondR
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,5 +38,27 @@ class RowToBondTest {
         assertThat(bond.type()).isEqualTo(TYPE);
         assertThat(bond.industrySegment()).isEqualTo(INDUSTRY_SEGMENT);
         assertThat(bond.price()).isEqualByComparingTo(PRICE);
+    }
+
+    @Test
+    void should_convert_list() {
+        List<BondRow> rows = List.of(BondRow.builder()
+                .id(ID)
+                .name(NAME)
+                .description(DESCRIPTION)
+                .type(TYPE)
+                .industrySegment(INDUSTRY_SEGMENT)
+                .price(PRICE)
+                .build());
+        List<Bond> bonds = RowToBond.convert(rows);
+
+        assertThat(bonds).isNotEmpty();
+        assertThat(bonds.get(0)).isNotNull();
+        assertThat(bonds.get(0).id()).isEqualByComparingTo(ID);
+        assertThat(bonds.get(0).name()).isEqualTo(NAME);
+        assertThat(bonds.get(0).description()).isEqualTo(DESCRIPTION);
+        assertThat(bonds.get(0).type()).isEqualTo(TYPE);
+        assertThat(bonds.get(0).industrySegment()).isEqualTo(INDUSTRY_SEGMENT);
+        assertThat(bonds.get(0).price()).isEqualByComparingTo(PRICE);
     }
 }
