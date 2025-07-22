@@ -13,5 +13,7 @@ public record ProfileDTO(
         @NotBlank String profession,
         @NotNull BigDecimal salary,
         @NotNull LocalDate payDay,
-        @NotNull BigDecimal financialGoal
+        @NotNull BigDecimal initialBalance,
+        @NotNull BigDecimal financialGoal,
+        @NotNull BigDecimal monthlyBudget
 ) {}
