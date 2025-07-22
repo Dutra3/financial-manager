@@ -21,6 +21,7 @@ public class FetchWallet {
     }
 
     public Wallet use(UUID id) {
+        logger.info("Find Wallet with id {}", id);
         return allWallets.by(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
