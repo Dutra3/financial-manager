@@ -9,14 +9,12 @@ public class MonthlyBudget {
     private String name;
     private String description;
     private BigDecimal targetAmount;
-    private Category category;
 
-    public MonthlyBudget(UUID id, String name, String description, BigDecimal targetAmount, Category category) {
+    public MonthlyBudget(UUID id, String name, String description, BigDecimal targetAmount) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.targetAmount = targetAmount;
-        this.category = category;
     }
 
     public UUID id() {
@@ -33,9 +31,5 @@ public class MonthlyBudget {
 
     public BigDecimal targetAmount() {
         return targetAmount;
-    }
-
-    public Category category() {
-        return category;
     }
 }
