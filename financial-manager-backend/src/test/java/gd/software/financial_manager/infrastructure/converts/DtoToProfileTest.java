@@ -29,7 +29,7 @@ class DtoToProfileTest {
         assertThat(profile.name()).isEqualTo(NAME);
         assertThat(profile.profession()).isEqualTo(PROFESSION);
         assertThat(profile.netSalary()).isEqualTo(SALARY);
-        assertThat(profile.payDay()).isEqualTo(PAYDAY);
+        assertThat(profile.payday()).isEqualTo(PAYDAY);
         assertThat(profile.initialBalance()).isEqualTo(INITIAL_BALANCE);
         assertThat(profile.financialGoal()).isEqualTo(FINANCIAL_GOAL);
     }

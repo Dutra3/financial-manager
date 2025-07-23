@@ -9,17 +9,17 @@ public class Profile {
     private String name;
     private String profession;
     private BigDecimal netSalary;
-    private Integer payDay;
+    private Integer payday;
     private BigDecimal initialBalance;
     private BigDecimal financialGoal;
 
-    public Profile(UUID id, String name, String profession, BigDecimal netSalary, Integer payDay, BigDecimal initialBalance,
+    public Profile(UUID id, String name, String profession, BigDecimal netSalary, Integer payday, BigDecimal initialBalance,
                    BigDecimal financialGoal) {
         this.id = id;
         this.name = name;
         this.profession = profession;
         this.netSalary = netSalary;
-        this.payDay = payDay;
+        this.payday = payday;
         this.initialBalance = initialBalance;
         this.financialGoal = financialGoal;
     }
@@ -40,8 +40,8 @@ public class Profile {
         return netSalary;
     }
 
-    public Integer payDay() {
-        return payDay;
+    public Integer payday() {
+        return payday;
     }
 
     public BigDecimal financialGoal() {

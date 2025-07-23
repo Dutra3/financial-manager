@@ -30,7 +30,7 @@ public class ProfileRow {
     private BigDecimal netSalary;
 
     @Column(nullable = false)
-    private Integer payDay;
+    private Integer payday;
 
     @Column(precision = 8, scale = 4, nullable = false)
     private BigDecimal initialBalance;
