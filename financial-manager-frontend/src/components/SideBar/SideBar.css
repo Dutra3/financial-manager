@@ -1,53 +1,54 @@
 .sidebar {
-  width: 275px;
-  background-color: var(--primary-color);
-  color: white;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+  	width: 275px;
+  	background-color: var(--primary-color);
+  	color: var(text-color);
+  	height: 100vh;
+  	display: flex;
+  	flex-direction: column;
+	border-right: 2px solid rgb(255, 255, 255, 0.5)
 }
 
 .sidebar .logo {
-  padding: 20px;
-  font-size: 24px;
-  font-weight: bold;
+  	padding: 20px;
+  	font-size: 24px;
+  	font-weight: bold;
 }
 
 .sidebar nav {
-  flex: 1;
+  	flex: 1;
 }
 
 .sidebar nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  	list-style: none;
+  	padding: 0;
+  	margin: 0;
 }
 
 .sidebar nav ul li {
-  padding: 0;
-  display: flex;
-  align-items: center;
+  	padding: 0;
+  	display: flex;
+  	align-items: center;
 }
 
 .sidebar nav ul li a {
-  color: grey;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  padding: 20px;
-  border-radius: 12px;
-  transition: background-color 0.3s, color 0.3s;
-  width: 100%;
+  	color: grey;
+  	text-decoration: none;
+  	display: flex;
+  	align-items: center;
+  	font-size: 18px;
+  	padding: 20px;
+  	border-radius: 12px;
+  	transition: background-color 0.3s, color 0.3s;
+  	width: 100%;
 }
 
 .sidebar nav ul li a svg {
-  margin-right: 4px;
+  	margin-right: 4px;
 }
 
 .sidebar nav ul li a:hover, 
 .sidebar nav ul li a.active {
-  background-color: var(--secondary-color); /*verify this color option later: #333*/
-  color: white;
-  cursor: pointer;
+  	background-color: var(--secondary-color);
+  	color: var(--text-color);
+  	cursor: pointer;
 }

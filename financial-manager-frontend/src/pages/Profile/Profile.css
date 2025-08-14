@@ -1,20 +1,23 @@
 .profile-container {
 	display: flex;
-	background-color: var(--background-color);
+	background-color: var(--primary-color);
 	height: 100vh;
 }
 
 .profile-content {
 	flex-grow: 1;
-	padding: 100px 20px 20px;
+	margin: 110px 20px 20px 40px;
+	padding: 28px;
 	background-color: var(--background-color);
 	color: var(--text-color);
+	border-radius: 20px;
+	overflow-y: auto;
+	height: 100vh;
 }
 
 .profile-info {
-	padding: 0 1rem;
-  	max-width: 1200px;
-  	margin: 0 auto;
+	padding: 0;
+  	margin: 0;
 }
 
 .profile-header {
@@ -187,6 +190,9 @@
 
 @media (max-width: 768px) {
 	.profile-info {
+		margin: 80px 10px 10px 60px;
+		padding: 20px;
+		border-radius: 16px;
 		padding: 1rem;
 	}
 
@@ -211,7 +217,9 @@
 
 @media (max-width: 480px) {
   	.profile-section {
-    	padding: 1.5rem;
+		margin: 90px 5px 5px 5px;
+		padding: 15px;
+    	border-radius: 12px;
   	}
 
   	.profile-avatar {
