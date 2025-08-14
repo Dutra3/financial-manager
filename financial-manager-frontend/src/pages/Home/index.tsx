@@ -26,7 +26,7 @@ const Home = () => {
                     <h1>Dashboard Page</h1>
                 </div>
                 <div>
-                    <button onClick={getAllDebits}>
+                    <button onClick={getAllDebits} className="btn-primary">
                         Get all debits.
                     </button>
                 </div>

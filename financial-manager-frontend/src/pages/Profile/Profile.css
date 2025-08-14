@@ -1,12 +1,225 @@
 .profile-container {
-  display: flex;
-  background-color: var(--background-color);
-  height: 100vh;
+	display: flex;
+	background-color: var(--background-color);
+	height: 100vh;
 }
-  
+
 .profile-content {
-  flex-grow: 1;
-  padding: 100px 20px 20px;
-  background-color: var(--background-color);
-  color: var(--text-color);
+	flex-grow: 1;
+	padding: 100px 20px 20px;
+	background-color: var(--background-color);
+	color: var(--text-color);
+}
+
+.profile-info {
+	padding: 0 1rem;
+  	max-width: 1200px;
+  	margin: 0 auto;
+}
+
+.profile-header {
+  	display: flex;
+ 	align-items: center;
+  	gap: 2rem;
+  	margin-bottom: 3rem;
+  	padding: 2rem;
+  	background: var(--card-background);
+  	border-radius: 12px;
+  	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  	color: var(--text-color);
+}
+
+.profile-name h1 {
+  	margin: 0 0 0.5rem 0;
+  	font-size: 2.5rem;
+  	color: var(--text-color);
+  	font-weight: 600;
+}
+
+.profile-profession {
+  	margin: 0;
+  	font-size: 1.1rem;
+  	color: var(--text-color);
+  	font-weight: 500;
+}
+
+.profile-details {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 2rem;
+}
+
+.profile-section {
+  	background: var(--card-background);
+  	padding: 2rem;
+  	border-radius: 12px;
+  	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  	color: var(--text-color);
+}	
+
+.profile-section h2 {
+  	margin: 0 0 1.5rem 0;
+  	font-size: 1.5rem;
+  	color: var(--text-color);
+  	font-weight: 600;
+  	border-bottom: 2px solid;
+  	padding-bottom: 0.5rem;
+}
+
+.info-grid {
+  	display: grid;
+  	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  	gap: 1.5rem;
+}
+
+.info-item {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 0.5rem;
+}
+
+.info-item label {
+  	font-size: 0.9rem;
+  	font-weight: 600;
+  	color: var(--text-color);
+  	text-transform: uppercase;
+  	letter-spacing: 0.5px;
+}
+
+.info-item span {
+  	font-size: 1.1rem;
+  	color: var(--text-color);
+  	font-weight: 500;
+  	padding: 0.75rem 1rem;
+  	background: var(--background-color);
+  	border-radius: 8px;
+  	border: 1px solid;
+}
+
+.salary-amount,
+.balance-amount,
+.goal-value {
+  	color:  #38a169;
+  	font-weight: 600;
+  	font-size: 1.2rem;
+}
+
+.goal-container {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 1.5rem;
+}
+
+.goal-amount {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 0.5rem;
+}
+
+.goal-amount label {
+  	font-size: 0.9rem;
+  	font-weight: 600;
+  	color: var(--text-color);
+  	text-transform: uppercase;
+  	letter-spacing: 0.5px;
+}
+
+.goal-progress {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 0.5rem;
+}
+
+.progress-bar {
+  	width: 100%;
+  	height: 12px;
+  	background: var(--background-color);
+  	border-radius: 6px;
+  	overflow: hidden;
+}
+
+.progress-fill {
+  	height: 100%;
+  	background: linear-gradient(90deg, #48bb78) 0%;
+  	border-radius: 6px;
+  	transition: width 0.3s ease;
+}
+
+.progress-text {
+  	font-size: 0.9rem;
+  	color: var(--text-color);
+  	font-weight: 500;
+  	text-align: center;
+}
+
+.profile-actions {
+  	display: flex;
+  	gap: 1rem;
+  	justify-content: center;
+  	margin-top: 2rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  	background-color: var(--secondary-color);
+  	color: var(--text-color);
+  	padding: 0.875rem 2rem;
+  	border: none;
+  	border-radius: 5px;
+  	font-size: 1rem;
+  	font-weight: 600;
+  	cursor: pointer;
+  	transition: all 0.3s ease;
+  	text-transform: uppercase;
+  	letter-spacing: 0.5px;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  	background-color: var(--primary-color);
+  	color: var(--text-color);
+}
+
+.btn-primary:focus,
+.btn-secondary:focus {
+  	outline: 2px solid var(--primary-color);
+}
+
+@media (max-width: 768px) {
+	.profile-info {
+		padding: 1rem;
+	}
+
+  	.profile-header {
+    	flex-direction: column;
+    	text-align: center;
+    	gap: 1rem;
+  	}
+
+  	.profile-name h1 {
+    	font-size: 2rem;
+  	}
+
+  	.info-grid {
+    	grid-template-columns: 1fr;
+  	}
+
+  	.profile-actions {
+    	flex-direction: column;
+	}
+}
+
+@media (max-width: 480px) {
+  	.profile-section {
+    	padding: 1.5rem;
+  	}
+
+  	.profile-avatar {
+    	width: 60px;
+    	height: 60px;
+  	}
+
+  	.avatar-initials {
+    	font-size: 1.5rem;
+  	}
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
 import "./Header.css";
 
 interface HeaderProps {
@@ -51,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                     {isDarkMode ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
                 </button>
                 <button onClick={handleLogout} className="logout-button">
-                    Logout
+                    <LogoutIcon />
                 </button>
             </div>
         </div>

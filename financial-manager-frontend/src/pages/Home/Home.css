@@ -1,19 +1,42 @@
 .home-container {
-  display: flex;
-  background-color: var(--background-color);
-  height: 100vh;
+	display: flex;
+  	background-color: var(--background-color);
+  	height: 100vh;
 }
 
 .home-content {
-  flex-grow: 1;
-  padding: 100px 20px 20px;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  	flex-grow: 1;
+  	padding: 100px 20px 20px;
+  	background-color: var(--background-color);
+  	color: var(--text-color);
 }
 
 .dashboard-content {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  	flex-grow: 1;
+  	padding: 20px;
+  	background-color: var(--background-color);
+  	color: var(--text-color);
+}
+
+.btn-primary {
+  	background-color: var(--secondary-color);
+  	color: var(--text-color);
+  	padding: 0.875rem 2rem;
+  	border: none;
+  	border-radius: 5px;
+  	font-size: 1rem;
+  	font-weight: 600;
+  	cursor: pointer;
+  	transition: all 0.3s ease;
+  	text-transform: uppercase;
+  	letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  	background-color: var(--primary-color);
+  	color: var(--text-color);
+}
+
+.btn-primary:focus {
+  	outline: 2px solid var(--primary-color);
 }
