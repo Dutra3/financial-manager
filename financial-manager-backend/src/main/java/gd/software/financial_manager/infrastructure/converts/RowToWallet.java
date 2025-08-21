@@ -6,7 +6,7 @@ import gd.software.financial_manager.infrastructure.persistence.relational.Walle
 public class RowToWallet {
 
     public static Wallet convert(WalletRow row) {
-        return new Wallet(row.getId(), row.getTotalAmount(), RowToBond.convert(row.getBonds()),
+        return new Wallet(row.getId(), row.getAmount(), RowToBond.convert(row.getBonds()),
                 RowToStock.convert(row.getStocks()), RowToReit.convert(row.getReits()));
     }
 }

@@ -28,7 +28,7 @@ class RowToWalletTest {
     void should_convert() {
         WalletRow row = WalletRow.builder()
                 .id(ID)
-                .totalAmount(AMOUNT)
+                .amount(AMOUNT)
                 .bonds(List.of(BOND))
                 .stocks(List.of(STOCK))
                 .reits(List.of(REIT))

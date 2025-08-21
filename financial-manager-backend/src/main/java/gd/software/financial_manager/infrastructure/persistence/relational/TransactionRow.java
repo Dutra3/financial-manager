@@ -27,7 +27,7 @@ public class TransactionRow {
     @Column(length = 255)
     private String description;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 8, scale = 4, nullable = false)
     private BigDecimal amount;
 
     @Column(nullable = false)

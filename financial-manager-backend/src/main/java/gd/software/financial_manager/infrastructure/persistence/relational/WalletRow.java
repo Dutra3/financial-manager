@@ -22,15 +22,18 @@ public class WalletRow {
     private UUID id;
 
     @Column(precision = 8, scale = 4)
-    private BigDecimal totalAmount;
+    private BigDecimal amount;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "gd_wallet")
     private List<BondRow> bonds;
 
-    @OneToMany
+    @ManyToMany
+    @JoinColumn(name = "wallet_id")
     private List<StockRow> stocks;
 
-    @OneToMany
+    @ManyToMany
+    @JoinColumn(name = "wallet_id")
     private List<ReitRow> reits;
 
     @ManyToOne
