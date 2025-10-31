@@ -16,10 +16,10 @@ const Wallet = () => {
                         <select
                            id="category-type"
                            name="type"
-                                                >
-                                                    <option value="debit">Debit</option>
-                                                    <option value="credit">Credit</option>
-                                                </select>
+                        >
+                            <option value="debit">Debit</option>
+                            <option value="credit">Credit</option>
+                        </select>
                 </div>
             </div>
         </main>
