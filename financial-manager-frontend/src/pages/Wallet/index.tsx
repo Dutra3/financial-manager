@@ -11,6 +11,16 @@ const Wallet = () => {
                 <div>
                     <h1>Wallet Page</h1>
                 </div>
+                <div>
+                     <label htmlFor="category-type">Type:</label>
+                        <select
+                           id="category-type"
+                           name="type"
+                                                >
+                                                    <option value="debit">Debit</option>
+                                                    <option value="credit">Credit</option>
+                                                </select>
+                </div>
             </div>
         </main>
     )
