@@ -4,10 +4,12 @@ import gd.software.financial_manager.domain.model.Wallet;
 import gd.software.financial_manager.domain.usecase.collections.AllWallets;
 import gd.software.financial_manager.infrastructure.converts.RowToWallet;
 import gd.software.financial_manager.infrastructure.persistence.repository.WalletRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Component
 public class AllWalletsPersistent implements AllWallets {
 
     private final WalletRepository repository;

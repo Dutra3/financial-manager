@@ -25,15 +25,24 @@ public class WalletRow {
     private BigDecimal amount;
 
     @ManyToMany
-    @JoinTable(name = "gd_wallet")
+    @JoinTable(
+            name = "gd_wallet_bonds",
+            joinColumns = @JoinColumn(name = "wallet_id"),
+            inverseJoinColumns = @JoinColumn(name = "bond_id"))
     private List<BondRow> bonds;
 
     @ManyToMany
-    @JoinColumn(name = "wallet_id")
+    @JoinTable(
+            name = "gd_wallet_stocks",
+            joinColumns = @JoinColumn(name = "wallet_id"),
+            inverseJoinColumns = @JoinColumn(name = "stock_id"))
     private List<StockRow> stocks;
 
     @ManyToMany
-    @JoinColumn(name = "wallet_id")
+    @JoinTable(
+            name = "gd_wallet_reits",
+            joinColumns = @JoinColumn(name = "wallet_id"),
+            inverseJoinColumns = @JoinColumn(name = "reit_id"))
     private List<ReitRow> reits;
 
     @ManyToOne

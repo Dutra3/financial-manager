@@ -6,7 +6,9 @@ import gd.software.financial_manager.infrastructure.converts.ProfileToRow;
 import gd.software.financial_manager.infrastructure.converts.RowToProfile;
 import gd.software.financial_manager.infrastructure.persistence.relational.ProfileRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.ProfileRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AllProfilesPersistent implements AllProfiles {
 
     private final ProfileRepository repository;
