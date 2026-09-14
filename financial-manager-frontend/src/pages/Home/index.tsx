@@ -6,6 +6,7 @@ import { CurrencyToggle } from "../../components/CurrencyToggle";
 import { MonthlyOverview } from "../../components/MonthlyOverview";
 import { DashboardKpis } from "../../components/DashboardKpis";
 import { RecentTransactions } from "../../components/RecentTransactions";
+import { VisualReports } from "../../components/VisualReports";
 import { useDashboardData } from "../../hooks/useDashboardData";
 import { useMonthlyData } from "../../hooks/useMonthlyData";
 import { computeKpis } from "../../hooks/useDashboardKpis";
@@ -38,6 +39,12 @@ const Home = () => {
                         <Card title="Expenses" amount={convert(expenses)} currency={currency} />
                         <DashboardKpis
                             kpis={computeKpis(transactions)}
+                            rates={rates}
+                            currency={currency}
+                        />
+                        <VisualReports
+                            transactions={transactions}
+                            monthlyData={monthlyData}
                             rates={rates}
                             currency={currency}
                         />
