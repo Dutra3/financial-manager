@@ -1,114 +1,67 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
-import { createCategory, getCategories, Category, CategoryType } from "../../api/categoryApi";
-import { createTransaction, updateTransaction } from "../../api/transactionApi";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Box, Typography, TextField, Button, Select, MenuItem, FormControl, InputLabel, Paper, Alert } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { format } from "date-fns";
-import { formatAmountInput, parseAmountInput } from "../../utils/formatAmount";
+import { TransactionModal } from "../../components/TransactionModal";
+import { CategoryModal } from "../../components/CategoryModal";
+import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModal";
+import { getTransactions, TransactionResponse } from "../../api/transactionApi";
+import { getCategories, Category } from "../../api/categoryApi";
+import { useQuery } from "@tanstack/react-query";
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, CircularProgress, Select, MenuItem, FormControl, InputLabel, Tooltip } from "@mui/material";
+import { FiEdit2, FiTrash2, FiPlusCircle, FiTag } from "react-icons/fi";
 import "./Transactions.css";
 
 const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
 
+const formatAmount = (amount: number, type: string) => {
+    const prefix = type === "DEBIT" ? "-" : "+";
+    return `${prefix}$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+};
+
+const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+};
+
 const Transactions = () => {
-    const queryClient = useQueryClient();
-    const [categoryName, setCategoryName] = useState("");
-    const [categoryType, setCategoryType] = useState<CategoryType>("debit");
-    const [categoryMessage, setCategoryMessage] = useState("");
-    const [transactionName, setTransactionName] = useState("");
-    const [description, setDescription] = useState("");
-    const [amount, setAmount] = useState("");
-    const [paymentDate, setPaymentDate] = useState<Date | null>(null);
-    const [categoryId, setCategoryId] = useState("");
-    const [transactionMessage, setTransactionMessage] = useState("");
+    const [transactionModalOpen, setTransactionModalOpen] = useState(false);
+    const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState<TransactionResponse | null>(null);
+    const [categoryFilter, setCategoryFilter] = useState("all");
+    const [typeFilter, setTypeFilter] = useState("all");
 
-    const [editId, setEditId] = useState("");
-    const [editName, setEditName] = useState("");
-    const [editDescription, setEditDescription] = useState("");
-    const [editAmount, setEditAmount] = useState("");
-    const [editPaymentDate, setEditPaymentDate] = useState<Date | null>(null);
-    const [editCategoryId, setEditCategoryId] = useState("");
-    const [editMessage, setEditMessage] = useState("");
+    const { data: transactions = [], isLoading, error } = useQuery({
+        queryKey: ["transactions", PLACEHOLDER_USER_ID],
+        queryFn: ({ signal }) => getTransactions(PLACEHOLDER_USER_ID, signal),
+    });
 
-    const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    const { data: categories = [] } = useQuery({
         queryKey: ["categories"],
         queryFn: () => getCategories() as Promise<Category[]>,
     });
 
-    const categoryMutation = useMutation({
-        mutationFn: (newCategory: Category) => createCategory(newCategory),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["categories"] });
-            setCategoryMessage("Category created successfully!");
-            setCategoryName("");
-        },
-        onError: (err: any) => {
-            setCategoryMessage(`Error: ${err?.response?.data?.message || "Failed to create category"}`);
-        },
-    });
+    const filteredTransactions = useMemo(() => {
+        return transactions.filter((t) => {
+            if (categoryFilter !== "all" && t.category !== categoryFilter) return false;
+            if (typeFilter !== "all" && t.type !== typeFilter) return false;
+            return true;
+        });
+    }, [transactions, categoryFilter, typeFilter]);
 
-    const transactionMutation = useMutation({
-        mutationFn: () => createTransaction({
-            id: "",
-            name: transactionName,
-            description,
-            amount: parseAmountInput(amount),
-            paymentDate: paymentDate ? format(paymentDate, "yyyy-MM-dd") : "",
-            categoryId,
-        }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["transactions", PLACEHOLDER_USER_ID] });
-            setTransactionMessage("Transaction created successfully!");
-            setTransactionName("");
-            setDescription("");
-            setAmount("");
-            setPaymentDate(null);
-            setCategoryId("");
-        },
-        onError: (err: any) => {
-            setTransactionMessage(`Error: ${err?.response?.data?.message || "Failed to create transaction"}`);
-        },
-    });
-
-    const handleCategorySubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        categoryMutation.mutate({ id: "", name: categoryName, type: categoryType });
+    const openCreateModal = () => {
+        setSelectedTransaction(null);
+        setTransactionModalOpen(true);
     };
 
-    const handleTransactionSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        transactionMutation.mutate();
+    const openEditModal = (transaction: TransactionResponse) => {
+        setSelectedTransaction(transaction);
+        setTransactionModalOpen(true);
     };
 
-    const editMutation = useMutation({
-        mutationFn: () => updateTransaction(editId, {
-            id: editId,
-            name: editName,
-            description: editDescription,
-            amount: parseAmountInput(editAmount),
-            paymentDate: editPaymentDate ? format(editPaymentDate, "yyyy-MM-dd") : "",
-            categoryId: editCategoryId,
-        }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["transactions", PLACEHOLDER_USER_ID] });
-            setEditMessage("Transaction updated successfully!");
-            setEditId("");
-            setEditName("");
-            setEditDescription("");
-            setEditAmount("");
-            setEditPaymentDate(null);
-            setEditCategoryId("");
-        },
-        onError: (err: any) => {
-            setEditMessage(`Error: ${err?.response?.data?.message || "Failed to update transaction"}`);
-        },
-    });
-
-    const handleEditSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        editMutation.mutate();
+    const openDeleteModal = (transaction: TransactionResponse) => {
+        setSelectedTransaction(transaction);
+        setDeleteModalOpen(true);
     };
 
     return (
@@ -117,263 +70,134 @@ const Transactions = () => {
             <div className="transaction-content">
                 <Header title="Olá, Gabriel. Você está no menu de Transações. Aqui você encontra suas despesas e receitas passadas, além de poder cadastrar novos dados de despesas e receitas."/>
 
-                <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-                    <Paper sx={{ flex: "1 1 300px", padding: 3, backgroundColor: "var(--primary-color)" }}>
-                        <Typography variant="h6" sx={{ marginBottom: 2, color: "var(--text-color)" }}>
-                            Create Category
-                        </Typography>
-                        <form onSubmit={handleCategorySubmit}>
-                            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                                <TextField
-                                    label="Name"
-                                    value={categoryName}
-                                    onChange={(e) => setCategoryName(e.target.value)}
-                                    required
-                                    size="small"
-                                    sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
-                                />
-                                <FormControl size="small" fullWidth>
-                                    <InputLabel sx={{ color: "var(--text-color)" }}>Type</InputLabel>
-                                    <Select
-                                        value={categoryType}
-                                        onChange={(e) => setCategoryType(e.target.value as CategoryType)}
-                                        label="Type"
-                                        sx={{
-                                            color: "var(--text-color)",
-                                            "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
-                                            "& .MuiSvgIcon-root": { color: "var(--text-color)" },
-                                        }}
-                                    >
-                                        <MenuItem value="debit">Debit</MenuItem>
-                                        <MenuItem value="credit">Credit</MenuItem>
-                                    </Select>
-                                </FormControl>
-                                <Button type="submit" variant="contained" disabled={categoryMutation.isPending}>
-                                    {categoryMutation.isPending ? "Creating..." : "Create Category"}
-                                </Button>
-                            </Box>
-                        </form>
-                        {categoryMessage && (
-                            <Alert severity={categoryMessage.startsWith("Error") ? "error" : "success"} sx={{ marginTop: 2 }}>
-                                {categoryMessage}
-                            </Alert>
-                        )}
-                    </Paper>
-
-                    <Paper sx={{ flex: "2 1 400px", padding: 3, backgroundColor: "var(--primary-color)" }}>
-                        <Typography variant="h6" sx={{ marginBottom: 2, color: "var(--text-color)" }}>
-                            Create Transaction
-                        </Typography>
-                        <form onSubmit={handleTransactionSubmit}>
-                            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                                <TextField
-                                    label="Name"
-                                    value={transactionName}
-                                    onChange={(e) => setTransactionName(e.target.value)}
-                                    required
-                                    size="small"
-                                    sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
-                                />
-                                <TextField
-                                    label="Description"
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    required
-                                    size="small"
-                                    sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
-                                />
-                                <Box sx={{ display: "flex", gap: 2 }}>
-                                    <TextField
-                                        label="Amount"
-                                        value={amount}
-                                        onChange={(e) => setAmount(formatAmountInput(e.target.value, amount))}
-                                        required
-                                        size="small"
-                                        placeholder="0.00"
-                                        inputMode="decimal"
-                                        sx={{ flex: 1, input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
-                                    />
-                                    <DatePicker
-                                        label="Payment Date"
-                                        value={paymentDate}
-                                        onChange={(date) => setPaymentDate(date)}
-                                        minDate={new Date(1900, 0, 1)}
-                                        maxDate={new Date(2100, 11, 31)}
-                                        shouldDisableDate={(date) => {
-                                            const min = new Date(1900, 0, 1);
-                                            const max = new Date(2100, 11, 31);
-                                            return date < min || date > max;
-                                        }}
-                                        slotProps={{
-                                            textField: {
-                                                size: "small",
-                                                required: true,
-                                                onBlur: (e) => {
-                                                    const raw = e.target.value;
-                                                    if (!raw) return;
-                                                    const d = new Date(raw);
-                                                    if (isNaN(d.getTime())) return;
-                                                    const min = new Date(1900, 0, 1);
-                                                    const max = new Date(2100, 11, 31);
-                                                    if (d < min) setPaymentDate(min);
-                                                    else if (d > max) setPaymentDate(max);
-                                                },
-                                                sx: {
-                                                    flex: 1,
-                                                    "& .MuiInputBase-root": { color: "var(--text-color)" },
-                                                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
-                                                    "& .MuiSvgIcon-root": { color: "var(--text-color)" },
-                                                    label: { color: "var(--text-color)" },
-                                                },
-                                            },
-                                        }}
-                                    />
-                                </Box>
-                                <FormControl size="small" fullWidth>
-                                    <InputLabel sx={{ color: "var(--text-color)" }}>Category</InputLabel>
-                                    <Select
-                                        value={categoryId}
-                                        onChange={(e) => setCategoryId(e.target.value)}
-                                        label="Category"
-                                        required
-                                        disabled={categoriesLoading}
-                                        sx={{
-                                            color: "var(--text-color)",
-                                            "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
-                                            "& .MuiSvgIcon-root": { color: "var(--text-color)" },
-                                        }}
-                                    >
-                                        {categories.map((cat) => (
-                                            <MenuItem key={cat.id} value={cat.id}>
-                                                {cat.name} ({cat.type})
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <Button type="submit" variant="contained" disabled={transactionMutation.isPending || !paymentDate}>
-                                    {transactionMutation.isPending ? "Creating..." : "Create Transaction"}
-                                </Button>
-                            </Box>
-                        </form>
-                        {transactionMessage && (
-                            <Alert severity={transactionMessage.startsWith("Error") ? "error" : "success"} sx={{ marginTop: 2 }}>
-                                {transactionMessage}
-                            </Alert>
-                        )}
-                    </Paper>
+                <Box sx={{ display: "flex", gap: 2, marginBottom: 3, flexWrap: "wrap", alignItems: "center" }}>
+                    <Button
+                        variant="contained"
+                        startIcon={<FiPlusCircle />}
+                        onClick={openCreateModal}
+                    >
+                        Add Transaction
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        startIcon={<FiTag />}
+                        onClick={() => setCategoryModalOpen(true)}
+                        sx={{ color: "var(--text-color)", borderColor: "var(--text-color)" }}
+                    >
+                        Create Category
+                    </Button>
+                    <Box sx={{ display: "flex", gap: 2, marginLeft: "auto" }}>
+                        <FormControl size="small" sx={{ minWidth: 150 }}>
+                            <InputLabel sx={{ color: "var(--text-color)" }}>Category</InputLabel>
+                            <Select
+                                value={categoryFilter}
+                                onChange={(e) => setCategoryFilter(e.target.value)}
+                                label="Category"
+                                sx={{
+                                    color: "var(--text-color)",
+                                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
+                                    "& .MuiSvgIcon-root": { color: "var(--text-color)" },
+                                }}
+                            >
+                                <MenuItem value="all">All Categories</MenuItem>
+                                {categories.map((cat) => (
+                                    <MenuItem key={cat.id} value={cat.name}>{cat.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl size="small" sx={{ minWidth: 120 }}>
+                            <InputLabel sx={{ color: "var(--text-color)" }}>Type</InputLabel>
+                            <Select
+                                value={typeFilter}
+                                onChange={(e) => setTypeFilter(e.target.value)}
+                                label="Type"
+                                sx={{
+                                    color: "var(--text-color)",
+                                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
+                                    "& .MuiSvgIcon-root": { color: "var(--text-color)" },
+                                }}
+                            >
+                                <MenuItem value="all">All Types</MenuItem>
+                                <MenuItem value="DEBIT">Debit</MenuItem>
+                                <MenuItem value="CREDIT">Credit</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
                 </Box>
 
-                <Paper sx={{ marginTop: 3, padding: 3, backgroundColor: "var(--primary-color)" }}>
-                    <Typography variant="h6" sx={{ marginBottom: 2, color: "var(--text-color)" }}>
-                        Edit Transaction
-                    </Typography>
-                    <form onSubmit={handleEditSubmit}>
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                            <TextField
-                                label="Transaction ID"
-                                value={editId}
-                                onChange={(e) => setEditId(e.target.value)}
-                                required
-                                size="small"
-                                placeholder="UUID of the transaction to edit"
-                                sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
-                            />
-                            <TextField
-                                label="Name"
-                                value={editName}
-                                onChange={(e) => setEditName(e.target.value)}
-                                required
-                                size="small"
-                                sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
-                            />
-                            <TextField
-                                label="Description"
-                                value={editDescription}
-                                onChange={(e) => setEditDescription(e.target.value)}
-                                required
-                                size="small"
-                                sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
-                            />
-                            <Box sx={{ display: "flex", gap: 2 }}>
-                                <TextField
-                                    label="Amount"
-                                    value={editAmount}
-                                    onChange={(e) => setEditAmount(formatAmountInput(e.target.value, editAmount))}
-                                    required
-                                    size="small"
-                                    placeholder="0.00"
-                                    inputMode="decimal"
-                                    sx={{ flex: 1, input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
-                                />
-                                <DatePicker
-                                    label="Payment Date"
-                                    value={editPaymentDate}
-                                    onChange={(date) => setEditPaymentDate(date)}
-                                    minDate={new Date(1900, 0, 1)}
-                                    maxDate={new Date(2100, 11, 31)}
-                                    shouldDisableDate={(date) => {
-                                        const min = new Date(1900, 0, 1);
-                                        const max = new Date(2100, 11, 31);
-                                        return date < min || date > max;
-                                    }}
-                                    slotProps={{
-                                        textField: {
-                                            size: "small",
-                                            required: true,
-                                            onBlur: (e) => {
-                                                const raw = e.target.value;
-                                                if (!raw) return;
-                                                const d = new Date(raw);
-                                                if (isNaN(d.getTime())) return;
-                                                const min = new Date(1900, 0, 1);
-                                                const max = new Date(2100, 11, 31);
-                                                if (d < min) setEditPaymentDate(min);
-                                                else if (d > max) setEditPaymentDate(max);
-                                            },
-                                            sx: {
-                                                flex: 1,
-                                                "& .MuiInputBase-root": { color: "var(--text-color)" },
-                                                "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
-                                                "& .MuiSvgIcon-root": { color: "var(--text-color)" },
-                                                label: { color: "var(--text-color)" },
-                                            },
-                                        },
-                                    }}
-                                />
-                            </Box>
-                            <FormControl size="small" fullWidth>
-                                <InputLabel sx={{ color: "var(--text-color)" }}>Category</InputLabel>
-                                <Select
-                                    value={editCategoryId}
-                                    onChange={(e) => setEditCategoryId(e.target.value)}
-                                    label="Category"
-                                    required
-                                    disabled={categoriesLoading}
-                                    sx={{
-                                        color: "var(--text-color)",
-                                        "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
-                                        "& .MuiSvgIcon-root": { color: "var(--text-color)" },
-                                    }}
-                                >
-                                    {categories.map((cat) => (
-                                        <MenuItem key={cat.id} value={cat.id}>
-                                            {cat.name} ({cat.type})
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <Button type="submit" variant="contained" disabled={editMutation.isPending || !editId || !editPaymentDate}>
-                                {editMutation.isPending ? "Updating..." : "Update Transaction"}
-                            </Button>
-                        </Box>
-                    </form>
-                    {editMessage && (
-                        <Alert severity={editMessage.startsWith("Error") ? "error" : "success"} sx={{ marginTop: 2 }}>
-                            {editMessage}
-                        </Alert>
-                    )}
-                </Paper>
+                {isLoading ? (
+                    <Box sx={{ display: "flex", justifyContent: "center", padding: 4 }}>
+                        <CircularProgress />
+                    </Box>
+                ) : error ? (
+                    <Typography color="error">Failed to load transactions.</Typography>
+                ) : transactions.length === 0 ? (
+                    <Paper sx={{ padding: 4, textAlign: "center", backgroundColor: "var(--primary-color)" }}>
+                        <Typography sx={{ color: "var(--text-color)" }}>No transactions found. Click "Add Transaction" to create one.</Typography>
+                    </Paper>
+                ) : filteredTransactions.length === 0 ? (
+                    <Paper sx={{ padding: 4, textAlign: "center", backgroundColor: "var(--primary-color)" }}>
+                        <Typography sx={{ color: "var(--text-color)" }}>No transactions match the selected filters.</Typography>
+                    </Paper>
+                ) : (
+                    <TableContainer component={Paper} sx={{ backgroundColor: "var(--primary-color)" }}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Name</TableCell>
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Notes</TableCell>
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Amount</TableCell>
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Date</TableCell>
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Category</TableCell>
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Type</TableCell>
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }} align="right">Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {filteredTransactions.map((t) => (
+                                    <TableRow key={t.id}>
+                                        <TableCell sx={{ color: "var(--text-color)" }}>{t.name}</TableCell>
+                                        <TableCell sx={{ color: "var(--text-color)", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                            <Tooltip title={t.description} arrow>
+                                                <span>{t.description || "—"}</span>
+                                            </Tooltip>
+                                        </TableCell>
+                                        <TableCell sx={{ color: t.type === "DEBIT" ? "#f44336" : "#4caf50", fontWeight: "bold" }}>
+                                            {formatAmount(t.amount, t.type)}
+                                        </TableCell>
+                                        <TableCell sx={{ color: "var(--text-color)" }}>{formatDate(t.paymentDate)}</TableCell>
+                                        <TableCell sx={{ color: "var(--text-color)" }}>{t.category}</TableCell>
+                                        <TableCell sx={{ color: "var(--text-color)" }}>{t.type}</TableCell>
+                                        <TableCell align="right">
+                                            <IconButton onClick={() => openEditModal(t)} size="small" sx={{ color: "var(--text-color)" }}>
+                                                <FiEdit2 />
+                                            </IconButton>
+                                            <IconButton onClick={() => openDeleteModal(t)} size="small" sx={{ color: "#f44336" }}>
+                                                <FiTrash2 />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                )}
             </div>
+
+            <TransactionModal
+                open={transactionModalOpen}
+                onClose={() => setTransactionModalOpen(false)}
+                transaction={selectedTransaction}
+            />
+            <CategoryModal
+                open={categoryModalOpen}
+                onClose={() => setCategoryModalOpen(false)}
+            />
+            <DeleteConfirmationModal
+                open={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                transaction={selectedTransaction}
+            />
         </main>
     );
 };

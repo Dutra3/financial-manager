@@ -32,4 +32,17 @@ class DtoToTransactionTest {
         assertThat(transaction.paymentDate()).isEqualTo(PAYMENT_DATE);
         assertThat(transaction.category().id()).isEqualTo(CATEGORY_ID);
     }
+
+    @Test
+    void should_convert_when_description_is_empty() {
+        TransactionDTO dto = new TransactionDTO(ID, NAME, "", AMOUNT, PAYMENT_DATE, CATEGORY_ID);
+        Transaction transaction = DtoToTransaction.convert(dto);
+
+        assertThat(transaction).isNotNull();
+        assertThat(transaction.name()).isEqualTo(NAME);
+        assertThat(transaction.description()).isEqualTo("");
+        assertThat(transaction.amount()).isEqualTo(AMOUNT);
+        assertThat(transaction.paymentDate()).isEqualTo(PAYMENT_DATE);
+        assertThat(transaction.category().id()).isEqualTo(CATEGORY_ID);
+    }
 }
