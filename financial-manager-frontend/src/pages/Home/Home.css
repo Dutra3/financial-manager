@@ -40,3 +40,9 @@
 .btn-primary:focus {
   	outline: 2px solid var(--primary-color);
 }
+
+.dashboard-error {
+  	color: #f44336;
+  	font-size: 0.9rem;
+  	padding: 10px 0;
+}

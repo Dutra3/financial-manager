@@ -11,7 +11,7 @@ export interface WalletResponse {
     reits: ReitResponse[]
 };
 
-export const getWallet = async (id: string) => {
-    const response = await apiClient.get(`/wallets/${id}`);
+export const getWallet = async (id: string, signal?: AbortSignal) => {
+    const response = await apiClient.get(`/wallets/${id}`, { signal });
     return response.data;
 };

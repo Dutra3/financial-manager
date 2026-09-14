@@ -1,40 +1,30 @@
 import { Card } from "../../components/Card";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
-import { getDebits } from "../../api/dashboardApi";
+import { useDashboardData } from "../../hooks/useDashboardData";
 import "./Home.css";
-import { useState } from "react";
 
 const Home = () => {
-    const [debits, setDebits] = useState<string>('');
-
-    const getAllDebits = async () => {
-        const debits = await getDebits('00000000-0000-0000-0000-000000000000');
-        console.log(debits);
-        setDebits(debits);
-    }
+    const { balance, income, expenses, loading, error } = useDashboardData();
 
     return (
         <main className="home-container">
-            <SideBar page="dashboard"/> 
+            <SideBar page="dashboard"/>
             <div className="home-content">
                 <Header title="Olá, Gabriel. Aqui você encontra o resumo de suas informações financeiras."/>
-                <Card title="My balance" amount={40000.00} />
-                <Card title="Income" amount={4700.00} />
-                <Card title="Expenses" amount={2500.00} />
+                {loading ? (
+                    <p>Loading dashboard...</p>
+                ) : (
+                    <>
+                        {error && <p className="dashboard-error">{error}</p>}
+                        <Card title="My balance" amount={balance} />
+                        <Card title="Income" amount={income} />
+                        <Card title="Expenses" amount={expenses} />
+                    </>
+                )}
                 <div className="dashboard-content">
                     <h1>Dashboard Page</h1>
                 </div>
-                <div>
-                    <button onClick={getAllDebits} className="btn-primary">
-                        Get all debits.
-                    </button>
-                </div>
-                {debits && (
-                    <div>
-                        <h1>{`${debits}`}</h1>
-                    </div>
-                )}
             </div>
         </main>
     );

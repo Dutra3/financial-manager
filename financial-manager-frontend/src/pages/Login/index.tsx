@@ -13,8 +13,9 @@ const Login = () => {
     const handleLogin = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
 
-        console.log('Username:', username);
-        console.log('Password:', password);
+        // TODO: Replace with real auth (task 22)
+        localStorage.setItem('authToken', 'dev-bypass-token');
+        navigate('/');
     };
 
     const handleGoogleLoginSuccess = (tokenResponse: { access_token: string }): void => {
