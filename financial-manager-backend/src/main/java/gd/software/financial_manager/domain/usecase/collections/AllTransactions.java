@@ -5,6 +5,7 @@ import gd.software.financial_manager.domain.model.Installment;
 import gd.software.financial_manager.domain.model.Transaction;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AllTransactions {
@@ -16,4 +17,6 @@ public interface AllTransactions {
     void remove(UUID id);
 
     List<Installment> byUserIdAndType(UUID id, CategoryType type);
+
+    Optional<Transaction> byId(UUID id);
 }

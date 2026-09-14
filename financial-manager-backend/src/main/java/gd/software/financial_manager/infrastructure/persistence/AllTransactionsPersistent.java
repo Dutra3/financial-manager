@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -25,10 +26,14 @@ public class AllTransactionsPersistent implements AllTransactions {
     @Autowired
     TransactionRepository repository;
 
-    //TODO: Create a logic to save user inside transaction!
     @Override
     public Transaction save(Transaction transaction) {
         TransactionRow row = TransactionToRow.convert(transaction);
+
+        if (row.getId() != null && repository.existsById(row.getId())) {
+            TransactionRow existing = repository.findById(row.getId()).orElseThrow();
+            row.setUser(existing.getUser());
+        }
 
         logger.info("Save transaction {}", row.getName());
         TransactionRow savedTransaction = repository.save(row);
@@ -53,5 +58,11 @@ public class AllTransactionsPersistent implements AllTransactions {
         return repository.findByUserIdAndType(id, CategoryTypeRow.valueOf(type.name())).stream()
                 .map(Installment::new)
                 .toList();
+    }
+
+    @Override
+    public Optional<Transaction> byId(UUID id) {
+        logger.info("Find Transaction by id {}.", id);
+        return repository.findById(id).map(RowToTransaction::convert);
     }
 }

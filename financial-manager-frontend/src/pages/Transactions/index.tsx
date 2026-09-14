@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { createCategory, getCategories, Category, CategoryType } from "../../api/categoryApi";
-import { createTransaction } from "../../api/transactionApi";
+import { createTransaction, updateTransaction } from "../../api/transactionApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, TextField, Button, Select, MenuItem, FormControl, InputLabel, Paper, Alert } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -23,6 +23,14 @@ const Transactions = () => {
     const [paymentDate, setPaymentDate] = useState<Date | null>(null);
     const [categoryId, setCategoryId] = useState("");
     const [transactionMessage, setTransactionMessage] = useState("");
+
+    const [editId, setEditId] = useState("");
+    const [editName, setEditName] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+    const [editAmount, setEditAmount] = useState("");
+    const [editPaymentDate, setEditPaymentDate] = useState<Date | null>(null);
+    const [editCategoryId, setEditCategoryId] = useState("");
+    const [editMessage, setEditMessage] = useState("");
 
     const { data: categories = [], isLoading: categoriesLoading } = useQuery({
         queryKey: ["categories"],
@@ -72,6 +80,35 @@ const Transactions = () => {
     const handleTransactionSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         transactionMutation.mutate();
+    };
+
+    const editMutation = useMutation({
+        mutationFn: () => updateTransaction(editId, {
+            id: editId,
+            name: editName,
+            description: editDescription,
+            amount: parseAmountInput(editAmount),
+            paymentDate: editPaymentDate ? format(editPaymentDate, "yyyy-MM-dd") : "",
+            categoryId: editCategoryId,
+        }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["transactions", PLACEHOLDER_USER_ID] });
+            setEditMessage("Transaction updated successfully!");
+            setEditId("");
+            setEditName("");
+            setEditDescription("");
+            setEditAmount("");
+            setEditPaymentDate(null);
+            setEditCategoryId("");
+        },
+        onError: (err: any) => {
+            setEditMessage(`Error: ${err?.response?.data?.message || "Failed to update transaction"}`);
+        },
+    });
+
+    const handleEditSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        editMutation.mutate();
     };
 
     return (
@@ -225,6 +262,117 @@ const Transactions = () => {
                         )}
                     </Paper>
                 </Box>
+
+                <Paper sx={{ marginTop: 3, padding: 3, backgroundColor: "var(--primary-color)" }}>
+                    <Typography variant="h6" sx={{ marginBottom: 2, color: "var(--text-color)" }}>
+                        Edit Transaction
+                    </Typography>
+                    <form onSubmit={handleEditSubmit}>
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                            <TextField
+                                label="Transaction ID"
+                                value={editId}
+                                onChange={(e) => setEditId(e.target.value)}
+                                required
+                                size="small"
+                                placeholder="UUID of the transaction to edit"
+                                sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
+                            />
+                            <TextField
+                                label="Name"
+                                value={editName}
+                                onChange={(e) => setEditName(e.target.value)}
+                                required
+                                size="small"
+                                sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
+                            />
+                            <TextField
+                                label="Description"
+                                value={editDescription}
+                                onChange={(e) => setEditDescription(e.target.value)}
+                                required
+                                size="small"
+                                sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
+                            />
+                            <Box sx={{ display: "flex", gap: 2 }}>
+                                <TextField
+                                    label="Amount"
+                                    value={editAmount}
+                                    onChange={(e) => setEditAmount(formatAmountInput(e.target.value, editAmount))}
+                                    required
+                                    size="small"
+                                    placeholder="0.00"
+                                    inputMode="decimal"
+                                    sx={{ flex: 1, input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
+                                />
+                                <DatePicker
+                                    label="Payment Date"
+                                    value={editPaymentDate}
+                                    onChange={(date) => setEditPaymentDate(date)}
+                                    minDate={new Date(1900, 0, 1)}
+                                    maxDate={new Date(2100, 11, 31)}
+                                    shouldDisableDate={(date) => {
+                                        const min = new Date(1900, 0, 1);
+                                        const max = new Date(2100, 11, 31);
+                                        return date < min || date > max;
+                                    }}
+                                    slotProps={{
+                                        textField: {
+                                            size: "small",
+                                            required: true,
+                                            onBlur: (e) => {
+                                                const raw = e.target.value;
+                                                if (!raw) return;
+                                                const d = new Date(raw);
+                                                if (isNaN(d.getTime())) return;
+                                                const min = new Date(1900, 0, 1);
+                                                const max = new Date(2100, 11, 31);
+                                                if (d < min) setEditPaymentDate(min);
+                                                else if (d > max) setEditPaymentDate(max);
+                                            },
+                                            sx: {
+                                                flex: 1,
+                                                "& .MuiInputBase-root": { color: "var(--text-color)" },
+                                                "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
+                                                "& .MuiSvgIcon-root": { color: "var(--text-color)" },
+                                                label: { color: "var(--text-color)" },
+                                            },
+                                        },
+                                    }}
+                                />
+                            </Box>
+                            <FormControl size="small" fullWidth>
+                                <InputLabel sx={{ color: "var(--text-color)" }}>Category</InputLabel>
+                                <Select
+                                    value={editCategoryId}
+                                    onChange={(e) => setEditCategoryId(e.target.value)}
+                                    label="Category"
+                                    required
+                                    disabled={categoriesLoading}
+                                    sx={{
+                                        color: "var(--text-color)",
+                                        "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
+                                        "& .MuiSvgIcon-root": { color: "var(--text-color)" },
+                                    }}
+                                >
+                                    {categories.map((cat) => (
+                                        <MenuItem key={cat.id} value={cat.id}>
+                                            {cat.name} ({cat.type})
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <Button type="submit" variant="contained" disabled={editMutation.isPending || !editId || !editPaymentDate}>
+                                {editMutation.isPending ? "Updating..." : "Update Transaction"}
+                            </Button>
+                        </Box>
+                    </form>
+                    {editMessage && (
+                        <Alert severity={editMessage.startsWith("Error") ? "error" : "success"} sx={{ marginTop: 2 }}>
+                            {editMessage}
+                        </Alert>
+                    )}
+                </Paper>
             </div>
         </main>
     );

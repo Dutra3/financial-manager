@@ -1,13 +1,18 @@
 package gd.software.financial_manager.infrastructure.controllers.transaction;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gd.software.financial_manager.infrastructure.dtos.CategoryData;
+import gd.software.financial_manager.infrastructure.dtos.TransactionDTO;
 import gd.software.financial_manager.infrastructure.dtos.TransactionResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
@@ -22,6 +27,9 @@ class TransactionIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private String categoriesUrl() {
         return "http://localhost:" + port + "/api/categories";
@@ -59,5 +67,21 @@ class TransactionIntegrationTest {
         UUID randomId = UUID.randomUUID();
 
         restTemplate.delete(transactionsUrl() + "/" + randomId);
+    }
+
+    @Test
+    void should_return_404_when_updating_nonexistent_transaction() throws Exception {
+        UUID randomId = UUID.randomUUID();
+        TransactionDTO request = new TransactionDTO(randomId, "Lunch", "Restaurant",
+                new java.math.BigDecimal("50.00"), java.time.LocalDate.of(2025, 1, 10), UUID.randomUUID());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(objectMapper.writeValueAsString(request), headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                transactionsUrl() + "/" + randomId, org.springframework.http.HttpMethod.PUT, entity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

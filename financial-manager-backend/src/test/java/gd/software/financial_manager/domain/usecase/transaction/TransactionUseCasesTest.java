@@ -40,6 +40,9 @@ class TransactionUseCasesTest {
     @InjectMocks
     private DeleteTransaction deleteTransaction;
 
+    @InjectMocks
+    private UpdateTransaction updateTransaction;
+
     private static final UUID TRANSACTION_ID = UUID.randomUUID();
     private static final UUID USER_ID = UUID.randomUUID();
     private static final UUID CATEGORY_ID = UUID.randomUUID();
@@ -93,5 +96,57 @@ class TransactionUseCasesTest {
         deleteTransaction.remove(TRANSACTION_ID);
 
         verify(allTransactions).remove(TRANSACTION_ID);
+    }
+
+    @Test
+    void updateTransaction_should_update_when_transaction_and_category_exist() {
+        Category oldCategory = new Category(CATEGORY_ID, "Food", CategoryType.DEBIT);
+        Category newCategory = new Category(UUID.randomUUID(), "Transport", CategoryType.DEBIT);
+        Transaction existing = new Transaction(TRANSACTION_ID, "Lunch", "Restaurant",
+                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), oldCategory);
+        Transaction input = new Transaction(TRANSACTION_ID, "Taxi", "Uber ride",
+                new BigDecimal("25.00"), LocalDate.of(2025, 1, 11), newCategory);
+        Transaction updated = new Transaction(TRANSACTION_ID, "Taxi", "Uber ride",
+                new BigDecimal("25.00"), LocalDate.of(2025, 1, 11), newCategory);
+        when(allTransactions.byId(TRANSACTION_ID)).thenReturn(Optional.of(existing));
+        when(allCategories.by(newCategory.id())).thenReturn(Optional.of(newCategory));
+        when(allTransactions.save(any(Transaction.class))).thenReturn(updated);
+
+        Transaction result = updateTransaction.use(input);
+
+        assertThat(result).isEqualTo(updated);
+        verify(allTransactions).byId(TRANSACTION_ID);
+        verify(allCategories).by(newCategory.id());
+        verify(allTransactions).save(existing);
+    }
+
+    @Test
+    void updateTransaction_should_throw_when_transaction_not_found() {
+        Category category = new Category(CATEGORY_ID, "Food", CategoryType.DEBIT);
+        Transaction input = new Transaction(TRANSACTION_ID, "Lunch", "Restaurant",
+                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), category);
+        when(allTransactions.byId(TRANSACTION_ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> updateTransaction.use(input))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Transaction not found");
+        verify(allTransactions, never()).save(any());
+    }
+
+    @Test
+    void updateTransaction_should_throw_when_category_not_found() {
+        Category oldCategory = new Category(CATEGORY_ID, "Food", CategoryType.DEBIT);
+        Category newCategory = new Category(UUID.randomUUID(), "Transport", CategoryType.DEBIT);
+        Transaction existing = new Transaction(TRANSACTION_ID, "Lunch", "Restaurant",
+                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), oldCategory);
+        Transaction input = new Transaction(TRANSACTION_ID, "Taxi", "Uber ride",
+                new BigDecimal("25.00"), LocalDate.of(2025, 1, 11), newCategory);
+        when(allTransactions.byId(TRANSACTION_ID)).thenReturn(Optional.of(existing));
+        when(allCategories.by(newCategory.id())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> updateTransaction.use(input))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Category not found");
+        verify(allTransactions, never()).save(any());
     }
 }

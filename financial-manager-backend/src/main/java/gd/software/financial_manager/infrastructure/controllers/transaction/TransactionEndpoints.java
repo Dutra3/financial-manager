@@ -4,6 +4,7 @@ import gd.software.financial_manager.domain.model.Transaction;
 import gd.software.financial_manager.domain.usecase.transaction.CreateTransaction;
 import gd.software.financial_manager.domain.usecase.transaction.DeleteTransaction;
 import gd.software.financial_manager.domain.usecase.transaction.FetchTransaction;
+import gd.software.financial_manager.domain.usecase.transaction.UpdateTransaction;
 import gd.software.financial_manager.infrastructure.converts.DtoToTransaction;
 import gd.software.financial_manager.infrastructure.converts.TransactionToDTO;
 import gd.software.financial_manager.infrastructure.converts.TransactionToResponse;
@@ -34,6 +35,9 @@ public class TransactionEndpoints {
     @Autowired
     private DeleteTransaction deleteTransaction;
 
+    @Autowired
+    private UpdateTransaction updateTransaction;
+
     @PostMapping
     public ResponseEntity<TransactionDTO> save(@RequestBody TransactionDTO transactionDTO) {
         Transaction transaction = DtoToTransaction.convert(transactionDTO);
@@ -51,6 +55,16 @@ public class TransactionEndpoints {
         List<TransactionResponse> responses = TransactionToResponse.convert(transactions);
 
         return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TransactionDTO> update(@PathVariable UUID id, @RequestBody TransactionDTO transactionDTO) {
+        Transaction transaction = DtoToTransaction.convert(transactionDTO);
+        Transaction updatedTransaction = updateTransaction.use(transaction);
+
+        logger.info("Updated transaction {}.", updatedTransaction.name());
+
+        return ResponseEntity.status(HttpStatus.OK).body(TransactionToDTO.convert(updatedTransaction));
     }
 
     @DeleteMapping("/{id}")

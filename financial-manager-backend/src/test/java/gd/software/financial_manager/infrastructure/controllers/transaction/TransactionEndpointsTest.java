@@ -7,6 +7,7 @@ import gd.software.financial_manager.domain.model.Transaction;
 import gd.software.financial_manager.domain.usecase.transaction.CreateTransaction;
 import gd.software.financial_manager.domain.usecase.transaction.DeleteTransaction;
 import gd.software.financial_manager.domain.usecase.transaction.FetchTransaction;
+import gd.software.financial_manager.domain.usecase.transaction.UpdateTransaction;
 import gd.software.financial_manager.infrastructure.dtos.TransactionDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ class TransactionEndpointsTest {
 
     @MockBean
     private DeleteTransaction deleteTransaction;
+
+    @MockBean
+    private UpdateTransaction updateTransaction;
 
     private static final UUID TRANSACTION_ID = UUID.randomUUID();
     private static final UUID USER_ID = UUID.randomUUID();
@@ -90,5 +94,37 @@ class TransactionEndpointsTest {
                 .andExpect(status().isNoContent());
 
         verify(deleteTransaction).remove(TRANSACTION_ID);
+    }
+
+    @Test
+    void should_update_transaction_and_return_200() throws Exception {
+        TransactionDTO request = new TransactionDTO(TRANSACTION_ID, "Lunch Updated", "Restaurant updated",
+                new BigDecimal("75.00"), LocalDate.of(2025, 1, 11), CATEGORY_ID);
+        Category category = new Category(CATEGORY_ID, "Food", CategoryType.DEBIT);
+        Transaction updated = new Transaction(TRANSACTION_ID, "Lunch Updated", "Restaurant updated",
+                new BigDecimal("75.00"), LocalDate.of(2025, 1, 11), category);
+        when(updateTransaction.use(any(Transaction.class))).thenReturn(updated);
+
+        mockMvc.perform(put("/transactions/{id}", TRANSACTION_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Lunch Updated"))
+                .andExpect(jsonPath("$.amount").value(75.00));
+
+        verify(updateTransaction).use(any(Transaction.class));
+    }
+
+    @Test
+    void should_return_404_when_updating_nonexistent_transaction() throws Exception {
+        TransactionDTO request = new TransactionDTO(TRANSACTION_ID, "Lunch", "Restaurant",
+                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), CATEGORY_ID);
+        when(updateTransaction.use(any(Transaction.class)))
+                .thenThrow(new jakarta.persistence.EntityNotFoundException("Transaction not found with id " + TRANSACTION_ID));
+
+        mockMvc.perform(put("/transactions/{id}", TRANSACTION_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
     }
 }

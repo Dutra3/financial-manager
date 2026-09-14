@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Import;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -157,5 +158,75 @@ class AllTransactionsPersistentTest {
         List<Installment> installments = allTransactions.byUserIdAndType(UUID.randomUUID(), CategoryType.DEBIT);
 
         assertThat(installments).isEmpty();
+    }
+
+    @Test
+    void should_find_transaction_by_id() {
+        UserRow user = entityManager.persist(UserRow.builder()
+                .email("user@test.com")
+                .password("encoded")
+                .build());
+        CategoryRow categoryRow = entityManager.persist(CategoryRow.builder()
+                .name("Food")
+                .type(CategoryTypeRow.DEBIT)
+                .build());
+        TransactionRow row = entityManager.persist(TransactionRow.builder()
+                .name("Lunch")
+                .description("Restaurant")
+                .amount(new BigDecimal("50.00"))
+                .paymentDate(LocalDate.of(2025, 1, 10))
+                .category(categoryRow)
+                .user(user)
+                .build());
+        entityManager.flush();
+        entityManager.clear();
+
+        Optional<Transaction> found = allTransactions.byId(row.getId());
+
+        assertThat(found).isPresent();
+        assertThat(found.get().name()).isEqualTo("Lunch");
+        assertThat(found.get().amount()).isEqualByComparingTo("50.00");
+    }
+
+    @Test
+    void should_return_empty_optional_when_transaction_not_found() {
+        Optional<Transaction> found = allTransactions.byId(UUID.randomUUID());
+
+        assertThat(found).isEmpty();
+    }
+
+    @Test
+    void should_preserve_user_when_updating_existing_transaction() {
+        UserRow user = entityManager.persist(UserRow.builder()
+                .email("user@test.com")
+                .password("encoded")
+                .build());
+        CategoryRow categoryRow = entityManager.persist(CategoryRow.builder()
+                .name("Food")
+                .type(CategoryTypeRow.DEBIT)
+                .build());
+        TransactionRow existing = entityManager.persist(TransactionRow.builder()
+                .name("Lunch")
+                .description("Restaurant")
+                .amount(new BigDecimal("50.00"))
+                .paymentDate(LocalDate.of(2025, 1, 10))
+                .category(categoryRow)
+                .user(user)
+                .build());
+        entityManager.flush();
+        entityManager.clear();
+
+        Category category = new Category(categoryRow.getId(), "Food", CategoryType.DEBIT);
+        Transaction update = new Transaction(existing.getId(), "Lunch Updated", "Restaurant updated",
+                new BigDecimal("75.00"), LocalDate.of(2025, 1, 11), category);
+
+        Transaction saved = allTransactions.save(update);
+
+        assertThat(saved.name()).isEqualTo("Lunch Updated");
+        assertThat(saved.amount()).isEqualByComparingTo("75.00");
+
+        TransactionRow row = entityManager.find(TransactionRow.class, existing.getId());
+        assertThat(row.getUser()).isNotNull();
+        assertThat(row.getUser().getId()).isEqualTo(user.getId());
     }
 }
