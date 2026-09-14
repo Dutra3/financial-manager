@@ -19,8 +19,8 @@ export interface TransactionResponse {
     category: string
 };
 
-export const getTransactions = async (userId: string) => {
-    const response = await apiClient.get(`/transactions/${userId}`);
+export const getTransactions = async (userId: string, signal?: AbortSignal): Promise<TransactionResponse[]> => {
+    const response = await apiClient.get(`/transactions/${userId}`, { signal });
     return response.data;
 };
 

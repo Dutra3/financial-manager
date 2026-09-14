@@ -3,7 +3,7 @@ import { getCredits, getDebits } from "../api/dashboardApi";
 import { getWallet } from "../api/walletApi";
 
 const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
-const PLACEHOLDER_WALLET_ID = "00000000-0000-0000-0000-000000000000";
+const PLACEHOLDER_WALLET_ID = "00000000-0000-0000-0000-000000000001";
 
 const sumAmounts = (items: { amount: number }[] | undefined) =>
     (items || []).reduce((sum, item) => sum + (item.amount || 0), 0);
