@@ -1,5 +1,6 @@
 package gd.software.financial_manager.infrastructure.persistence.repository;
 
+import gd.software.financial_manager.infrastructure.persistence.relational.CategoryTypeRow;
 import gd.software.financial_manager.infrastructure.persistence.relational.TransactionRow;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +19,5 @@ public interface TransactionRepository extends JpaRepository<TransactionRow, UUI
             WHERE transaction.user.id = :id
             AND transaction.category.type = :type
             """)
-    List<BigDecimal> findByUserIdAndType(@Param("id") UUID id, @Param("type") String type);
+    List<BigDecimal> findByUserIdAndType(@Param("id") UUID id, @Param("type") CategoryTypeRow type);
 }

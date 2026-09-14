@@ -6,6 +6,7 @@ import gd.software.financial_manager.domain.model.Transaction;
 import gd.software.financial_manager.domain.usecase.collections.AllTransactions;
 import gd.software.financial_manager.infrastructure.converts.RowToTransaction;
 import gd.software.financial_manager.infrastructure.converts.TransactionToRow;
+import gd.software.financial_manager.infrastructure.persistence.relational.CategoryTypeRow;
 import gd.software.financial_manager.infrastructure.persistence.relational.TransactionRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.TransactionRepository;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class AllTransactionsPersistent implements AllTransactions {
 
     @Override
     public List<Installment> byUserIdAndType(UUID id, CategoryType type) {
-        return repository.findByUserIdAndType(id, type.name()).stream()
+        return repository.findByUserIdAndType(id, CategoryTypeRow.valueOf(type.name())).stream()
                 .map(Installment::new)
                 .toList();
     }
