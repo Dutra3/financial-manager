@@ -6,8 +6,17 @@ interface CardProps {
     currency?: string;
 }
 
+const LOCALE: Record<string, string> = {
+    USD: "en-US",
+    BRL: "pt-BR",
+    EUR: "de-DE",
+    CAD: "en-CA",
+    GBP: "en-GB",
+};
+
 const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat("en-US", {
+    const locale = LOCALE[currency] || "en-US";
+    return new Intl.NumberFormat(locale, {
         style: "currency",
         currency,
         minimumFractionDigits: 2,
