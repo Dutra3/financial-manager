@@ -16,6 +16,7 @@ public class StockToResponse {
 
     public static StockResponse convert(Stock stock) {
         return new StockResponse(stock.id(), stock.name(), stock.ticker(), stock.description(), stock.type(), stock.industrySegment(),
-                stock.tagAlong(), stock.price(), stock.isBesst(), stock.isNewMarket());
+                stock.tagAlong(), stock.price(), stock.peRatio(), stock.dividendYield(), stock.pbRatio(), stock.lastDividend(),
+                stock.isBesst(), stock.isNewMarket());
     }
 }

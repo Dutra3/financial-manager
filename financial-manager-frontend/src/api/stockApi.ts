@@ -17,6 +17,10 @@ export interface StockResponse {
     industrySegment: string,
     tagAlong: number,
     price: number,
+    peRatio: number | null,
+    dividendYield: number | null,
+    pbRatio: number | null,
+    lastDividend: number | null,
     isBesst: boolean,
     isNewMarket: boolean
 };

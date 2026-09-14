@@ -12,6 +12,10 @@ public record StockResponse(
         String industrySegment,
         BigDecimal tagAlong,
         BigDecimal price,
+        BigDecimal peRatio,
+        BigDecimal dividendYield,
+        BigDecimal pbRatio,
+        BigDecimal lastDividend,
         Boolean isBesst,
         Boolean isNewMarket
 ) {}

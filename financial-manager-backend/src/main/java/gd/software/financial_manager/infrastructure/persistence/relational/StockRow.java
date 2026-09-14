@@ -41,6 +41,18 @@ public class StockRow {
     @Column(precision = 8, scale = 4)
     private BigDecimal price;
 
+    @Column(precision = 8, scale = 4)
+    private BigDecimal peRatio;
+
+    @Column(precision = 6, scale = 4)
+    private BigDecimal dividendYield;
+
+    @Column(precision = 8, scale = 4)
+    private BigDecimal pbRatio;
+
+    @Column(precision = 8, scale = 4)
+    private BigDecimal lastDividend;
+
     @Column(nullable = false)
     private Boolean isBesst;
 

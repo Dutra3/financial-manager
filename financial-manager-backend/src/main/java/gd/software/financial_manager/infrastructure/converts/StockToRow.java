@@ -15,6 +15,10 @@ public class StockToRow {
                 .industrySegment(stock.industrySegment())
                 .tagAlong(stock.tagAlong())
                 .price(stock.price())
+                .peRatio(stock.peRatio())
+                .dividendYield(stock.dividendYield())
+                .pbRatio(stock.pbRatio())
+                .lastDividend(stock.lastDividend())
                 .isBesst(stock.isBesst())
                 .isNewMarket(stock.isNewMarket())
                 .build();

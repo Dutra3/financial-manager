@@ -16,6 +16,7 @@ public class RowToStock {
     public static Stock convert(StockRow stockRow) {
         return new Stock(stockRow.getId(), stockRow.getName(), stockRow.getTicker(), stockRow.getDescription(),
                 stockRow.getType(), stockRow.getIndustrySegment(), stockRow.getTagAlong(), stockRow.getPrice(),
+                stockRow.getPeRatio(), stockRow.getDividendYield(), stockRow.getPbRatio(), stockRow.getLastDividend(),
                 stockRow.getIsBesst(), stockRow.getIsNewMarket());
     }
 }

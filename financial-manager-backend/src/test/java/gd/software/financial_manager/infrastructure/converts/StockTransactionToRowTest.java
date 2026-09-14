@@ -21,7 +21,7 @@ class StockTransactionToRowTest {
 
     @Test
     void should_convert() {
-        Stock stock = new Stock(STOCK_ID, "Banco do Brasil", "BBSA3", "Description", "Banco", "Bancario", new BigDecimal("1.00"), new BigDecimal("22.00"), true, true);
+        Stock stock = new Stock(STOCK_ID, "Banco do Brasil", "BBSA3", "Description", "Banco", "Bancario", new BigDecimal("1.00"), new BigDecimal("22.00"), null, null, null, null, true, true);
         StockTransaction stockTransaction = new StockTransaction(ID, stock, QUANTITY, PRICE, TRANSACTION_DATE);
 
         StockTransactionDTO dto = StockTransactionToDTO.convert(stockTransaction);

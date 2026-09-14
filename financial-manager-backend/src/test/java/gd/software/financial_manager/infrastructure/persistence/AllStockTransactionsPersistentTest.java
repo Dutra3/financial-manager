@@ -38,7 +38,7 @@ class AllStockTransactionsPersistentTest {
                 .isNewMarket(true)
                 .build());
         Stock stock = new Stock(stockRow.getId(), "Petrobras", "PETR4", "Oil company", "Stock", "Energy",
-                new BigDecimal("0.80"), new BigDecimal("35.50"), true, true);
+                new BigDecimal("0.80"), new BigDecimal("35.50"), null, null, null, null, true, true);
         StockTransaction transaction = new StockTransaction(null, stock, new BigDecimal("100"),
                 new BigDecimal("35.50"), LocalDate.of(2025, 1, 20));
 

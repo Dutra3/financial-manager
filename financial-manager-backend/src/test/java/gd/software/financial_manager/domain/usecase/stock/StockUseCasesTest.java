@@ -41,7 +41,7 @@ class StockUseCasesTest {
     @Test
     void createStockTransaction_should_delegate_to_allStockTransactions_save() {
         Stock stock = new Stock(STOCK_ID, "Petrobras", "PETR4", "Oil company", "Stock", "Energy",
-                new BigDecimal("0.80"), new BigDecimal("35.50"), true, true);
+                new BigDecimal("0.80"), new BigDecimal("35.50"), null, null, null, null, true, true);
         StockTransaction input = new StockTransaction(null, stock, new BigDecimal("100"),
                 new BigDecimal("35.50"), LocalDate.of(2025, 1, 20));
         StockTransaction saved = new StockTransaction(TRANSACTION_ID, stock, new BigDecimal("100"),
@@ -57,7 +57,7 @@ class StockUseCasesTest {
     @Test
     void fetchStock_by_should_return_stock_when_found() throws Exception {
         Stock stock = new Stock(STOCK_ID, "Petrobras", "PETR4", "Oil company", "Stock", "Energy",
-                new BigDecimal("0.80"), new BigDecimal("35.50"), true, true);
+                new BigDecimal("0.80"), new BigDecimal("35.50"), null, null, null, null, true, true);
         when(allStocks.by(STOCK_ID)).thenReturn(Optional.of(stock));
 
         Stock result = fetchStock.by(STOCK_ID);
@@ -79,7 +79,7 @@ class StockUseCasesTest {
     void fetchStock_all_should_delegate_to_allStocks_all() {
         List<Stock> stocks = List.of(
                 new Stock(STOCK_ID, "Petrobras", "PETR4", "Oil company", "Stock", "Energy",
-                        new BigDecimal("0.80"), new BigDecimal("35.50"), true, true));
+                        new BigDecimal("0.80"), new BigDecimal("35.50"), null, null, null, null, true, true));
         when(allStocks.all()).thenReturn(stocks);
 
         List<Stock> result = fetchStock.all();

@@ -20,6 +20,10 @@ class RowToStockTest {
     private static final String INDUSTRY_SEGMENT = "Bancario";
     private static final BigDecimal TAG_ALONG = new BigDecimal("1.00");
     private static final BigDecimal PRICE = new BigDecimal("22.00");
+    private static final BigDecimal PE_RATIO = new BigDecimal("15.50");
+    private static final BigDecimal DIVIDEND_YIELD = new BigDecimal("4.20");
+    private static final BigDecimal PB_RATIO = new BigDecimal("1.80");
+    private static final BigDecimal LAST_DIVIDEND = new BigDecimal("0.95");
     private static final boolean IS_BESST = true;
     private static final boolean IS_NEW_MARKET = true;
 
@@ -50,6 +54,32 @@ class RowToStockTest {
         assertThat(stock.price()).isEqualTo(PRICE);
         assertThat(stock.isBesst()).isEqualTo(IS_BESST);
         assertThat(stock.isNewMarket()).isEqualTo(IS_NEW_MARKET);
+    }
+
+    @Test
+    void should_convert_with_financial_metrics() {
+        StockRow stockRow = StockRow.builder()
+                .id(ID)
+                .name(NAME)
+                .ticker(TICKER)
+                .description(DESCRIPTION)
+                .type(TYPE)
+                .industrySegment(INDUSTRY_SEGMENT)
+                .tagAlong(TAG_ALONG)
+                .price(PRICE)
+                .peRatio(PE_RATIO)
+                .dividendYield(DIVIDEND_YIELD)
+                .pbRatio(PB_RATIO)
+                .lastDividend(LAST_DIVIDEND)
+                .isBesst(IS_BESST)
+                .isNewMarket(IS_NEW_MARKET)
+                .build();
+        Stock stock = RowToStock.convert(stockRow);
+
+        assertThat(stock.peRatio()).isEqualTo(PE_RATIO);
+        assertThat(stock.dividendYield()).isEqualTo(DIVIDEND_YIELD);
+        assertThat(stock.pbRatio()).isEqualTo(PB_RATIO);
+        assertThat(stock.lastDividend()).isEqualTo(LAST_DIVIDEND);
     }
 
     @Test

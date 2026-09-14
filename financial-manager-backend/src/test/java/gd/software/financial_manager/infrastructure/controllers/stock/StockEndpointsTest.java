@@ -48,7 +48,7 @@ class StockEndpointsTest {
         StockTransactionDTO request = new StockTransactionDTO(null, STOCK_ID,
                 new BigDecimal("100"), new BigDecimal("35.50"), LocalDate.of(2025, 1, 20));
         Stock stock = new Stock(STOCK_ID, "Petrobras", "PETR4", "Oil company", "Stock", "Energy",
-                new BigDecimal("0.80"), new BigDecimal("35.50"), true, true);
+                new BigDecimal("0.80"), new BigDecimal("35.50"), null, null, null, null, true, true);
         StockTransaction saved = new StockTransaction(TRANSACTION_ID, stock, new BigDecimal("100"),
                 new BigDecimal("35.50"), LocalDate.of(2025, 1, 20));
         when(createStockTransaction.use(any(StockTransaction.class))).thenReturn(saved);
@@ -63,7 +63,7 @@ class StockEndpointsTest {
     @Test
     void should_fetch_stock_by_id_and_return_200() throws Exception {
         Stock stock = new Stock(STOCK_ID, "Petrobras", "PETR4", "Oil company", "Stock", "Energy",
-                new BigDecimal("0.80"), new BigDecimal("35.50"), true, true);
+                new BigDecimal("0.80"), new BigDecimal("35.50"), null, null, null, null, true, true);
         when(fetchStock.by(STOCK_ID)).thenReturn(stock);
 
         mockMvc.perform(get("/stocks/{id}", STOCK_ID))
@@ -75,7 +75,7 @@ class StockEndpointsTest {
     @Test
     void should_fetch_all_stocks_and_return_200() throws Exception {
         Stock stock = new Stock(STOCK_ID, "Petrobras", "PETR4", "Oil company", "Stock", "Energy",
-                new BigDecimal("0.80"), new BigDecimal("35.50"), true, true);
+                new BigDecimal("0.80"), new BigDecimal("35.50"), null, null, null, null, true, true);
         when(fetchStock.all()).thenReturn(List.of(stock));
 
         mockMvc.perform(get("/stocks"))

@@ -21,10 +21,14 @@ class StockToResponseTest {
     private static final String INDUSTRY_SEGMENT = "Bancario";
     private static final BigDecimal TAG_ALONG = new BigDecimal("1.00");
     private static final BigDecimal PRICE = new BigDecimal("22.00");
+    private static final BigDecimal PE_RATIO = new BigDecimal("15.50");
+    private static final BigDecimal DIVIDEND_YIELD = new BigDecimal("4.20");
+    private static final BigDecimal PB_RATIO = new BigDecimal("1.80");
+    private static final BigDecimal LAST_DIVIDEND = new BigDecimal("0.95");
 
     @Test
     void should_convert() {
-        Stock stock = new Stock(ID, NAME, TICKER, DESCRIPTION, TYPE, INDUSTRY_SEGMENT, TAG_ALONG, PRICE, true, true);
+        Stock stock = new Stock(ID, NAME, TICKER, DESCRIPTION, TYPE, INDUSTRY_SEGMENT, TAG_ALONG, PRICE, null, null, null, null, true, true);
         StockResponse response = StockToResponse.convert(stock);
 
         assertThat(response).isNotNull();
@@ -41,9 +45,21 @@ class StockToResponseTest {
     }
 
     @Test
+    void should_convert_with_financial_metrics() {
+        Stock stock = new Stock(ID, NAME, TICKER, DESCRIPTION, TYPE, INDUSTRY_SEGMENT, TAG_ALONG, PRICE,
+                PE_RATIO, DIVIDEND_YIELD, PB_RATIO, LAST_DIVIDEND, true, true);
+        StockResponse response = StockToResponse.convert(stock);
+
+        assertThat(response.peRatio()).isEqualTo(PE_RATIO);
+        assertThat(response.dividendYield()).isEqualTo(DIVIDEND_YIELD);
+        assertThat(response.pbRatio()).isEqualTo(PB_RATIO);
+        assertThat(response.lastDividend()).isEqualTo(LAST_DIVIDEND);
+    }
+
+    @Test
     void should_convert_list() {
-        Stock stock = new Stock(ID, NAME, TICKER, DESCRIPTION, TYPE, INDUSTRY_SEGMENT, TAG_ALONG, PRICE, true, true);
-        Stock stockTwo = new Stock(ID_TWO, "Stock2", "STK2", "Desc2", "Type2", "Segment2", BigDecimal.ONE, new BigDecimal("15.00"), true, false);
+        Stock stock = new Stock(ID, NAME, TICKER, DESCRIPTION, TYPE, INDUSTRY_SEGMENT, TAG_ALONG, PRICE, null, null, null, null, true, true);
+        Stock stockTwo = new Stock(ID_TWO, "Stock2", "STK2", "Desc2", "Type2", "Segment2", BigDecimal.ONE, new BigDecimal("15.00"), null, null, null, null, true, false);
 
         List<StockResponse> responses = StockToResponse.convert(List.of(stock, stockTwo));
 

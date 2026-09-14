@@ -8,6 +8,16 @@ export interface EtfTransaction {
     transactionDate: string
 };
 
+export interface EtfResponse {
+    id: string,
+    name: string,
+    ticker: string,
+    description: string,
+    type: string,
+    industrySegment: string,
+    price: number
+};
+
 export const getEtfs = async () => {
     const response = await apiClient.get('/etfs');
     return response.data;
