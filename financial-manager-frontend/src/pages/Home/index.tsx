@@ -9,7 +9,7 @@ const Home = () => {
     const [debits, setDebits] = useState<string>('');
 
     const getAllDebits = async () => {
-        const debits = await getDebits();
+        const debits = await getDebits('00000000-0000-0000-0000-000000000000');
         console.log(debits);
         setDebits(debits);
     }

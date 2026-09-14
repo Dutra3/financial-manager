@@ -8,12 +8,25 @@ export interface StockTransaction {
     transactionDate: string
 };
 
+export interface StockResponse {
+    id: string,
+    name: string,
+    ticker: string,
+    description: string,
+    type: string,
+    industrySegment: string,
+    tagAlong: number,
+    price: number,
+    isBesst: boolean,
+    isNewMarket: boolean
+};
+
 export const getStocks = async () => {
     const response = await apiClient.get('/stocks');
     return response.data;
 };
 
-export const getStock = async (id: number) => {
+export const getStock = async (id: string) => {
     const response = await apiClient.get(`/stocks/${id}`);
     return response.data;
 };

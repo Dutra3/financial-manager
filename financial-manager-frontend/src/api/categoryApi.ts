@@ -13,12 +13,17 @@ export const getCategories = async () => {
     return response.data;
 };
 
-export const getCategory = async (id: number) => {
+export const getCategory = async (id: string) => {
     const response = await apiClient.get(`/categories/${id}`);
     return response.data;
 };
 
 export const createCategory = async (category: Category) => {
     const response = await apiClient.post('/categories', category);
+    return response.data;
+};
+
+export const deleteCategory = async (id: string) => {
+    const response = await apiClient.delete(`/categories/${id}`);
     return response.data;
 };

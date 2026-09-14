@@ -13,7 +13,7 @@ export const getEtfs = async () => {
     return response.data;
 };
 
-export const getEtf = async (id: number) => {
+export const getEtf = async (id: string) => {
     const response = await apiClient.get(`/etfs/${id}`);
     return response.data;
 };
