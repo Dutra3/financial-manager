@@ -2,6 +2,7 @@ package gd.software.financial_manager.infrastructure.controllers.wallet;
 
 import gd.software.financial_manager.domain.model.Wallet;
 import gd.software.financial_manager.domain.usecase.wallet.FetchWallet;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,5 +39,15 @@ class WalletEndpointsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(WALLET_ID.toString()))
                 .andExpect(jsonPath("$.totalAmount").value(15000.00));
+    }
+
+    @Test
+    void should_return_404_when_wallet_not_found() throws Exception {
+        UUID missingId = UUID.randomUUID();
+        when(fetchWallet.use(missingId)).thenThrow(new EntityNotFoundException("Wallet not found"));
+
+        mockMvc.perform(get("/wallets/{id}", missingId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Resource not found"));
     }
 }
