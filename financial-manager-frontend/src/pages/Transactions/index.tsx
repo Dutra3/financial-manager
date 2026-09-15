@@ -6,9 +6,10 @@ import { CategoryModal } from "../../components/CategoryModal";
 import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModal";
 import { getTransactions, TransactionResponse } from "../../api/transactionApi";
 import { getCategories, Category } from "../../api/categoryApi";
+import { exportTransactions, downloadCSV } from "../../api/exportApi";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, CircularProgress, Select, MenuItem, FormControl, InputLabel, Tooltip } from "@mui/material";
-import { FiEdit2, FiTrash2, FiPlusCircle, FiTag } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiPlusCircle, FiTag, FiDownload } from "react-icons/fi";
 import "./Transactions.css";
 
 const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
@@ -64,6 +65,15 @@ const Transactions = () => {
         setDeleteModalOpen(true);
     };
 
+    const handleExport = async () => {
+        try {
+            const data = await exportTransactions("00000000-0000-0000-0000-000000000000");
+            downloadCSV(data, "transactions.csv");
+        } catch (err) {
+            console.error("Export failed", err);
+        }
+    };
+
     return (
         <main className="transactions-container">
             <SideBar page="transactions"/>
@@ -85,6 +95,14 @@ const Transactions = () => {
                         sx={{ color: "var(--text-color)", borderColor: "var(--text-color)" }}
                     >
                         Create Category
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        startIcon={<FiDownload />}
+                        onClick={handleExport}
+                        sx={{ color: "var(--text-color)", borderColor: "var(--text-color)" }}
+                    >
+                        Export CSV
                     </Button>
                     <Box sx={{ display: "flex", gap: 2, marginLeft: "auto" }}>
                         <FormControl size="small" sx={{ minWidth: 150 }}>
