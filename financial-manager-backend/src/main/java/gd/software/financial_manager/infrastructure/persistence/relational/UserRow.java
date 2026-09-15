@@ -23,13 +23,19 @@ public class UserRow {
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
+
+    @Column(length = 50)
+    private String provider;
+
+    @Column(length = 255)
+    private String providerId;
 
     @PrePersist
     @PreUpdate
     private void encryptPassword() {
-        if (this.password != null) {
+        if (this.password != null && !this.password.startsWith("$2a$")) {
             this.password = PasswordUtil.encryptPassword(this.password);
         }
     }

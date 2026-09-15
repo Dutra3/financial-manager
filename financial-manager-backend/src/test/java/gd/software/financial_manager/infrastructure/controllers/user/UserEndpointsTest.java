@@ -2,6 +2,7 @@ package gd.software.financial_manager.infrastructure.controllers.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gd.software.financial_manager.infrastructure.dtos.UserData;
+import gd.software.financial_manager.infrastructure.persistence.relational.UserRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,10 @@ class UserEndpointsTest {
 
     @Test
     void should_return_409_when_email_already_exists() throws Exception {
-        userRepository.save(new gd.software.financial_manager.infrastructure.persistence.relational.UserRow(
-                null, "existing@test.com", "pass"));
+        userRepository.save(UserRow.builder()
+                .email("existing@test.com")
+                .password("pass")
+                .build());
 
         UserData request = new UserData(UUID.randomUUID(), "existing@test.com", "password123");
 

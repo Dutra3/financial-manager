@@ -80,3 +80,10 @@
 .create-account-final-button:hover {
     background-color: #1f47c7;
 }
+.password-hint {
+    color: var(--text-color);
+    opacity: 0.6;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 8px;
+}

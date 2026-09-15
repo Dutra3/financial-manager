@@ -17,7 +17,11 @@ public class ProfileToRow {
                 .payday(profile.payday())
                 .initialBalance(profile.initialBalance())
                 .financialGoal(profile.financialGoal())
-                .user(new UserRow(UUID.randomUUID(), "email@email.com", "password"))
+                .user(UserRow.builder()
+                        .id(UUID.randomUUID())
+                        .email("email@email.com")
+                        .password("password")
+                        .build())
                 .build();
     }
 }

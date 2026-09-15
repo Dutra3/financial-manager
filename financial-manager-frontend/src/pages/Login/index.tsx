@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { FaGoogle } from 'react-icons/fa';
 import { useGoogleLogin } from '@react-oauth/google';
-import { login } from '../../api/authApi';
+import { login, googleLogin as googleLoginApi } from '../../api/authApi';
 import './Login.css';
 
 const Login = () => {
@@ -25,11 +25,20 @@ const Login = () => {
         }
     };
 
-    const handleGoogleLoginSuccess = (tokenResponse: { access_token: string }): void => {
-        localStorage.setItem('googleAuthToken', tokenResponse.access_token);
-        console.log(tokenResponse);
-
-        navigate('/');
+    const handleGoogleLoginSuccess = async (credentialResponse: any): Promise<void> => {
+        try {
+            const accessToken = credentialResponse.access_token;
+            if (!accessToken) {
+                setError('Google login failed: no access token');
+                return;
+            }
+            const response = await googleLoginApi(accessToken);
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('userId', response.userId);
+            navigate('/');
+        } catch (err) {
+            setError('Google login failed');
+        }
     };
 
     const handleGoogleLoginError = (): void => {

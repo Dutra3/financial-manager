@@ -25,6 +25,18 @@ const CreateAccount = () => {
             setError('Password must be at least 8 characters');
             return false;
         }
+        if (!/[A-Z]/.test(password)) {
+            setError('Password must contain at least one uppercase letter');
+            return false;
+        }
+        if (!/[0-9]/.test(password)) {
+            setError('Password must contain at least one number');
+            return false;
+        }
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+            setError('Password must contain at least one special character');
+            return false;
+        }
         setError('');
         return true;
     };
@@ -87,11 +99,16 @@ const CreateAccount = () => {
 
                     {error && <p className="error-message">{error}</p>}
                     {success && <p className="success-message">{success}</p>}
+                    {!error && !success && (
+                        <p className="password-hint">
+                            Password must have: 8+ chars, 1 uppercase, 1 number, 1 special character
+                        </p>
+                    )}
 
                     <button
                         type="submit"
                         className="create-account-final-button"
-                        disabled={password !== confirmPassword || password.length < 8}
+                        disabled={password !== confirmPassword || password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)}
                     >
                         Create Account
                     </button>
