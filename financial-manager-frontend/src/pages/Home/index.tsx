@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Box } from "@mui/material";
 import { Card } from "../../components/Card";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
@@ -36,9 +37,11 @@ const Home = () => {
                     <>
                         {error && <p className="dashboard-error">{error}</p>}
                         <CurrencyToggle currency={currency} onChange={setCurrency} />
-                        <Card title="My balance" amount={convert(balance)} currency={currency} />
-                        <Card title="Income" amount={convert(income)} currency={currency} />
-                        <Card title="Expenses" amount={convert(expenses)} currency={currency} />
+                        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", marginBottom: 3 }}>
+                            <Card title="My balance" amount={convert(balance)} currency={currency} />
+                            <Card title="Income" amount={convert(income)} currency={currency} />
+                            <Card title="Expenses" amount={convert(expenses)} currency={currency} />
+                        </Box>
                         <DashboardKpis
                             kpis={computeKpis(transactions)}
                             rates={rates}

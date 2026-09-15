@@ -1,15 +1,29 @@
 .card-container {
-    background-color: var(--primary-color);
-    padding: 12px;
-    border-radius: 8px;
+    background: var(--card-background);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 220px;
+    min-width: 200px;
 }
 
 .card-title {
-    padding: 12px;
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.6;
 }
 
 .card-amount {
-    padding: 12px;
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
     color: var(--text-color);
 }

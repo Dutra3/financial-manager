@@ -1,12 +1,21 @@
 .transactions-container {
-  display: flex;
-  background-color: var(--background-color);
-  height: 100vh;
+    display: flex;
+    background-color: var(--background-color);
+    min-height: 100vh;
 }
-  
+
 .transaction-content {
-  flex-grow: 1;
-  padding: 100px 20px 20px;
-  background-color: var(--background-color);
-  color: var(--text-color);
+    flex-grow: 1;
+    margin-left: 250px;
+    padding: 80px 24px 24px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .transaction-content {
+        margin-left: 60px;
+        padding: 70px 16px 16px;
+    }
 }

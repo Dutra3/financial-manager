@@ -1,48 +1,27 @@
 .home-container {
-	display: flex;
-  	background-color: var(--background-color);
-  	height: 100vh;
+    display: flex;
+    background-color: var(--background-color);
+    min-height: 100vh;
 }
 
 .home-content {
-  	flex-grow: 1;
-  	padding: 100px 20px 20px;
-  	background-color: var(--background-color);
-  	color: var(--text-color);
-}
-
-.dashboard-content {
-  	flex-grow: 1;
-  	padding: 20px;
-  	background-color: var(--background-color);
-  	color: var(--text-color);
-}
-
-.btn-primary {
-  	background-color: var(--secondary-color);
-  	color: var(--text-color);
-  	padding: 0.875rem 2rem;
-  	border: none;
-  	border-radius: 5px;
-  	font-size: 1rem;
-  	font-weight: 600;
-  	cursor: pointer;
-  	transition: all 0.3s ease;
-  	text-transform: uppercase;
-  	letter-spacing: 0.5px;
-}
-
-.btn-primary:hover {
-  	background-color: var(--primary-color);
-  	color: var(--text-color);
-}
-
-.btn-primary:focus {
-  	outline: 2px solid var(--primary-color);
+    flex-grow: 1;
+    margin-left: 250px;
+    padding: 80px 24px 24px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
 }
 
 .dashboard-error {
-  	color: #f44336;
-  	font-size: 0.9rem;
-  	padding: 10px 0;
+    color: #f44336;
+    font-size: 0.9rem;
+    padding: 10px 0;
+}
+
+@media (max-width: 768px) {
+    .home-content {
+        margin-left: 60px;
+        padding: 70px 16px 16px;
+    }
 }

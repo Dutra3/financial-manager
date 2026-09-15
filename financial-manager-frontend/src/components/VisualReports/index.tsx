@@ -103,10 +103,14 @@ const VisualReports: React.FC<VisualReportsProps> = ({ transactions, monthlyData
                         </Typography>
                         {hasLineData ? (
                             <ResponsiveContainer width="100%" height={300}>
-                                <LineChart data={lineData}>
+                                <LineChart data={lineData} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.3)" />
                                     <XAxis dataKey="month" stroke="var(--text-color)" />
-                                    <YAxis stroke="var(--text-color)" tickFormatter={(v: number) => formatCurrency(v, currency)} />
+                                    <YAxis
+                                        stroke="var(--text-color)"
+                                        tickFormatter={(v: number) => formatCurrency(v, currency)}
+                                        width={105}
+                                    />
                                     <Tooltip formatter={(value: any) => formatCurrency(Number(value), currency)} />
                                     <Legend />
                                     <Line type="monotone" dataKey="income" stroke="#4caf50" name="Income" />

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { logout } from '../../utils/auth';
 import "./Header.css";
 
 interface HeaderProps {
@@ -14,8 +14,6 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
         const savedTheme = localStorage.getItem('theme');
         return savedTheme === 'dark';
     });
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -36,10 +34,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('googleAuthToken');
-        
-        navigate("/login");
+        logout();
     };
 
     return (

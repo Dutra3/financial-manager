@@ -235,7 +235,7 @@ const Wallet = () => {
     };
 
     return (
-        <main className="home-container">
+        <main className="wallet-container">
             <SideBar page="wallet"/>
             <div className="wallet-content">
                 <Header title="Olá, Gabriel. Você está na aba de Carteira. Aqui você encontra suas ações e fundos imobiliários cadastrados, podendo também alterar a quantidade de cada um deles."/>

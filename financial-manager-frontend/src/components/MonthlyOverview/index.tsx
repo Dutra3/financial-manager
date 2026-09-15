@@ -41,7 +41,7 @@ const MonthlyOverview: React.FC<MonthlyOverviewProps> = ({ data, loading, error,
             <TableContainer component={Paper} sx={{ backgroundColor: "var(--primary-color)" }}>
                 <Table size="small">
                     <TableHead>
-                        <TableRow>
+                        <TableRow sx={{ "& th": { backgroundColor: "var(--hover-color)" } }}>
                             <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Month</TableCell>
                             <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }} align="right">Income</TableCell>
                             <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }} align="right">Expenses</TableCell>
@@ -53,13 +53,21 @@ const MonthlyOverview: React.FC<MonthlyOverviewProps> = ({ data, loading, error,
                             const income = convertCurrency(row.income, rates, currency);
                             const expenses = convertCurrency(row.expenses, rates, currency);
                             const net = income - expenses;
+                            const isPositive = net >= 0;
                             return (
-                                <TableRow key={row.month}>
-                                    <TableCell sx={{ color: "var(--text-color)" }}>{row.month}</TableCell>
+                                <TableRow
+                                    key={row.month}
+                                    sx={{
+                                        "&:nth-of-type(odd)": { backgroundColor: "rgba(128,128,128,0.04)" },
+                                        "&:hover": { backgroundColor: "var(--hover-color)" },
+                                        "& td": { borderBottom: "1px solid var(--border-color)" },
+                                    }}
+                                >
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: 500 }}>{row.month}</TableCell>
                                     <TableCell sx={{ color: "#4caf50" }} align="right">{formatCurrency(income, currency)}</TableCell>
                                     <TableCell sx={{ color: "#f44336" }} align="right">{formatCurrency(expenses, currency)}</TableCell>
-                                    <TableCell sx={{ color: net >= 0 ? "#4caf50" : "#f44336" }} align="right">
-                                        {formatCurrency(net, currency)}
+                                    <TableCell sx={{ color: isPositive ? "#4caf50" : "#f44336", fontWeight: 600 }} align="right">
+                                        {isPositive ? "+" : "-"}{formatCurrency(Math.abs(net), currency)}
                                     </TableCell>
                                 </TableRow>
                             );

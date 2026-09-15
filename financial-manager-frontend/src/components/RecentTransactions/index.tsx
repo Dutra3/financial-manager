@@ -1,4 +1,5 @@
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip } from "@mui/material";
+import { Link } from "react-router-dom";
 import { TransactionResponse } from "../../api/transactionApi";
 import { Currency } from "../../utils/currency";
 import { convertCurrency } from "../../utils/currency";
@@ -17,6 +18,14 @@ const LOCALE: Record<string, string> = {
     EUR: "de-DE",
     CAD: "en-CA",
     GBP: "en-GB",
+};
+
+const CATEGORY_COLORS = ["#8884d8", "#83a6ed", "#8dd1e1", "#82ca9d", "#a8d08d", "#d4a96a", "#e0a8a8", "#d884a8"];
+
+const categoryColor = (name: string) => {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return CATEGORY_COLORS[Math.abs(hash) % CATEGORY_COLORS.length];
 };
 
 const formatCurrency = (amount: number, currency: string) => {
@@ -47,13 +56,20 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions, l
 
     return (
         <Box sx={{ marginBottom: 3 }}>
-            <Typography variant="h6" sx={{ marginBottom: 1, color: "var(--text-color)" }}>
-                Recent Transactions
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 1 }}>
+                <Typography variant="h6" sx={{ color: "var(--text-color)" }}>
+                    Recent Transactions
+                </Typography>
+                <Link to="/transactions" style={{ textDecoration: "none" }}>
+                    <Typography sx={{ color: "var(--secondary-color)", fontSize: "0.9rem", fontWeight: 600, "&:hover": { textDecoration: "underline" } }}>
+                        View all →
+                    </Typography>
+                </Link>
+            </Box>
             <TableContainer component={Paper} sx={{ backgroundColor: "var(--primary-color)" }}>
                 <Table size="small">
                     <TableHead>
-                        <TableRow>
+                        <TableRow sx={{ "& th": { backgroundColor: "var(--hover-color)" } }}>
                             <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Name</TableCell>
                             <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Category</TableCell>
                             <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Date</TableCell>
@@ -63,13 +79,32 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions, l
                     <TableBody>
                         {recent.map((t) => {
                             const amount = convertCurrency(t.amount, rates, currency);
+                            const isCredit = t.type === "CREDIT";
                             return (
-                                <TableRow key={t.id}>
+                                <TableRow
+                                    key={t.id}
+                                    sx={{
+                                        "&:nth-of-type(odd)": { backgroundColor: "rgba(128,128,128,0.04)" },
+                                        "&:hover": { backgroundColor: "var(--hover-color)" },
+                                        "& td": { borderBottom: "1px solid var(--border-color)" },
+                                    }}
+                                >
                                     <TableCell sx={{ color: "var(--text-color)" }}>{t.name}</TableCell>
-                                    <TableCell sx={{ color: "var(--text-color)" }}>{t.category}</TableCell>
-                                    <TableCell sx={{ color: "var(--text-color)" }}>{formatDate(t.paymentDate)}</TableCell>
-                                    <TableCell sx={{ color: t.type === "CREDIT" ? "#4caf50" : "#f44336" }} align="right">
-                                        {t.type === "CREDIT" ? "+" : "-"}{formatCurrency(amount, currency)}
+                                    <TableCell>
+                                        <Chip
+                                            label={t.category}
+                                            size="small"
+                                            sx={{
+                                                backgroundColor: categoryColor(t.category),
+                                                color: "#fff",
+                                                fontWeight: 600,
+                                                fontSize: "0.75rem",
+                                            }}
+                                        />
+                                    </TableCell>
+                                    <TableCell sx={{ color: "var(--text-color)", opacity: 0.8 }}>{formatDate(t.paymentDate)}</TableCell>
+                                    <TableCell sx={{ color: isCredit ? "#4caf50" : "#f44336", fontWeight: 600 }} align="right">
+                                        {isCredit ? "+" : "-"}{formatCurrency(amount, currency)}
                                     </TableCell>
                                 </TableRow>
                             );
