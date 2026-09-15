@@ -1,0 +1,11 @@
+.budgets-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
+.budgets-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
