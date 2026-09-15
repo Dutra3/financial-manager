@@ -35,22 +35,22 @@ public class StockRow {
     @Column(length = 255)
     private String industrySegment;
 
-    @Column(precision = 4, scale = 2)
+    @Column(precision = 13, scale = 4)
     private BigDecimal tagAlong;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal price;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal peRatio;
 
-    @Column(precision = 6, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal dividendYield;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal pbRatio;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal lastDividend;
 
     @Column(nullable = false)

@@ -8,6 +8,9 @@ import gd.software.financial_manager.infrastructure.persistence.relational.Profi
 import gd.software.financial_manager.infrastructure.persistence.repository.ProfileRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Component
 public class AllProfilesPersistent implements AllProfiles {
 
@@ -21,8 +24,18 @@ public class AllProfilesPersistent implements AllProfiles {
     public Profile save(Profile profile) {
         ProfileRow row = ProfileToRow.convert(profile);
 
+        if (row.getId() != null && repository.existsById(row.getId())) {
+            ProfileRow existing = repository.findById(row.getId()).orElseThrow();
+            row.setUser(existing.getUser());
+        }
+
         ProfileRow savedProfile = repository.save(row);
 
         return RowToProfile.convert(savedProfile);
+    }
+
+    @Override
+    public Optional<Profile> byId(UUID id) {
+        return repository.findById(id).map(RowToProfile::convert);
     }
 }

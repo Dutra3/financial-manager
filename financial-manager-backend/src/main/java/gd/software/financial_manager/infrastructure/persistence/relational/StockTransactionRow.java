@@ -26,10 +26,10 @@ public class StockTransactionRow {
     @ToString.Exclude
     private StockRow stock;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal quantity;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal price;
 
     @Column(nullable = false)

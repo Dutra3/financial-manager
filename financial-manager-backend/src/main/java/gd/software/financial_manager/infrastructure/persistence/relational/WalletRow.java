@@ -21,7 +21,7 @@ public class WalletRow {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal amount;
 
     @ManyToMany

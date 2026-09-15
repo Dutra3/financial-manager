@@ -32,6 +32,6 @@ public class BondRow {
     @Column(length = 255)
     private String industrySegment;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal price;
 }

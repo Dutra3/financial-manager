@@ -26,10 +26,10 @@ public class ReitTransactionRow {
     @ToString.Exclude
     private ReitRow reit;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal quantity;
 
-    @Column(precision = 8, scale = 4)
+    @Column(precision = 13, scale = 4)
     private BigDecimal price;
 
     @Column(nullable = false)

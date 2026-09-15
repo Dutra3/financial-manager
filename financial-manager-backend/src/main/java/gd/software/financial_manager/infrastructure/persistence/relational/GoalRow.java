@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -13,30 +14,27 @@ import java.util.UUID;
 @Setter
 @ToString
 @Entity
-@Table(name = "gd_profile")
-public class ProfileRow {
+@Table(name = "gd_goal")
+public class GoalRow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(length = 100)
-    private String profession;
+    @Column(length = 255)
+    private String description;
+
+    @Column
+    private LocalDate targetDate;
 
     @Column(precision = 13, scale = 4, nullable = false)
-    private BigDecimal netSalary;
+    private BigDecimal targetAmount;
 
     @Column(nullable = false)
-    private Integer payday;
-
-    @Column(precision = 13, scale = 4, nullable = false)
-    private BigDecimal initialBalance;
-
-    @Column(precision = 13, scale = 4, nullable = false)
-    private BigDecimal financialGoal;
+    private Boolean isAchieved;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

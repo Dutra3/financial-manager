@@ -4,6 +4,8 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import "./SideBar.css";
 
 interface SideBarProps {
@@ -34,6 +36,18 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
                         <Link to="/wallet" className={page == "wallet" ? "active" : ""}>
                             <AccountBalanceWalletOutlinedIcon />
                             Wallet
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/goals" className={page == "goals" ? "active" : ""}>
+                            <FlagOutlinedIcon />
+                            Goals
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/budgets" className={page == "budgets" ? "active" : ""}>
+                            <AccountBalanceOutlinedIcon />
+                            Budgets
                         </Link>
                     </li>
                     <li>

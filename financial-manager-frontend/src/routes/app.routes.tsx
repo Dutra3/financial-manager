@@ -3,6 +3,8 @@ import { Home } from "../pages/Home";
 import { Profile } from "../pages/Profile";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
+import { Goals } from "../pages/Goals";
+import { Budgets } from "../pages/Budgets";
 import { Login } from "../pages/Login";
 import { ForgotPassword } from "../pages/ForgotPassword";
 import { CreateAccount } from "../pages/CreateAccount";
@@ -32,6 +34,16 @@ const AppRoutes = () => {
             <Route path="/wallet" element={
                 <PrivateRoute>
                     <Wallet />
+                </PrivateRoute>}
+            />
+            <Route path="/goals" element={
+                <PrivateRoute>
+                    <Goals />
+                </PrivateRoute>}
+            />
+            <Route path="/budgets" element={
+                <PrivateRoute>
+                    <Budgets />
                 </PrivateRoute>}
             />
         </Routes>
