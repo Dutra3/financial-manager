@@ -2,20 +2,27 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { FaGoogle } from 'react-icons/fa';
 import { useGoogleLogin } from '@react-oauth/google';
+import { login } from '../../api/authApi';
 import './Login.css';
 
 const Login = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [error, setError] = useState<string>('');
 
     const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent<HTMLFormElement>): void => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
-
-        // TODO: Replace with real auth (task 22)
-        localStorage.setItem('authToken', 'dev-bypass-token');
-        navigate('/');
+        setError('');
+        try {
+            const response = await login({ email: username, password });
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('userId', response.userId);
+            navigate('/');
+        } catch (err: any) {
+            setError(err?.response?.status === 401 ? 'Invalid email or password' : 'Login failed');
+        }
     };
 
     const handleGoogleLoginSuccess = (tokenResponse: { access_token: string }): void => {
@@ -54,6 +61,7 @@ const Login = () => {
             <div className="right-section">
                 <form className="login-form" onSubmit={handleLogin}>
                     <h2>Login</h2>
+                    {error && <p className="login-error">{error}</p>}
                     <div className="form-group">
                         <label htmlFor="username">Email</label>
                         <input

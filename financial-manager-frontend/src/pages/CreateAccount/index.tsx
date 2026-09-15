@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createUser } from "../../api/authApi";
 import "./CreateAccount.css";
 
 const CreateAccount = () => {
@@ -7,6 +8,7 @@ const CreateAccount = () => {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const [success, setSuccess] = useState<string>('');
 
     const navigate = useNavigate();
 
@@ -27,10 +29,15 @@ const CreateAccount = () => {
         return true;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (validateForm()) {
-            console.log('Account Created');
+        if (!validateForm()) return;
+        try {
+            await createUser({ id: crypto.randomUUID(), email, password });
+            setSuccess('Account created successfully! Redirecting to login...');
+            setTimeout(() => navigate('/login'), 2000);
+        } catch (err: any) {
+            setError(err?.response?.status === 409 ? 'Email already registered' : 'Failed to create account');
         }
     };
 
@@ -79,6 +86,7 @@ const CreateAccount = () => {
                     </div>
 
                     {error && <p className="error-message">{error}</p>}
+                    {success && <p className="success-message">{success}</p>}
 
                     <button
                         type="submit"
