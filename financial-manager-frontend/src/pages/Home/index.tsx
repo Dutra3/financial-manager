@@ -7,6 +7,8 @@ import { MonthlyOverview } from "../../components/MonthlyOverview";
 import { DashboardKpis } from "../../components/DashboardKpis";
 import { RecentTransactions } from "../../components/RecentTransactions";
 import { VisualReports } from "../../components/VisualReports";
+import { DashboardGoals } from "../../components/DashboardGoals";
+import { DashboardBudgetAlerts } from "../../components/DashboardBudgetAlerts";
 import { useDashboardData } from "../../hooks/useDashboardData";
 import { useMonthlyData } from "../../hooks/useMonthlyData";
 import { computeKpis } from "../../hooks/useDashboardKpis";
@@ -42,6 +44,8 @@ const Home = () => {
                             rates={rates}
                             currency={currency}
                         />
+                        <DashboardGoals />
+                        <DashboardBudgetAlerts />
                         <VisualReports
                             transactions={transactions}
                             monthlyData={monthlyData}
