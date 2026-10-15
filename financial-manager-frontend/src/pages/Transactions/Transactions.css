@@ -6,16 +6,22 @@
 
 .transaction-content {
     flex-grow: 1;
-    margin-left: 250px;
+    margin-left: 72px;
     padding: 80px 24px 24px;
     background-color: var(--background-color);
     color: var(--text-color);
     min-height: 100vh;
 }
 
+.transaction-content > * {
+    max-width: 1240px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 @media (max-width: 768px) {
     .transaction-content {
-        margin-left: 60px;
+        margin-left: 72px;
         padding: 70px 16px 16px;
     }
 }

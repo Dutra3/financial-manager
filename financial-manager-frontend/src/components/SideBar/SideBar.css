@@ -1,10 +1,11 @@
 .sidebar {
-    width: 250px;
+    width: 72px;
     background-color: var(--primary-color);
     color: var(--text-color);
     height: 100vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
     border-right: 1px solid var(--border-color);
     position: fixed;
     top: 0;
@@ -13,45 +14,61 @@
 }
 
 .sidebar .logo {
-    padding: 24px 20px;
-    font-size: 24px;
-    font-weight: bold;
-    border-bottom: 1px solid var(--border-color);
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar .logo-mark {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-color);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
 }
 
 .sidebar nav {
     flex: 1;
-    padding: 12px 8px;
+    width: 100%;
+    padding: 12px 0;
 }
 
 .sidebar nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
 }
 
 .sidebar nav ul li {
-    padding: 0;
     display: flex;
-    align-items: center;
+    justify-content: center;
 }
 
 .sidebar nav ul li a {
     color: var(--text-color);
-    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 16px;
-    padding: 14px 16px;
-    border-radius: 10px;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     transition: all 0.2s ease;
-    width: 100%;
-    opacity: 0.7;
+    opacity: 0.6;
+    position: relative;
 }
 
 .sidebar nav ul li a svg {
-    font-size: 22px;
+    font-size: 24px;
 }
 
 .sidebar nav ul li a:hover {
@@ -65,6 +82,14 @@
     opacity: 1;
 }
 
-.sidebar nav ul li a.active svg {
-    color: #ffffff;
+.sidebar nav ul li a.active::before {
+    content: "";
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 24px;
+    border-radius: 0 4px 4px 0;
+    background-color: var(--secondary-color);
 }

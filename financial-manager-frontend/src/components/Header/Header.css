@@ -5,10 +5,10 @@
     padding: 16px 24px;
     background-color: var(--primary-color);
     color: var(--text-color);
-    width: calc(100% - 250px);
+    width: calc(100% - 72px);
     position: fixed;
     top: 0;
-    left: 250px;
+    left: 72px;
     z-index: 90;
     border-bottom: 1px solid var(--border-color);
 }
@@ -55,8 +55,8 @@
 
 @media (max-width: 768px) {
     .header-container {
-        width: calc(100% - 60px);
-        left: 60px;
+        width: calc(100% - 72px);
+        left: 72px;
         padding: 12px 16px;
     }
 
