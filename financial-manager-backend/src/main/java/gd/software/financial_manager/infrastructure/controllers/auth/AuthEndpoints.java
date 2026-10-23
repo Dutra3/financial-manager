@@ -3,11 +3,14 @@ package gd.software.financial_manager.infrastructure.controllers.auth;
 import gd.software.financial_manager.infrastructure.dtos.AuthResponse;
 import gd.software.financial_manager.infrastructure.dtos.GoogleLoginRequest;
 import gd.software.financial_manager.infrastructure.dtos.LoginRequest;
+import gd.software.financial_manager.infrastructure.dtos.RefreshTokenRequest;
+import gd.software.financial_manager.infrastructure.persistence.relational.RefreshTokenRow;
 import gd.software.financial_manager.infrastructure.persistence.relational.UserRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.UserRepository;
 import gd.software.financial_manager.infrastructure.utils.GoogleTokenValidator;
 import gd.software.financial_manager.infrastructure.utils.JwtUtil;
 import gd.software.financial_manager.infrastructure.utils.PasswordUtil;
+import gd.software.financial_manager.infrastructure.utils.RefreshTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class AuthEndpoints {
     @Autowired
     private GoogleTokenValidator googleTokenValidator;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         logger.info("Login attempt for email {}.", request.email());
@@ -43,8 +49,7 @@ public class AuthEndpoints {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        String token = JwtUtil.generateToken(user.getId().toString(), user.getEmail());
-        return ResponseEntity.ok(new AuthResponse(token, user.getId().toString(), user.getEmail()));
+        return ResponseEntity.ok(buildAuthResponse(user));
     }
 
     @PostMapping("/google")
@@ -78,7 +83,30 @@ public class AuthEndpoints {
             }
         }
 
+        return ResponseEntity.ok(buildAuthResponse(user));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+        return refreshTokenService.rotate(request.refreshToken())
+                .map(rotated -> {
+                    UserRow user = rotated.getUser();
+                    String refreshToken = refreshTokenService.create(user);
+                    String token = JwtUtil.generateToken(user.getId().toString(), user.getEmail());
+                    return ResponseEntity.ok(new AuthResponse(token, refreshToken, user.getId().toString(), user.getEmail()));
+                })
+                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody RefreshTokenRequest request) {
+        refreshTokenService.revoke(request.refreshToken());
+        return ResponseEntity.noContent().build();
+    }
+
+    private AuthResponse buildAuthResponse(UserRow user) {
         String token = JwtUtil.generateToken(user.getId().toString(), user.getEmail());
-        return ResponseEntity.ok(new AuthResponse(token, user.getId().toString(), user.getEmail()));
+        String refreshToken = refreshTokenService.create(user);
+        return new AuthResponse(token, refreshToken, user.getId().toString(), user.getEmail());
     }
 }

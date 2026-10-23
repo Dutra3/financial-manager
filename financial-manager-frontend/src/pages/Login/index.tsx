@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle } from 'react-icons/fa';
 import { useGoogleLogin } from '@react-oauth/google';
 import { login, googleLogin as googleLoginApi } from '../../api/authApi';
+import { saveSession } from '../../utils/auth';
 import './Login.css';
 
 const Login = () => {
@@ -17,8 +18,7 @@ const Login = () => {
         setError('');
         try {
             const response = await login({ email: username, password });
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('userId', response.userId);
+            saveSession(response.token, response.refreshToken, response.userId);
             navigate('/');
         } catch (err: any) {
             setError(err?.response?.status === 401 ? 'Invalid email or password' : 'Login failed');
@@ -33,8 +33,7 @@ const Login = () => {
                 return;
             }
             const response = await googleLoginApi(accessToken);
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('userId', response.userId);
+            saveSession(response.token, response.refreshToken, response.userId);
             navigate('/');
         } catch (err) {
             setError('Google login failed');

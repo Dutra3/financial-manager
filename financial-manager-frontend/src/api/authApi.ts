@@ -7,6 +7,7 @@ export interface LoginRequest {
 
 export interface AuthResponse {
     token: string;
+    refreshToken: string;
     userId: string;
     email: string;
 };
@@ -30,4 +31,8 @@ export const googleLogin = async (accessToken: string) => {
 export const createUser = async (user: UserData) => {
     const response = await apiClient.post('/users', user);
     return response.data;
+};
+
+export const logoutSession = async (refreshToken: string) => {
+    await apiClient.post('/auth/logout', { refreshToken });
 };

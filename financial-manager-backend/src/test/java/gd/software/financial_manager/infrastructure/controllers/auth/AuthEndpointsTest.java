@@ -3,6 +3,7 @@ package gd.software.financial_manager.infrastructure.controllers.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gd.software.financial_manager.infrastructure.dtos.GoogleLoginRequest;
 import gd.software.financial_manager.infrastructure.dtos.LoginRequest;
+import gd.software.financial_manager.infrastructure.dtos.RefreshTokenRequest;
 import gd.software.financial_manager.infrastructure.persistence.relational.UserRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.UserRepository;
 import gd.software.financial_manager.infrastructure.utils.GoogleTokenValidator;
@@ -107,6 +108,103 @@ class AuthEndpointsTest {
         mockMvc.perform(post("/auth/google")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void should_login_and_return_refresh_token() throws Exception {
+        userRepository.save(UserRow.builder()
+                .email("refreshlogin@test.com")
+                .password("secret123")
+                .build());
+
+        LoginRequest request = new LoginRequest("refreshlogin@test.com", "secret123");
+
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isNotEmpty())
+                .andExpect(jsonPath("$.refreshToken").isNotEmpty());
+    }
+
+    @Test
+    void should_refresh_and_rotate_tokens() throws Exception {
+        userRepository.save(UserRow.builder()
+                .email("rotate@test.com")
+                .password("secret123")
+                .build());
+
+        String loginResponse = mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new LoginRequest("rotate@test.com", "secret123"))))
+                .andReturn().getResponse().getContentAsString();
+
+        String refreshToken = objectMapper.readTree(loginResponse).get("refreshToken").asText();
+
+        mockMvc.perform(post("/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RefreshTokenRequest(refreshToken))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isNotEmpty())
+                .andExpect(jsonPath("$.refreshToken").isNotEmpty());
+    }
+
+    @Test
+    void should_reject_reused_refresh_token() throws Exception {
+        userRepository.save(UserRow.builder()
+                .email("reuse@test.com")
+                .password("secret123")
+                .build());
+
+        String loginResponse = mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new LoginRequest("reuse@test.com", "secret123"))))
+                .andReturn().getResponse().getContentAsString();
+
+        String refreshToken = objectMapper.readTree(loginResponse).get("refreshToken").asText();
+
+        mockMvc.perform(post("/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RefreshTokenRequest(refreshToken))))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RefreshTokenRequest(refreshToken))))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void should_reject_unknown_refresh_token() throws Exception {
+        mockMvc.perform(post("/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RefreshTokenRequest("nonexistent-token"))))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void should_revoke_refresh_token_on_logout() throws Exception {
+        userRepository.save(UserRow.builder()
+                .email("logout@test.com")
+                .password("secret123")
+                .build());
+
+        String loginResponse = mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new LoginRequest("logout@test.com", "secret123"))))
+                .andReturn().getResponse().getContentAsString();
+
+        String refreshToken = objectMapper.readTree(loginResponse).get("refreshToken").asText();
+
+        mockMvc.perform(post("/auth/logout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RefreshTokenRequest(refreshToken))))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(post("/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RefreshTokenRequest(refreshToken))))
                 .andExpect(status().isUnauthorized());
     }
 }

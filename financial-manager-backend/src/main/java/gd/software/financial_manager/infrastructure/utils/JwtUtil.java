@@ -11,7 +11,7 @@ public class JwtUtil {
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(
             "financial-manager-secret-key-must-be-at-least-32-bytes-long".getBytes()
     );
-    private static final long EXPIRATION_MS = 86400000L; // 24 hours
+    private static final long EXPIRATION_MS = 900000L; // 15 minutes
 
     public static String generateToken(String userId, String email) {
         return Jwts.builder()
