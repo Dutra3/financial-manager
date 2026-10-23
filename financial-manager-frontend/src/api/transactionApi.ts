@@ -6,7 +6,8 @@ export interface Transaction {
     description: string,
     amount: number,
     paymentDate: string,
-    categoryId: string
+    categoryId: string,
+    userId: string
 };
 
 export interface TransactionResponse {

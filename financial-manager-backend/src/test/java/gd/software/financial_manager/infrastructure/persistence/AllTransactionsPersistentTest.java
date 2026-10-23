@@ -44,7 +44,7 @@ class AllTransactionsPersistentTest {
                 .build());
         Category category = new Category(categoryRow.getId(), "Food", CategoryType.DEBIT);
         Transaction transaction = new Transaction(null, "Lunch", "Restaurant",
-                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), category);
+                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), category, user.getId());
 
         Transaction saved = allTransactions.save(transaction);
 
@@ -52,6 +52,11 @@ class AllTransactionsPersistentTest {
         assertThat(saved.id()).isNotNull();
         assertThat(saved.name()).isEqualTo("Lunch");
         assertThat(saved.amount()).isEqualByComparingTo("50.00");
+        assertThat(saved.userId()).isEqualTo(user.getId());
+
+        TransactionRow persisted = entityManager.find(TransactionRow.class, saved.id());
+        assertThat(persisted.getUser()).isNotNull();
+        assertThat(persisted.getUser().getId()).isEqualTo(user.getId());
     }
 
     @Test

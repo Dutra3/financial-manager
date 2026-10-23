@@ -8,6 +8,6 @@ public class DtoToTransaction {
 
     public static Transaction convert(TransactionDTO transactionDTO) {
         return new Transaction(transactionDTO.id(), transactionDTO.name(), transactionDTO.description(), transactionDTO.amount(),
-                transactionDTO.paymentDate(), new Category(transactionDTO.categoryId()));
+                transactionDTO.paymentDate(), new Category(transactionDTO.categoryId()), transactionDTO.userId());
     }
 }

@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTransactions, TransactionResponse } from "../api/transactionApi";
-
-const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { getUserId } from "../utils/auth";
 
 export interface MonthlyData {
     month: string;
@@ -35,8 +34,8 @@ const groupByMonth = (transactions: TransactionResponse[]): MonthlyData[] => {
 
 export const useMonthlyData = () => {
     const query = useQuery({
-        queryKey: ["transactions", PLACEHOLDER_USER_ID],
-        queryFn: ({ signal }) => getTransactions(PLACEHOLDER_USER_ID, signal),
+        queryKey: ["transactions", getUserId()],
+        queryFn: ({ signal }) => getTransactions(getUserId(), signal),
     });
 
     const monthlyData = query.data ? groupByMonth(query.data) : [];

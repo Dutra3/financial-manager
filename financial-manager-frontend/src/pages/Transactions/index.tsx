@@ -11,8 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, CircularProgress, Select, MenuItem, FormControl, InputLabel, Tooltip } from "@mui/material";
 import { FiEdit2, FiTrash2, FiPlusCircle, FiTag, FiDownload } from "react-icons/fi";
 import "./Transactions.css";
-
-const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { getUserId } from "../../utils/auth";
 
 const formatAmount = (amount: number, type: string) => {
     const prefix = type === "DEBIT" ? "-" : "+";
@@ -33,8 +32,8 @@ const Transactions = () => {
     const [typeFilter, setTypeFilter] = useState("all");
 
     const { data: transactions = [], isLoading, error } = useQuery({
-        queryKey: ["transactions", PLACEHOLDER_USER_ID],
-        queryFn: ({ signal }) => getTransactions(PLACEHOLDER_USER_ID, signal),
+        queryKey: ["transactions", getUserId()],
+        queryFn: ({ signal }) => getTransactions(getUserId(), signal),
     });
 
     const { data: categories = [] } = useQuery({

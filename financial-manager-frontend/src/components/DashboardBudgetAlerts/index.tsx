@@ -2,8 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getBudgetAlerts, BudgetAlert } from "../../api/budgetApi";
 import { Box, Typography, Paper, Alert } from "@mui/material";
 import { FiAlertCircle } from "react-icons/fi";
-
-const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { getUserId } from "../../utils/auth";
 
 const formatCurrency = (value: number) => `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -13,8 +12,8 @@ const DashboardBudgetAlerts = () => {
     const currentYear = now.getFullYear();
 
     const { data: alerts = [] } = useQuery<BudgetAlert[]>({
-        queryKey: ["budgetAlerts", PLACEHOLDER_USER_ID, currentMonth, currentYear],
-        queryFn: () => getBudgetAlerts(PLACEHOLDER_USER_ID, currentMonth, currentYear),
+        queryKey: ["budgetAlerts", getUserId(), currentMonth, currentYear],
+        queryFn: () => getBudgetAlerts(getUserId(), currentMonth, currentYear),
         retry: false,
     });
 

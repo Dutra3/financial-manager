@@ -6,8 +6,7 @@ import { createTransaction, updateTransaction, TransactionResponse } from "../..
 import { getCategories, Category } from "../../api/categoryApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatAmountInput, parseAmountInput } from "../../utils/formatAmount";
-
-const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { getUserId } from "../../utils/auth";
 
 interface TransactionModalProps {
     open: boolean;
@@ -72,13 +71,14 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
                 amount: parseAmountInput(amount),
                 paymentDate: paymentDate ? format(paymentDate, "yyyy-MM-dd") : "",
                 categoryId,
+                userId: getUserId(),
             };
             return isEdit
                 ? updateTransaction(transaction!.id, payload)
                 : createTransaction(payload);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["transactions", PLACEHOLDER_USER_ID] });
+            queryClient.invalidateQueries({ queryKey: ["transactions", getUserId()] });
             setMessage(isEdit ? "Transaction updated successfully!" : "Transaction created successfully!");
             setTimeout(() => onClose(), 1000);
         },

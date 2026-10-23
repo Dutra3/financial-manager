@@ -7,8 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, CircularProgress, LinearProgress, IconButton, Tooltip } from "@mui/material";
 import { FiPlusCircle, FiTrash2 } from "react-icons/fi";
 import "./Goals.css";
-
-const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { getUserId } from "../../utils/auth";
 
 const formatCurrency = (value: number) => `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const formatDate = (dateStr: string) => dateStr ? new Date(dateStr).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "—";
@@ -18,14 +17,14 @@ const Goals = () => {
     const [modalOpen, setModalOpen] = useState(false);
 
     const { data: goals = [], isLoading: goalsLoading } = useQuery<GoalType[]>({
-        queryKey: ["goals", PLACEHOLDER_USER_ID],
-        queryFn: () => getGoals(PLACEHOLDER_USER_ID),
+        queryKey: ["goals", getUserId()],
+        queryFn: () => getGoals(getUserId()),
         retry: false,
     });
 
     const { data: currentBalance = 0, isLoading: balanceLoading } = useQuery<number>({
-        queryKey: ["currentBalance", PLACEHOLDER_USER_ID],
-        queryFn: () => getCurrentBalance(PLACEHOLDER_USER_ID),
+        queryKey: ["currentBalance", getUserId()],
+        queryFn: () => getCurrentBalance(getUserId()),
         retry: false,
     });
 

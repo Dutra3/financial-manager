@@ -18,10 +18,11 @@ class DtoToTransactionTest {
     private static final BigDecimal AMOUNT = new BigDecimal("320.00");
     private static final LocalDate PAYMENT_DATE = LocalDate.of(2025, 5, 20);
     private static final UUID CATEGORY_ID = UUID.randomUUID();
+    private static final UUID USER_ID = UUID.randomUUID();
 
     @Test
     void should_convert() {
-        TransactionDTO dto = new TransactionDTO(ID, NAME, DESCRIPTION, AMOUNT, PAYMENT_DATE, CATEGORY_ID);
+        TransactionDTO dto = new TransactionDTO(ID, NAME, DESCRIPTION, AMOUNT, PAYMENT_DATE, CATEGORY_ID, USER_ID);
         Transaction transaction = DtoToTransaction.convert(dto);
 
         assertThat(transaction).isNotNull();
@@ -35,7 +36,7 @@ class DtoToTransactionTest {
 
     @Test
     void should_convert_when_description_is_empty() {
-        TransactionDTO dto = new TransactionDTO(ID, NAME, "", AMOUNT, PAYMENT_DATE, CATEGORY_ID);
+        TransactionDTO dto = new TransactionDTO(ID, NAME, "", AMOUNT, PAYMENT_DATE, CATEGORY_ID, USER_ID);
         Transaction transaction = DtoToTransaction.convert(dto);
 
         assertThat(transaction).isNotNull();

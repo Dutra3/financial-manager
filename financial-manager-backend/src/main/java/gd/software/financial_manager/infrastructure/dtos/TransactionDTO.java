@@ -13,5 +13,6 @@ public record TransactionDTO(
         String description,
         @NotNull BigDecimal amount,
         @NotNull LocalDate paymentDate,
-        @NotNull UUID categoryId
+        @NotNull UUID categoryId,
+        @NotNull UUID userId
 ) {}

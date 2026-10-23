@@ -12,14 +12,20 @@ public class Transaction {
     private BigDecimal amount;
     private LocalDate paymentDate;
     private Category category;
+    private UUID userId;
 
     public Transaction(UUID id, String name, String description, BigDecimal amount, LocalDate paymentDate, Category category) {
+        this(id, name, description, amount, paymentDate, category, null);
+    }
+
+    public Transaction(UUID id, String name, String description, BigDecimal amount, LocalDate paymentDate, Category category, UUID userId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.paymentDate = paymentDate;
         this.category = category;
+        this.userId = userId;
     }
 
     public UUID id() {
@@ -44,6 +50,10 @@ public class Transaction {
 
     public Category category() {
         return category;
+    }
+
+    public UUID userId() {
+        return userId;
     }
 
     public void setCategory(Category category) {

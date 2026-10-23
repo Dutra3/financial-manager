@@ -2,21 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import { getGoals, getCurrentBalance, Goal } from "../../api/goalApi";
 import { Box, Typography, Paper, LinearProgress, CircularProgress, Alert } from "@mui/material";
 import { FiFlag } from "react-icons/fi";
-
-const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { getUserId } from "../../utils/auth";
 
 const formatCurrency = (value: number) => `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const DashboardGoals = () => {
     const { data: goals = [] } = useQuery<Goal[]>({
-        queryKey: ["goals", PLACEHOLDER_USER_ID],
-        queryFn: () => getGoals(PLACEHOLDER_USER_ID),
+        queryKey: ["goals", getUserId()],
+        queryFn: () => getGoals(getUserId()),
         retry: false,
     });
 
     const { data: currentBalance = 0, isLoading } = useQuery<number>({
-        queryKey: ["currentBalance", PLACEHOLDER_USER_ID],
-        queryFn: () => getCurrentBalance(PLACEHOLDER_USER_ID),
+        queryKey: ["currentBalance", getUserId()],
+        queryFn: () => getCurrentBalance(getUserId()),
         retry: false,
     });
 

@@ -7,8 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, CircularProgress, IconButton, Tooltip, Alert, LinearProgress } from "@mui/material";
 import { FiPlusCircle, FiTrash2 } from "react-icons/fi";
 import "./Budgets.css";
-
-const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { getUserId } from "../../utils/auth";
 
 const formatCurrency = (value: number) => `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -21,14 +20,14 @@ const Budgets = () => {
     const currentYear = now.getFullYear();
 
     const { data: budgets = [], isLoading } = useQuery<BudgetType[]>({
-        queryKey: ["budgets", PLACEHOLDER_USER_ID],
-        queryFn: () => getBudgets(PLACEHOLDER_USER_ID),
+        queryKey: ["budgets", getUserId()],
+        queryFn: () => getBudgets(getUserId()),
         retry: false,
     });
 
     const { data: alerts = [] } = useQuery<BudgetAlertType[]>({
-        queryKey: ["budgetAlerts", PLACEHOLDER_USER_ID, currentMonth, currentYear],
-        queryFn: () => getBudgetAlerts(PLACEHOLDER_USER_ID, currentMonth, currentYear),
+        queryKey: ["budgetAlerts", getUserId(), currentMonth, currentYear],
+        queryFn: () => getBudgetAlerts(getUserId(), currentMonth, currentYear),
         retry: false,
     });
 

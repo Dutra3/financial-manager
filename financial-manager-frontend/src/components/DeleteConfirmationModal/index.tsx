@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Box, Typography, Button, Alert } from "@mui/material";
 import { deleteTransaction, TransactionResponse } from "../../api/transactionApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-const PLACEHOLDER_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { getUserId } from "../../utils/auth";
 
 interface DeleteConfirmationModalProps {
     open: boolean;
@@ -34,7 +33,7 @@ const DeleteConfirmationModal = ({ open, onClose, transaction }: DeleteConfirmat
     const mutation = useMutation({
         mutationFn: () => deleteTransaction(transaction!.id),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["transactions", PLACEHOLDER_USER_ID] });
+            queryClient.invalidateQueries({ queryKey: ["transactions", getUserId()] });
             setMessage("Transaction deleted successfully!");
             setTimeout(() => onClose(), 1000);
         },
