@@ -1,0 +1,52 @@
+import apiClient from "./apiClient";
+
+export type AssetType = "STOCK" | "REIT" | "ETF" | "BOND" | "CRYPTO";
+export type AssetTransactionType = "BUY" | "SELL" | "DIVIDEND";
+
+export interface Asset {
+    id: string;
+    ticker: string;
+    name: string;
+    assetType: AssetType;
+    description: string;
+    type: string;
+    industrySegment: string;
+    price: number;
+    tagAlong: number | null;
+    peRatio: number | null;
+    dividendYield: number | null;
+    pbRatio: number | null;
+    lastDividend: number | null;
+    isBesst: boolean | null;
+    isNewMarket: boolean | null;
+};
+
+export interface AssetTransaction {
+    id: string;
+    assetId: string;
+    userId: string;
+    type: AssetTransactionType;
+    quantity: number;
+    price: number;
+    transactionDate: string;
+};
+
+export const getAssets = async (type?: AssetType): Promise<Asset[]> => {
+    const response = await apiClient.get('/assets', { params: type ? { type } : {} });
+    return response.data;
+};
+
+export const getAsset = async (id: string) => {
+    const response = await apiClient.get(`/assets/${id}`);
+    return response.data;
+};
+
+export const createAssetTransaction = async (transaction: Omit<AssetTransaction, "id">) => {
+    const response = await apiClient.post('/asset-transactions', transaction);
+    return response.data;
+};
+
+export const getAssetTransactions = async (userId: string): Promise<AssetTransaction[]> => {
+    const response = await apiClient.get(`/asset-transactions/${userId}`);
+    return response.data;
+};
