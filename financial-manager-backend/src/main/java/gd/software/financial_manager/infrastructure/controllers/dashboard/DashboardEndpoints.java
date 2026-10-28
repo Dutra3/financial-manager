@@ -5,6 +5,7 @@ import gd.software.financial_manager.domain.usecase.credit.FetchCredit;
 import gd.software.financial_manager.domain.usecase.debit.FetchDebit;
 import gd.software.financial_manager.infrastructure.dtos.CreditResponse;
 import gd.software.financial_manager.infrastructure.dtos.DebitResponse;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ public class DashboardEndpoints {
 
     @GetMapping("/debits/{id}")
     public ResponseEntity<List<DebitResponse>> fetchAllDebits(@PathVariable UUID id) {
+        SecurityUtils.requireSameUser(id);
         List<Installment> debits = fetchDebit.all(id);
         List<DebitResponse> responses = debits.stream()
                 .map(debit -> new DebitResponse(debit.amount()))
@@ -38,6 +40,7 @@ public class DashboardEndpoints {
 
     @GetMapping("/credits/{id}")
     public ResponseEntity<List<CreditResponse>> fetchAllCredits(@PathVariable UUID id) {
+        SecurityUtils.requireSameUser(id);
         List<Installment> debits = fetchCredit.all(id);
         List<CreditResponse> responses = debits.stream()
                 .map(credit -> new CreditResponse(credit.amount()))

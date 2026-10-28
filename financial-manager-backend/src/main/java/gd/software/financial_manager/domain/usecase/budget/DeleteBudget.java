@@ -1,6 +1,7 @@
 package gd.software.financial_manager.domain.usecase.budget;
 
 import gd.software.financial_manager.domain.usecase.collections.AllBudgets;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class DeleteBudget {
 
     public void use(UUID id) {
         logger.info("Deleting budget with id {}.", id);
+        allBudgets.byId(id).ifPresent(budget -> SecurityUtils.requireOwner(budget.userId()));
         allBudgets.remove(id);
     }
 }

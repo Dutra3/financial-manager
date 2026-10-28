@@ -10,6 +10,7 @@ import gd.software.financial_manager.infrastructure.converts.TransactionToDTO;
 import gd.software.financial_manager.infrastructure.converts.TransactionToResponse;
 import gd.software.financial_manager.infrastructure.dtos.TransactionDTO;
 import gd.software.financial_manager.infrastructure.dtos.TransactionResponse;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class TransactionEndpoints {
     @PostMapping
     public ResponseEntity<TransactionDTO> save(@RequestBody TransactionDTO transactionDTO) {
         Transaction transaction = DtoToTransaction.convert(transactionDTO);
+        transaction.setUserId(SecurityUtils.resolveUserId(transaction.userId()));
         Transaction savedTransaction = createTransaction.use(transaction);
 
         logger.info("Created transaction {}.", savedTransaction.name());
@@ -50,6 +52,7 @@ public class TransactionEndpoints {
 
     @GetMapping("/{id}")
     public ResponseEntity<List<TransactionResponse>> fetchAllTransactions(@PathVariable UUID id) {
+        SecurityUtils.requireSameUser(id);
         List<Transaction> transactions = fetchTransaction.all(id);
 
         List<TransactionResponse> responses = TransactionToResponse.convert(transactions);
@@ -60,6 +63,7 @@ public class TransactionEndpoints {
     @PutMapping("/{id}")
     public ResponseEntity<TransactionDTO> update(@PathVariable UUID id, @RequestBody TransactionDTO transactionDTO) {
         Transaction transaction = DtoToTransaction.convert(transactionDTO);
+        transaction.setUserId(SecurityUtils.resolveUserId(transaction.userId()));
         Transaction updatedTransaction = updateTransaction.use(transaction);
 
         logger.info("Updated transaction {}.", updatedTransaction.name());

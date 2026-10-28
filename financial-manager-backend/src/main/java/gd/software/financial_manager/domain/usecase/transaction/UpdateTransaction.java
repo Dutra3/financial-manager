@@ -4,6 +4,7 @@ import gd.software.financial_manager.domain.model.Category;
 import gd.software.financial_manager.domain.model.Transaction;
 import gd.software.financial_manager.domain.usecase.collections.AllCategories;
 import gd.software.financial_manager.domain.usecase.collections.AllTransactions;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ public class UpdateTransaction {
 
         Transaction existing = allTransactions.byId(transaction.id())
                 .orElseThrow(() -> new EntityNotFoundException("Transaction not found with id " + transaction.id()));
+
+        SecurityUtils.requireOwner(existing.userId());
 
         Optional<Category> category = allCategories.by(transaction.category().id());
         category.ifPresentOrElse(

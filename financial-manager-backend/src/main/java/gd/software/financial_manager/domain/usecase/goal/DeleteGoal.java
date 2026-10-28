@@ -1,6 +1,7 @@
 package gd.software.financial_manager.domain.usecase.goal;
 
 import gd.software.financial_manager.domain.usecase.collections.AllGoals;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class DeleteGoal {
 
     public void use(UUID id) {
         logger.info("Deleting goal with id {}.", id);
+        allGoals.byId(id).ifPresent(goal -> SecurityUtils.requireOwner(goal.userId()));
         allGoals.remove(id);
     }
 }

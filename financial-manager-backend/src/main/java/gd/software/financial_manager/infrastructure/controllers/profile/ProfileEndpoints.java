@@ -7,6 +7,7 @@ import gd.software.financial_manager.domain.usecase.profile.UpdateProfile;
 import gd.software.financial_manager.infrastructure.converts.DtoToProfile;
 import gd.software.financial_manager.infrastructure.converts.ProfileToDTO;
 import gd.software.financial_manager.infrastructure.dtos.ProfileDTO;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class ProfileEndpoints {
     @PostMapping
     public ResponseEntity<ProfileDTO> save(@RequestBody ProfileDTO profileDTO) {
         Profile profile = DtoToProfile.convert(profileDTO);
+        profile.setUserId(SecurityUtils.currentUserId());
         Profile savedProfile = createProfile.use(profile);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ProfileToDTO.convert(savedProfile));
@@ -42,6 +44,7 @@ public class ProfileEndpoints {
     @GetMapping("/{id}")
     public ResponseEntity<ProfileDTO> fetchProfile(@PathVariable UUID id) {
         Profile profile = fetchProfile.by(id);
+        SecurityUtils.requireOwner(profile.userId());
         return ResponseEntity.ok(ProfileToDTO.convert(profile));
     }
 

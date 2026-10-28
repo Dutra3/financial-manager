@@ -2,6 +2,7 @@ package gd.software.financial_manager.infrastructure.controllers.export;
 
 import gd.software.financial_manager.domain.model.Transaction;
 import gd.software.financial_manager.domain.usecase.collections.AllTransactions;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class ExportEndpoints {
 
     @GetMapping("/transactions/{userId}")
     public void exportTransactions(@PathVariable UUID userId, HttpServletResponse response) throws Exception {
+        SecurityUtils.requireSameUser(userId);
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=transactions.csv");
 

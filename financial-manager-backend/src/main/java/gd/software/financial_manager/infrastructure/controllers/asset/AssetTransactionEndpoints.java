@@ -6,6 +6,7 @@ import gd.software.financial_manager.domain.usecase.asset.FetchAssetTransactions
 import gd.software.financial_manager.infrastructure.converts.AssetTransactionToDTO;
 import gd.software.financial_manager.infrastructure.converts.DtoToAssetTransaction;
 import gd.software.financial_manager.infrastructure.dtos.AssetTransactionDTO;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class AssetTransactionEndpoints {
     @PostMapping
     public ResponseEntity<AssetTransactionDTO> save(@Valid @RequestBody AssetTransactionDTO assetTransactionDTO) {
         AssetTransaction assetTransaction = DtoToAssetTransaction.convert(assetTransactionDTO);
+        assetTransaction.setUserId(SecurityUtils.resolveUserId(assetTransaction.userId()));
         AssetTransaction savedAssetTransaction = createAssetTransaction.use(assetTransaction);
 
         logger.info("Saved asset transaction {} for user {}.", savedAssetTransaction.id(), savedAssetTransaction.userId());
@@ -46,6 +48,7 @@ public class AssetTransactionEndpoints {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<AssetTransactionDTO>> fetchAllByUser(@PathVariable UUID userId) {
+        SecurityUtils.requireSameUser(userId);
         List<AssetTransaction> assetTransactions = fetchAssetTransactions.allBy(userId);
         logger.info("Get all asset transactions for user {}.", userId);
 

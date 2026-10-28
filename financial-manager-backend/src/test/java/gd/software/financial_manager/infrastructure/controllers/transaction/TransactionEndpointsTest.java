@@ -53,6 +53,36 @@ class TransactionEndpointsTest {
     private static final UUID USER_ID = UUID.randomUUID();
     private static final UUID CATEGORY_ID = UUID.randomUUID();
 
+    @org.junit.jupiter.api.AfterEach
+    void clearSecurityContext() {
+        org.springframework.security.core.context.SecurityContextHolder.clearContext();
+    }
+
+    private void authenticateAs(UUID userId) {
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(
+                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                        userId.toString(), null, java.util.Collections.emptyList()));
+    }
+
+    @Test
+    void should_return_403_when_fetching_transactions_of_another_user() throws Exception {
+        authenticateAs(USER_ID);
+
+        mockMvc.perform(get("/transactions/{id}", UUID.randomUUID()))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(fetchTransaction);
+    }
+
+    @Test
+    void should_allow_fetch_when_path_user_matches_authenticated_user() throws Exception {
+        authenticateAs(USER_ID);
+        when(fetchTransaction.all(USER_ID)).thenReturn(List.of());
+
+        mockMvc.perform(get("/transactions/{id}", USER_ID))
+                .andExpect(status().isOk());
+    }
+
     @Test
     void should_create_transaction_and_return_201() throws Exception {
         TransactionDTO request = new TransactionDTO(null, "Salary", "Monthly salary",

@@ -1,6 +1,7 @@
 package gd.software.financial_manager.domain.usecase.transaction;
 
 import gd.software.financial_manager.domain.usecase.collections.AllTransactions;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class DeleteTransaction {
 
     public void remove(UUID id) {
         logger.info("Delete transaction with id {}", id);
+        allTransactions.byId(id).ifPresent(transaction -> SecurityUtils.requireOwner(transaction.userId()));
         allTransactions.remove(id);
     }
 }

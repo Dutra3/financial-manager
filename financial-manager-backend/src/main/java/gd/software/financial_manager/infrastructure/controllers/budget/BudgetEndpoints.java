@@ -9,6 +9,7 @@ import gd.software.financial_manager.domain.usecase.budget.FetchBudgets;
 import gd.software.financial_manager.infrastructure.converts.BudgetToDTO;
 import gd.software.financial_manager.infrastructure.converts.DtoToBudget;
 import gd.software.financial_manager.infrastructure.dtos.BudgetAlertDTO;
+import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import gd.software.financial_manager.infrastructure.dtos.BudgetDTO;
 import gd.software.financial_manager.infrastructure.persistence.relational.BudgetRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.BudgetRepository;
@@ -42,6 +43,7 @@ public class BudgetEndpoints {
     @PostMapping
     public ResponseEntity<BudgetDTO> save(@RequestBody BudgetDTO budgetDTO) {
         Budget budget = DtoToBudget.convert(budgetDTO);
+        budget.setUserId(SecurityUtils.currentUserId());
         Budget savedBudget = createBudget.use(budget);
         BudgetRow row = budgetRepository.findById(savedBudget.id()).orElseThrow();
         return ResponseEntity.status(HttpStatus.CREATED).body(BudgetToDTO.convert(row));
@@ -49,6 +51,7 @@ public class BudgetEndpoints {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<BudgetDTO>> fetchBudgets(@PathVariable UUID userId) {
+        SecurityUtils.requireSameUser(userId);
         List<BudgetRow> rows = budgetRepository.findByUserId(userId);
         return ResponseEntity.ok(rows.stream().map(BudgetToDTO::convert).toList());
     }
@@ -57,6 +60,7 @@ public class BudgetEndpoints {
     public ResponseEntity<List<BudgetDTO>> fetchBudgetsByMonth(@PathVariable UUID userId,
                                                                @PathVariable Integer month,
                                                                @PathVariable Integer year) {
+        SecurityUtils.requireSameUser(userId);
         List<BudgetRow> rows = budgetRepository.findByUserIdAndMonthAndYear(userId, month, year);
         return ResponseEntity.ok(rows.stream().map(BudgetToDTO::convert).toList());
     }
@@ -65,6 +69,7 @@ public class BudgetEndpoints {
     public ResponseEntity<List<BudgetAlertDTO>> fetchAlerts(@PathVariable UUID userId,
                                                             @PathVariable Integer month,
                                                             @PathVariable Integer year) {
+        SecurityUtils.requireSameUser(userId);
         List<BudgetAlert> alerts = budgetAlerts.forUserAndMonth(userId, month, year);
         return ResponseEntity.ok(alerts.stream().map(BudgetAlertDTO::from).toList());
     }

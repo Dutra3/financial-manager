@@ -149,4 +149,46 @@ class TransactionUseCasesTest {
                 .hasMessageContaining("Category not found");
         verify(allTransactions, never()).save(any());
     }
+
+    @Test
+    void deleteTransaction_should_throw_when_transaction_belongs_to_another_user() {
+        UUID otherUserId = UUID.randomUUID();
+        Category category = new Category(CATEGORY_ID, "Food", CategoryType.DEBIT);
+        Transaction existing = new Transaction(TRANSACTION_ID, "Lunch", "Restaurant",
+                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), category, otherUserId);
+        when(allTransactions.byId(TRANSACTION_ID)).thenReturn(Optional.of(existing));
+
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(
+                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                        USER_ID.toString(), null, java.util.Collections.emptyList()));
+        try {
+            assertThatThrownBy(() -> deleteTransaction.remove(TRANSACTION_ID))
+                    .isInstanceOf(org.springframework.security.access.AccessDeniedException.class);
+            verify(allTransactions, never()).remove(any());
+        } finally {
+            org.springframework.security.core.context.SecurityContextHolder.clearContext();
+        }
+    }
+
+    @Test
+    void updateTransaction_should_throw_when_transaction_belongs_to_another_user() {
+        UUID otherUserId = UUID.randomUUID();
+        Category category = new Category(CATEGORY_ID, "Food", CategoryType.DEBIT);
+        Transaction existing = new Transaction(TRANSACTION_ID, "Lunch", "Restaurant",
+                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), category, otherUserId);
+        Transaction input = new Transaction(TRANSACTION_ID, "Taxi", "Uber ride",
+                new BigDecimal("25.00"), LocalDate.of(2025, 1, 11), category);
+        when(allTransactions.byId(TRANSACTION_ID)).thenReturn(Optional.of(existing));
+
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(
+                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                        USER_ID.toString(), null, java.util.Collections.emptyList()));
+        try {
+            assertThatThrownBy(() -> updateTransaction.use(input))
+                    .isInstanceOf(org.springframework.security.access.AccessDeniedException.class);
+            verify(allTransactions, never()).save(any());
+        } finally {
+            org.springframework.security.core.context.SecurityContextHolder.clearContext();
+        }
+    }
 }
