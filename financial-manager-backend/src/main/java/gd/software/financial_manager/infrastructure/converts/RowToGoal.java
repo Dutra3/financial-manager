@@ -7,6 +7,7 @@ public class RowToGoal {
 
     public static Goal convert(GoalRow row) {
         return new Goal(row.getId(), row.getName(), row.getDescription(), row.getTargetDate(),
-                row.getTargetAmount(), row.getIsAchieved());
+                row.getTargetAmount(), row.getIsAchieved(),
+                row.getUser() != null ? row.getUser().getId() : null);
     }
 }

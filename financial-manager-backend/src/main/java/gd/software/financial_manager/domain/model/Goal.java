@@ -12,14 +12,21 @@ public class Goal {
     private LocalDate targetDate;
     private BigDecimal targetAmount;
     private Boolean isAchieved;
+    private UUID userId;
 
     public Goal(UUID id, String name, String description, LocalDate targetDate, BigDecimal targetAmount, Boolean isAchieved) {
+        this(id, name, description, targetDate, targetAmount, isAchieved, null);
+    }
+
+    public Goal(UUID id, String name, String description, LocalDate targetDate, BigDecimal targetAmount, Boolean isAchieved,
+                UUID userId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.targetDate = targetDate;
         this.targetAmount = targetAmount;
         this.isAchieved = isAchieved;
+        this.userId = userId;
     }
 
     public UUID id() {
@@ -44,5 +51,13 @@ public class Goal {
 
     public Boolean isAchieved() {
         return isAchieved;
+    }
+
+    public UUID userId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -52,6 +53,11 @@ public class AllBudgetsPersistent implements AllBudgets {
         return repository.findByUserIdAndMonthAndYear(userId, month, year).stream()
                 .map(RowToBudget::convert)
                 .toList();
+    }
+
+    @Override
+    public Optional<Budget> byId(UUID id) {
+        return repository.findById(id).map(RowToBudget::convert);
     }
 
     @Override

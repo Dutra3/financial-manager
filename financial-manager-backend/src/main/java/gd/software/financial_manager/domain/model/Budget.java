@@ -10,13 +10,19 @@ public class Budget {
     private BigDecimal amount;
     private Integer month;
     private Integer year;
+    private UUID userId;
 
     public Budget(UUID id, UUID categoryId, BigDecimal amount, Integer month, Integer year) {
+        this(id, categoryId, amount, month, year, null);
+    }
+
+    public Budget(UUID id, UUID categoryId, BigDecimal amount, Integer month, Integer year, UUID userId) {
         this.id = id;
         this.categoryId = categoryId;
         this.amount = amount;
         this.month = month;
         this.year = year;
+        this.userId = userId;
     }
 
     public UUID id() {
@@ -37,5 +43,13 @@ public class Budget {
 
     public Integer year() {
         return year;
+    }
+
+    public UUID userId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }

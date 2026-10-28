@@ -12,9 +12,15 @@ public class Profile {
     private Integer payday;
     private BigDecimal initialBalance;
     private BigDecimal financialGoal;
+    private UUID userId;
 
     public Profile(UUID id, String name, String profession, BigDecimal netSalary, Integer payday, BigDecimal initialBalance,
                    BigDecimal financialGoal) {
+        this(id, name, profession, netSalary, payday, initialBalance, financialGoal, null);
+    }
+
+    public Profile(UUID id, String name, String profession, BigDecimal netSalary, Integer payday, BigDecimal initialBalance,
+                   BigDecimal financialGoal, UUID userId) {
         this.id = id;
         this.name = name;
         this.profession = profession;
@@ -22,6 +28,7 @@ public class Profile {
         this.payday = payday;
         this.initialBalance = initialBalance;
         this.financialGoal = financialGoal;
+        this.userId = userId;
     }
 
     public UUID id() {
@@ -50,5 +57,13 @@ public class Profile {
 
     public BigDecimal initialBalance() {
         return initialBalance;
+    }
+
+    public UUID userId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }

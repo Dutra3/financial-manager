@@ -7,6 +7,7 @@ public class RowToBudget {
 
     public static Budget convert(BudgetRow row) {
         return new Budget(row.getId(), row.getCategory().getId(), row.getAmount(),
-                row.getMonth(), row.getYear());
+                row.getMonth(), row.getYear(),
+                row.getUser() != null ? row.getUser().getId() : null);
     }
 }

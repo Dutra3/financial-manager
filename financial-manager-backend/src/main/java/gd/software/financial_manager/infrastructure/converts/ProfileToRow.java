@@ -4,24 +4,22 @@ import gd.software.financial_manager.domain.model.Profile;
 import gd.software.financial_manager.infrastructure.persistence.relational.ProfileRow;
 import gd.software.financial_manager.infrastructure.persistence.relational.UserRow;
 
-import java.util.UUID;
-
 public class ProfileToRow {
 
     public static ProfileRow convert(Profile profile) {
-        return ProfileRow.builder()
+        ProfileRow.ProfileRowBuilder builder = ProfileRow.builder()
                 .id(profile.id())
                 .name(profile.name())
                 .profession(profile.profession())
                 .netSalary(profile.netSalary())
                 .payday(profile.payday())
                 .initialBalance(profile.initialBalance())
-                .financialGoal(profile.financialGoal())
-                .user(UserRow.builder()
-                        .id(UUID.randomUUID())
-                        .email("email@email.com")
-                        .password("password")
-                        .build())
-                .build();
+                .financialGoal(profile.financialGoal());
+
+        if (profile.userId() != null) {
+            builder.user(UserRow.builder().id(profile.userId()).build());
+        }
+
+        return builder.build();
     }
 }

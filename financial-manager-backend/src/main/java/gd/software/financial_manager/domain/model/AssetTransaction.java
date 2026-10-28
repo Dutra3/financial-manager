@@ -52,4 +52,8 @@ public class AssetTransaction {
     public LocalDate transactionDate() {
         return transactionDate;
     }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
 }

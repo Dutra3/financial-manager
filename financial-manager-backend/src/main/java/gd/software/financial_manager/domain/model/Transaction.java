@@ -75,4 +75,8 @@ public class Transaction {
     public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
 }
