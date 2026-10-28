@@ -9,6 +9,7 @@ import gd.software.financial_manager.infrastructure.converts.DtoToGoal;
 import gd.software.financial_manager.infrastructure.converts.GoalToDTO;
 import gd.software.financial_manager.infrastructure.dtos.GoalDTO;
 import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class GoalEndpoints {
     private CurrentBalance currentBalance;
 
     @PostMapping
-    public ResponseEntity<GoalDTO> save(@RequestBody GoalDTO goalDTO) {
+    public ResponseEntity<GoalDTO> save(@Valid @RequestBody GoalDTO goalDTO) {
         Goal goal = DtoToGoal.convert(goalDTO);
         goal.setUserId(SecurityUtils.currentUserId());
         Goal savedGoal = createGoal.use(goal);

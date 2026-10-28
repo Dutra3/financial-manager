@@ -11,6 +11,7 @@ import gd.software.financial_manager.infrastructure.utils.GoogleTokenValidator;
 import gd.software.financial_manager.infrastructure.utils.JwtUtil;
 import gd.software.financial_manager.infrastructure.utils.PasswordUtil;
 import gd.software.financial_manager.infrastructure.utils.RefreshTokenService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class AuthEndpoints {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         logger.info("Login attempt for email {}.", request.email());
 
         UserRow user = userRepository.findByEmail(request.email()).orElse(null);
@@ -56,7 +57,7 @@ public class AuthEndpoints {
     }
 
     @PostMapping("/google")
-    public ResponseEntity<AuthResponse> googleLogin(@RequestBody GoogleLoginRequest request) {
+    public ResponseEntity<AuthResponse> googleLogin(@Valid @RequestBody GoogleLoginRequest request) {
         logger.info("Google login attempt.");
 
         GoogleTokenValidator.GoogleUserInfo userInfo = googleTokenValidator.validate(request.accessToken());
@@ -90,7 +91,7 @@ public class AuthEndpoints {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
         return refreshTokenService.rotate(request.refreshToken())
                 .map(rotated -> {
                     UserRow user = rotated.getUser();
@@ -102,7 +103,7 @@ public class AuthEndpoints {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestBody RefreshTokenRequest request) {
+    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request) {
         refreshTokenService.revoke(request.refreshToken());
         return ResponseEntity.noContent().build();
     }

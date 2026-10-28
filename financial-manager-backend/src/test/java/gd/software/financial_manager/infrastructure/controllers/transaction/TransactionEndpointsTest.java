@@ -84,6 +84,19 @@ class TransactionEndpointsTest {
     }
 
     @Test
+    void should_return_400_when_transaction_body_is_invalid() throws Exception {
+        TransactionDTO request = new TransactionDTO(null, "", "Missing name and category",
+                null, null, null, USER_ID);
+
+        mockMvc.perform(post("/transactions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(createTransaction);
+    }
+
+    @Test
     void should_create_transaction_and_return_201() throws Exception {
         TransactionDTO request = new TransactionDTO(null, "Salary", "Monthly salary",
                 new BigDecimal("5000.00"), LocalDate.of(2025, 1, 5), CATEGORY_ID, USER_ID);

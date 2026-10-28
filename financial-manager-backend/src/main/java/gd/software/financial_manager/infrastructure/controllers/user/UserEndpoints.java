@@ -4,6 +4,7 @@ import gd.software.financial_manager.infrastructure.dtos.UserData;
 import gd.software.financial_manager.infrastructure.persistence.relational.UserRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.UserRepository;
 import gd.software.financial_manager.infrastructure.utils.PasswordValidator;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class UserEndpoints {
     private UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<UserData> save(@RequestBody UserData userData) {
+    public ResponseEntity<UserData> save(@Valid @RequestBody UserData userData) {
         logger.info("Creating user with email {}.", userData.email());
 
         PasswordValidator.validate(userData.password());

@@ -7,6 +7,7 @@ import gd.software.financial_manager.domain.usecase.category.FetchCategory;
 import gd.software.financial_manager.infrastructure.converts.CategoryToData;
 import gd.software.financial_manager.infrastructure.converts.DataToCategory;
 import gd.software.financial_manager.infrastructure.dtos.CategoryData;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class CategoryEndpoints {
     private DeleteCategory deleteCategory;
 
     @PostMapping
-    public ResponseEntity<CategoryData> save(@RequestBody CategoryData categoryData) {
+    public ResponseEntity<CategoryData> save(@Valid @RequestBody CategoryData categoryData) {
         Category category = DataToCategory.convert(categoryData);
         Category savedCategory = createCategory.use(category);
 

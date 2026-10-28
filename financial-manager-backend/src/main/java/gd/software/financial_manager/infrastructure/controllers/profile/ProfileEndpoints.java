@@ -8,6 +8,7 @@ import gd.software.financial_manager.infrastructure.converts.DtoToProfile;
 import gd.software.financial_manager.infrastructure.converts.ProfileToDTO;
 import gd.software.financial_manager.infrastructure.dtos.ProfileDTO;
 import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class ProfileEndpoints {
     private UpdateProfile updateProfile;
 
     @PostMapping
-    public ResponseEntity<ProfileDTO> save(@RequestBody ProfileDTO profileDTO) {
+    public ResponseEntity<ProfileDTO> save(@Valid @RequestBody ProfileDTO profileDTO) {
         Profile profile = DtoToProfile.convert(profileDTO);
         profile.setUserId(SecurityUtils.currentUserId());
         Profile savedProfile = createProfile.use(profile);
@@ -49,7 +50,7 @@ public class ProfileEndpoints {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProfileDTO> updateProfile(@PathVariable UUID id, @RequestBody ProfileDTO profileDTO) {
+    public ResponseEntity<ProfileDTO> updateProfile(@PathVariable UUID id, @Valid @RequestBody ProfileDTO profileDTO) {
         Profile profile = DtoToProfile.convert(profileDTO);
         Profile updatedProfile = updateProfile.use(id, profile);
         return ResponseEntity.ok(ProfileToDTO.convert(updatedProfile));

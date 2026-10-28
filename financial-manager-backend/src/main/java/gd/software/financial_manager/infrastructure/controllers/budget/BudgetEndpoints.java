@@ -13,6 +13,7 @@ import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import gd.software.financial_manager.infrastructure.dtos.BudgetDTO;
 import gd.software.financial_manager.infrastructure.persistence.relational.BudgetRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.BudgetRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class BudgetEndpoints {
     private BudgetRepository budgetRepository;
 
     @PostMapping
-    public ResponseEntity<BudgetDTO> save(@RequestBody BudgetDTO budgetDTO) {
+    public ResponseEntity<BudgetDTO> save(@Valid @RequestBody BudgetDTO budgetDTO) {
         Budget budget = DtoToBudget.convert(budgetDTO);
         budget.setUserId(SecurityUtils.currentUserId());
         Budget savedBudget = createBudget.use(budget);

@@ -11,6 +11,7 @@ import gd.software.financial_manager.infrastructure.converts.TransactionToRespon
 import gd.software.financial_manager.infrastructure.dtos.TransactionDTO;
 import gd.software.financial_manager.infrastructure.dtos.TransactionResponse;
 import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class TransactionEndpoints {
     private UpdateTransaction updateTransaction;
 
     @PostMapping
-    public ResponseEntity<TransactionDTO> save(@RequestBody TransactionDTO transactionDTO) {
+    public ResponseEntity<TransactionDTO> save(@Valid @RequestBody TransactionDTO transactionDTO) {
         Transaction transaction = DtoToTransaction.convert(transactionDTO);
         transaction.setUserId(SecurityUtils.resolveUserId(transaction.userId()));
         Transaction savedTransaction = createTransaction.use(transaction);
@@ -61,7 +62,7 @@ public class TransactionEndpoints {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TransactionDTO> update(@PathVariable UUID id, @RequestBody TransactionDTO transactionDTO) {
+    public ResponseEntity<TransactionDTO> update(@PathVariable UUID id, @Valid @RequestBody TransactionDTO transactionDTO) {
         Transaction transaction = DtoToTransaction.convert(transactionDTO);
         transaction.setUserId(SecurityUtils.resolveUserId(transaction.userId()));
         Transaction updatedTransaction = updateTransaction.use(transaction);
