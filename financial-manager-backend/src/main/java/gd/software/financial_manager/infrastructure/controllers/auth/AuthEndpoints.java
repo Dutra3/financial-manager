@@ -38,6 +38,9 @@ public class AuthEndpoints {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         logger.info("Login attempt for email {}.", request.email());
@@ -92,7 +95,7 @@ public class AuthEndpoints {
                 .map(rotated -> {
                     UserRow user = rotated.getUser();
                     String refreshToken = refreshTokenService.create(user);
-                    String token = JwtUtil.generateToken(user.getId().toString(), user.getEmail());
+                    String token = jwtUtil.generateToken(user.getId().toString(), user.getEmail());
                     return ResponseEntity.ok(new AuthResponse(token, refreshToken, user.getId().toString(), user.getEmail()));
                 })
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
@@ -105,7 +108,7 @@ public class AuthEndpoints {
     }
 
     private AuthResponse buildAuthResponse(UserRow user) {
-        String token = JwtUtil.generateToken(user.getId().toString(), user.getEmail());
+        String token = jwtUtil.generateToken(user.getId().toString(), user.getEmail());
         String refreshToken = refreshTokenService.create(user);
         return new AuthResponse(token, refreshToken, user.getId().toString(), user.getEmail());
     }

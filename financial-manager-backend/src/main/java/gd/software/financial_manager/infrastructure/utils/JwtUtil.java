@@ -2,46 +2,54 @@ package gd.software.financial_manager.infrastructure.utils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@Component
 public class JwtUtil {
 
-    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(
-            "financial-manager-secret-key-must-be-at-least-32-bytes-long".getBytes()
-    );
-    private static final long EXPIRATION_MS = 900000L; // 15 minutes
+    private final SecretKey secretKey;
+    private final long expirationMs;
 
-    public static String generateToken(String userId, String email) {
+    public JwtUtil(@Value("${jwt.secret}") String secret,
+                   @Value("${jwt.expiration-ms:900000}") long expirationMs) {
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.expirationMs = expirationMs;
+    }
+
+    public String generateToken(String userId, String email) {
         return Jwts.builder()
                 .subject(userId)
                 .claim("email", email)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
-                .signWith(SECRET_KEY)
+                .expiration(new Date(System.currentTimeMillis() + expirationMs))
+                .signWith(secretKey)
                 .compact();
     }
 
-    public static String extractUserId(String token) {
+    public String extractUserId(String token) {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
         return Jwts.parser()
-                .verifyWith(SECRET_KEY)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
     }
 
-    public static boolean validateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             if (token != null && token.startsWith("Bearer ")) {
                 token = token.substring(7);
             }
             Jwts.parser()
-                    .verifyWith(SECRET_KEY)
+                    .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token);
             return true;

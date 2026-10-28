@@ -26,7 +26,7 @@ import java.util.Collections;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> {})
@@ -35,20 +35,27 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/users", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
     }
 
     static class JwtAuthFilter extends OncePerRequestFilter {
+
+        private final JwtUtil jwtUtil;
+
+        JwtAuthFilter(JwtUtil jwtUtil) {
+            this.jwtUtil = jwtUtil;
+        }
+
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                         FilterChain filterChain) throws ServletException, IOException {
             String authHeader = request.getHeader("Authorization");
 
-            if (authHeader != null && JwtUtil.validateToken(authHeader)) {
-                String userId = JwtUtil.extractUserId(authHeader);
+            if (authHeader != null && jwtUtil.validateToken(authHeader)) {
+                String userId = jwtUtil.extractUserId(authHeader);
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
