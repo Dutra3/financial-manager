@@ -2,6 +2,8 @@ package gd.software.financial_manager.infrastructure.persistence.repository;
 
 import gd.software.financial_manager.infrastructure.persistence.relational.CategoryTypeRow;
 import gd.software.financial_manager.infrastructure.persistence.relational.TransactionRow;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,8 @@ import java.util.UUID;
 public interface TransactionRepository extends JpaRepository<TransactionRow, UUID> {
 
     List<TransactionRow> findByUserId(UUID id);
+
+    Page<TransactionRow> findByUserId(UUID id, Pageable pageable);
 
     @Query(value = """
             SELECT transaction.amount FROM TransactionRow transaction

@@ -12,6 +12,8 @@ import gd.software.financial_manager.infrastructure.persistence.repository.Trans
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,6 +41,11 @@ public class AllTransactionsPersistent implements AllTransactions {
         TransactionRow savedTransaction = repository.save(row);
 
         return RowToTransaction.convert(savedTransaction);
+    }
+
+    @Override
+    public Page<Transaction> allBy(UUID id, Pageable pageable) {
+        return repository.findByUserId(id, pageable).map(RowToTransaction::convert);
     }
 
     @Override

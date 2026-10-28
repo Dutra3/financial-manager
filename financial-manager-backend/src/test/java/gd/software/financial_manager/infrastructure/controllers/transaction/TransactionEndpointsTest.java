@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -77,7 +79,7 @@ class TransactionEndpointsTest {
     @Test
     void should_allow_fetch_when_path_user_matches_authenticated_user() throws Exception {
         authenticateAs(USER_ID);
-        when(fetchTransaction.all(USER_ID)).thenReturn(List.of());
+        when(fetchTransaction.all(eq(USER_ID), any())).thenReturn(Page.empty());
 
         mockMvc.perform(get("/transactions/{id}", USER_ID))
                 .andExpect(status().isOk());
@@ -120,13 +122,14 @@ class TransactionEndpointsTest {
         Category category = new Category(CATEGORY_ID, "Food", CategoryType.DEBIT);
         Transaction transaction = new Transaction(TRANSACTION_ID, "Lunch", "Restaurant",
                 new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), category);
-        when(fetchTransaction.all(USER_ID)).thenReturn(List.of(transaction));
+        when(fetchTransaction.all(eq(USER_ID), any())).thenReturn(new PageImpl<>(List.of(transaction)));
 
         mockMvc.perform(get("/transactions/{id}", USER_ID))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Lunch"))
-                .andExpect(jsonPath("$[0].category").value("Food"))
-                .andExpect(jsonPath("$[0].type").value("DEBIT"));
+                .andExpect(jsonPath("$.content[0].name").value("Lunch"))
+                .andExpect(jsonPath("$.content[0].category").value("Food"))
+                .andExpect(jsonPath("$.content[0].type").value("DEBIT"))
+                .andExpect(jsonPath("$.totalElements").value(1));
     }
 
     @Test

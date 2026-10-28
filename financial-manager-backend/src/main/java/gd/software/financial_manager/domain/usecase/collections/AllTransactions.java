@@ -3,6 +3,8 @@ package gd.software.financial_manager.domain.usecase.collections;
 import gd.software.financial_manager.domain.model.CategoryType;
 import gd.software.financial_manager.domain.model.Installment;
 import gd.software.financial_manager.domain.model.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,7 @@ public interface AllTransactions {
     Transaction save(Transaction transaction);
 
     List<Transaction> allBy(UUID id);
+    Page<Transaction> allBy(UUID id, Pageable pageable);
 
     void remove(UUID id);
 

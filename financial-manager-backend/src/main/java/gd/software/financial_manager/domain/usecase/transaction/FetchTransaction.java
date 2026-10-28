@@ -1,6 +1,8 @@
 package gd.software.financial_manager.domain.usecase.transaction;
 
 import gd.software.financial_manager.domain.model.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import gd.software.financial_manager.domain.usecase.collections.AllTransactions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,5 +25,10 @@ public class FetchTransaction {
     public List<Transaction> all(UUID id) {
         logger.info("Fetch all transactions for user {}.", id);
         return allTransactions.allBy(id);
+    }
+
+    public Page<Transaction> all(UUID id, Pageable pageable) {
+        logger.info("Fetch transactions page {} for user {}.", pageable.getPageNumber(), id);
+        return allTransactions.allBy(id, pageable);
     }
 }

@@ -94,6 +94,36 @@ class AllTransactionsPersistentTest {
     }
 
     @Test
+    void should_return_paged_transactions_by_user_id() {
+        UserRow user = entityManager.persist(UserRow.builder()
+                .email("user@test.com")
+                .password("encoded")
+                .build());
+        CategoryRow categoryRow = entityManager.persist(CategoryRow.builder()
+                .name("Food")
+                .type(CategoryTypeRow.DEBIT)
+                .build());
+        for (int i = 1; i <= 3; i++) {
+            entityManager.persist(TransactionRow.builder()
+                    .name("Lunch " + i)
+                    .amount(new BigDecimal("10.00"))
+                    .paymentDate(LocalDate.of(2025, 1, i))
+                    .category(categoryRow)
+                    .user(user)
+                    .build());
+        }
+        entityManager.flush();
+        entityManager.clear();
+
+        var firstPage = allTransactions.allBy(user.getId(), org.springframework.data.domain.PageRequest.of(0, 2));
+
+        assertThat(firstPage.getContent()).hasSize(2);
+        assertThat(firstPage.getTotalElements()).isEqualTo(3);
+        assertThat(firstPage.getTotalPages()).isEqualTo(2);
+        assertThat(firstPage.hasNext()).isTrue();
+    }
+
+    @Test
     void should_remove_transaction_by_id() {
         UserRow user = entityManager.persist(UserRow.builder()
                 .email("user@test.com")

@@ -20,9 +20,20 @@ export interface TransactionResponse {
     category: string
 };
 
+export interface Page<T> {
+    content: T[],
+    totalElements: number,
+    totalPages: number,
+    number: number,
+    size: number
+};
+
 export const getTransactions = async (userId: string, signal?: AbortSignal): Promise<TransactionResponse[]> => {
-    const response = await apiClient.get(`/transactions/${userId}`, { signal });
-    return response.data;
+    const response = await apiClient.get(`/transactions/${userId}`, {
+        signal,
+        params: { page: 0, size: 100, sort: "paymentDate,desc" },
+    });
+    return response.data.content;
 };
 
 export const createTransaction = async (transaction: Transaction) => {

@@ -13,7 +13,7 @@ public class TransactionToResponse {
                 .toList();
     }
 
-    private static TransactionResponse convert(Transaction transaction) {
+    public static TransactionResponse convert(Transaction transaction) {
         return new TransactionResponse(transaction.id(), transaction.name(), transaction.description(), transaction.amount(),
                 transaction.paymentDate(), transaction.category().type().name(), transaction.category().name());
     }

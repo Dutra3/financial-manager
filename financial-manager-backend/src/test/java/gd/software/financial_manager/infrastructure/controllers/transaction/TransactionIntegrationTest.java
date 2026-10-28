@@ -43,12 +43,13 @@ class TransactionIntegrationTest {
     void should_fetch_transactions_by_user_and_return_empty_list_when_no_data() {
         UUID randomUserId = UUID.randomUUID();
 
-        ResponseEntity<TransactionResponse[]> response = restTemplate.getForEntity(
-                transactionsUrl() + "/" + randomUserId, TransactionResponse[].class);
+        ResponseEntity<com.fasterxml.jackson.databind.JsonNode> response = restTemplate.getForEntity(
+                transactionsUrl() + "/" + randomUserId, com.fasterxml.jackson.databind.JsonNode.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody()).isEmpty();
+        assertThat(response.getBody().get("content")).isNotNull();
+        assertThat(response.getBody().get("content").isEmpty()).isTrue();
     }
 
     @Test
