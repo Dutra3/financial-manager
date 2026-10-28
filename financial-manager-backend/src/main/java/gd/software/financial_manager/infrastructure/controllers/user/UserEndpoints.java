@@ -3,6 +3,7 @@ package gd.software.financial_manager.infrastructure.controllers.user;
 import gd.software.financial_manager.infrastructure.dtos.UserData;
 import gd.software.financial_manager.infrastructure.persistence.relational.UserRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.UserRepository;
+import gd.software.financial_manager.infrastructure.utils.PasswordValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class UserEndpoints {
     @PostMapping
     public ResponseEntity<UserData> save(@RequestBody UserData userData) {
         logger.info("Creating user with email {}.", userData.email());
+
+        PasswordValidator.validate(userData.password());
 
         if (userRepository.findByEmail(userData.email()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();

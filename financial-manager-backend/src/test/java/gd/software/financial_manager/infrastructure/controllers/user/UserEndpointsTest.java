@@ -31,7 +31,7 @@ class UserEndpointsTest {
 
     @Test
     void should_create_user_and_return_201() throws Exception {
-        UserData request = new UserData(UUID.randomUUID(), "newuser@test.com", "password123");
+        UserData request = new UserData(UUID.randomUUID(), "newuser@test.com", "Password1!");
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -42,13 +42,23 @@ class UserEndpointsTest {
     }
 
     @Test
+    void should_return_400_when_password_is_weak() throws Exception {
+        UserData request = new UserData(UUID.randomUUID(), "weakpass@test.com", "password123");
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void should_return_409_when_email_already_exists() throws Exception {
         userRepository.save(UserRow.builder()
                 .email("existing@test.com")
                 .password("pass")
                 .build());
 
-        UserData request = new UserData(UUID.randomUUID(), "existing@test.com", "password123");
+        UserData request = new UserData(UUID.randomUUID(), "existing@test.com", "Password1!");
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
