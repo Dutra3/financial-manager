@@ -46,6 +46,25 @@ export const createAssetTransaction = async (transaction: Omit<AssetTransaction,
     return response.data;
 };
 
+export interface Position {
+    assetId: string,
+    ticker: string,
+    name: string,
+    assetType: string,
+    quantity: number,
+    averagePrice: number,
+    totalInvested: number,
+    dividends: number,
+    currentValue: number,
+    profitLoss: number,
+    profitLossPercent: number
+};
+
+export const getPortfolio = async (userId: string): Promise<Position[]> => {
+    const response = await apiClient.get(`/portfolio/${userId}`);
+    return response.data;
+};
+
 export const getAssetTransactions = async (userId: string): Promise<AssetTransaction[]> => {
     const response = await apiClient.get(`/asset-transactions/${userId}`);
     return response.data;

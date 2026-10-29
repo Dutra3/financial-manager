@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { InvestmentModal } from "../../components/InvestmentModal";
-import { getAssets, createAssetTransaction, Asset, AssetType } from "../../api/assetApi";
+import { getAssets, createAssetTransaction, getPortfolio, Asset, AssetType, Position } from "../../api/assetApi";
 import { getUserId } from "../../utils/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Tabs, Tab } from "@mui/material";
@@ -26,6 +26,11 @@ const Wallet = () => {
     const [activeTab, setActiveTab] = useState<AssetType>("STOCK");
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+
+    const { data: positions = [] } = useQuery<Position[]>({
+        queryKey: ["portfolio", getUserId()],
+        queryFn: () => getPortfolio(getUserId()),
+    });
 
     const { data: assets = [], isLoading } = useQuery({
         queryKey: ["assets"],
@@ -61,6 +66,37 @@ const Wallet = () => {
             <div className="wallet-content">
                 <Header title={`Olá, ${name}. Você está na aba de Carteira. Aqui você encontra os ativos disponíveis e pode registrar suas compras.`}/>
 
+                {positions.length > 0 && (
+                    <>
+                        <Typography variant="h6" sx={{ color: "var(--text-color)", marginBottom: 1 }}>My Positions</Typography>
+                        <TableContainer component={Paper} sx={{ backgroundColor: "var(--primary-color)", marginBottom: 3 }}>
+                            <Table size="small">
+                                <TableHead>
+                                    <TableRow>
+                                        {["Ticker", "Qty", "Avg Price", "Invested", "Current", "Dividends", "P&L"].map((h) => (
+                                            <TableCell key={h} sx={{ color: "var(--text-color)", fontWeight: "bold" }}>{h}</TableCell>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {positions.map((pos) => (
+                                        <TableRow key={pos.assetId}>
+                                            <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>{pos.ticker}</TableCell>
+                                            <TableCell sx={{ color: "var(--text-color)" }}>{pos.quantity}</TableCell>
+                                            <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(pos.averagePrice)}</TableCell>
+                                            <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(pos.totalInvested)}</TableCell>
+                                            <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(pos.currentValue)}</TableCell>
+                                            <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(pos.dividends)}</TableCell>
+                                            <TableCell sx={{ color: pos.profitLoss >= 0 ? "#4caf50" : "#f44336", fontWeight: "bold" }}>
+                                                {pos.profitLoss >= 0 ? "+" : ""}{formatPrice(pos.profitLoss)} ({pos.profitLossPercent.toFixed(1)}%)
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </>
+                )}
                 <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)} sx={{ marginBottom: 2, "& .MuiTab-root": { color: "var(--text-color)" }, "& .MuiTabs-indicator": { backgroundColor: "var(--text-color)" } }}>
                     {TABS.map((tab) => (
                         <Tab key={tab.value} label={tab.label} value={tab.value} />
