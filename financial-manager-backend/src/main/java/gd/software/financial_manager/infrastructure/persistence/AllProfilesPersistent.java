@@ -38,4 +38,9 @@ public class AllProfilesPersistent implements AllProfiles {
     public Optional<Profile> byId(UUID id) {
         return repository.findById(id).map(RowToProfile::convert);
     }
+
+    @Override
+    public Optional<Profile> byUserId(UUID userId) {
+        return repository.findByUserId(userId).map(RowToProfile::convert);
+    }
 }

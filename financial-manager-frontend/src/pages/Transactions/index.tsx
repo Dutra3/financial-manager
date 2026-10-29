@@ -12,6 +12,7 @@ import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableConta
 import { FiEdit2, FiTrash2, FiPlusCircle, FiTag, FiDownload } from "react-icons/fi";
 import "./Transactions.css";
 import { getUserId } from "../../utils/auth";
+import { useUserName } from "../../hooks/useUserName";
 
 const formatAmount = (amount: number, type: string) => {
     const prefix = type === "DEBIT" ? "-" : "+";
@@ -24,6 +25,7 @@ const formatDate = (dateStr: string) => {
 };
 
 const Transactions = () => {
+    const name = useUserName();
     const [transactionModalOpen, setTransactionModalOpen] = useState(false);
     const [categoryModalOpen, setCategoryModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -77,7 +79,7 @@ const Transactions = () => {
         <main className="transactions-container">
             <SideBar page="transactions"/>
             <div className="transaction-content">
-                <Header title="Olá, Gabriel. Você está no menu de Transações. Aqui você encontra suas despesas e receitas passadas, além de poder cadastrar novos dados de despesas e receitas."/>
+                <Header title={`Olá, ${name}. Você está no menu de Transações. Aqui você encontra suas despesas e receitas passadas, além de poder cadastrar novos dados de despesas e receitas.`}/>
 
                 <Box sx={{ display: "flex", gap: 2, marginBottom: 3, flexWrap: "wrap", alignItems: "center" }}>
                     <Button

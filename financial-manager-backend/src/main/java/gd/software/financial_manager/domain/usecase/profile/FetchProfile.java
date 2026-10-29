@@ -25,4 +25,10 @@ public class FetchProfile {
         return allProfiles.byId(id)
                 .orElseThrow(() -> new EntityNotFoundException("Profile not found with id " + id));
     }
+
+    public Profile byUser(UUID userId) {
+        logger.info("Fetch profile for user {}.", userId);
+        return allProfiles.byUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Profile not found for user " + userId));
+    }
 }

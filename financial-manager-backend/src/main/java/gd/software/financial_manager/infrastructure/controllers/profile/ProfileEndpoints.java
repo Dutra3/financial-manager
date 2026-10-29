@@ -42,6 +42,13 @@ public class ProfileEndpoints {
         return ResponseEntity.status(HttpStatus.CREATED).body(ProfileToDTO.convert(savedProfile));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<ProfileDTO> fetchMyProfile() {
+        UUID userId = SecurityUtils.currentUserId();
+        Profile profile = fetchProfile.byUser(userId);
+        return ResponseEntity.ok(ProfileToDTO.convert(profile));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProfileDTO> fetchProfile(@PathVariable UUID id) {
         Profile profile = fetchProfile.by(id);

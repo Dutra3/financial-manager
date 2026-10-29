@@ -8,11 +8,13 @@ import { Box, Typography, Button, Paper, CircularProgress, LinearProgress, IconB
 import { FiPlusCircle, FiTrash2 } from "react-icons/fi";
 import "./Goals.css";
 import { getUserId } from "../../utils/auth";
+import { useUserName } from "../../hooks/useUserName";
 
 const formatCurrency = (value: number) => `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const formatDate = (dateStr: string) => dateStr ? new Date(dateStr).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "—";
 
 const Goals = () => {
+    const name = useUserName();
     const queryClient = useQueryClient();
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -53,7 +55,7 @@ const Goals = () => {
         <main className="goals-container">
             <SideBar page="goals"/>
             <div className="goals-content">
-                <Header title="Olá, Gabriel. Você está na aba de Metas. Aqui você acompanha seu saldo atual e suas metas financeiras."/>
+                <Header title={`Olá, ${name}. Você está na aba de Metas. Aqui você acompanha seu saldo atual e suas metas financeiras.`}/>
 
                 <Paper sx={{ padding: 3, marginBottom: 3, backgroundColor: "var(--primary-color)" }}>
                     <Typography variant="h5" sx={{ color: "var(--text-color)", marginBottom: 1 }}>

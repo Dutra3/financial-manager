@@ -18,7 +18,7 @@ const Login = () => {
         setError('');
         try {
             const response = await login({ email: username, password });
-            saveSession(response.token, response.refreshToken, response.userId);
+            saveSession(response.token, response.refreshToken, response.userId, response.email);
             navigate('/');
         } catch (err: any) {
             setError(err?.response?.status === 401 ? 'Invalid email or password' : 'Login failed');
@@ -33,7 +33,7 @@ const Login = () => {
                 return;
             }
             const response = await googleLoginApi(accessToken);
-            saveSession(response.token, response.refreshToken, response.userId);
+            saveSession(response.token, response.refreshToken, response.userId, response.email);
             navigate('/');
         } catch (err) {
             setError('Google login failed');

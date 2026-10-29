@@ -116,4 +116,36 @@ class ProfileEndpointsTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("Resource not found"));
     }
+
+    @org.junit.jupiter.api.AfterEach
+    void clearSecurityContext() {
+        org.springframework.security.core.context.SecurityContextHolder.clearContext();
+    }
+
+    @Test
+    void should_return_current_users_profile() throws Exception {
+        UUID userId = UUID.randomUUID();
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(
+                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                        userId.toString(), null, java.util.Collections.emptyList()));
+        Profile profile = new Profile(PROFILE_ID, "Gabriel Dutra", "Developer",
+                new BigDecimal("5500.00"), 7, new BigDecimal("1200.00"), new BigDecimal("10000.00"), userId);
+        when(fetchProfile.byUser(userId)).thenReturn(profile);
+
+        mockMvc.perform(get("/profiles/me"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Gabriel Dutra"));
+    }
+
+    @Test
+    void should_return_404_when_user_has_no_profile() throws Exception {
+        UUID userId = UUID.randomUUID();
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(
+                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                        userId.toString(), null, java.util.Collections.emptyList()));
+        when(fetchProfile.byUser(userId)).thenThrow(new EntityNotFoundException("Profile not found"));
+
+        mockMvc.perform(get("/profiles/me"))
+                .andExpect(status().isNotFound());
+    }
 }

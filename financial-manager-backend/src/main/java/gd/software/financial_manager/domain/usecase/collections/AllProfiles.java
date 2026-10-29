@@ -10,4 +10,5 @@ public interface AllProfiles {
     Profile save(Profile profile);
 
     Optional<Profile> byId(UUID id);
+    Optional<Profile> byUserId(UUID userId);
 }

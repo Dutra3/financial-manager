@@ -8,6 +8,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Tabs, Tab } from "@mui/material";
 import { FiPlusCircle } from "react-icons/fi";
 import "./Wallet.css";
+import { useUserName } from "../../hooks/useUserName";
 
 const TABS: { value: AssetType; label: string }[] = [
     { value: "STOCK", label: "Stocks" },
@@ -20,6 +21,7 @@ const formatPrice = (price: number) => `$${price.toLocaleString("en-US", { minim
 const formatMetric = (value: number | null | undefined) => value != null ? value.toFixed(2) : "—";
 
 const Wallet = () => {
+    const name = useUserName();
     const queryClient = useQueryClient();
     const [activeTab, setActiveTab] = useState<AssetType>("STOCK");
     const [modalOpen, setModalOpen] = useState(false);
@@ -57,7 +59,7 @@ const Wallet = () => {
         <main className="wallet-container">
             <SideBar page="wallet"/>
             <div className="wallet-content">
-                <Header title="Olá, Gabriel. Você está na aba de Carteira. Aqui você encontra os ativos disponíveis e pode registrar suas compras."/>
+                <Header title={`Olá, ${name}. Você está na aba de Carteira. Aqui você encontra os ativos disponíveis e pode registrar suas compras.`}/>
 
                 <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)} sx={{ marginBottom: 2, "& .MuiTab-root": { color: "var(--text-color)" }, "& .MuiTabs-indicator": { backgroundColor: "var(--text-color)" } }}>
                     {TABS.map((tab) => (

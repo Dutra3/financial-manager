@@ -8,10 +8,12 @@ import { Box, Typography, Button, Paper, CircularProgress, IconButton, Tooltip, 
 import { FiPlusCircle, FiTrash2 } from "react-icons/fi";
 import "./Budgets.css";
 import { getUserId } from "../../utils/auth";
+import { useUserName } from "../../hooks/useUserName";
 
 const formatCurrency = (value: number) => `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const Budgets = () => {
+    const name = useUserName();
     const queryClient = useQueryClient();
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -59,7 +61,7 @@ const Budgets = () => {
         <main className="budgets-container">
             <SideBar page="budgets"/>
             <div className="budgets-content">
-                <Header title="Olá, Gabriel. Você está na aba de Orçamentos. Aqui você define limites de gastos por categoria."/>
+                <Header title={`Olá, ${name}. Você está na aba de Orçamentos. Aqui você define limites de gastos por categoria.`}/>
 
                 {warningAlerts.length > 0 && (
                     <Box sx={{ marginBottom: 3, display: "flex", flexDirection: "column", gap: 1 }}>

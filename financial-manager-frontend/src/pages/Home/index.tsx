@@ -15,10 +15,12 @@ import { useMonthlyData } from "../../hooks/useMonthlyData";
 import { computeKpis } from "../../hooks/useDashboardKpis";
 import { useExchangeRates, convertCurrency, Currency } from "../../utils/currency";
 import "./Home.css";
+import { useUserName } from "../../hooks/useUserName";
 
 const BASE_CURRENCY: Currency = "USD";
 
 const Home = () => {
+    const name = useUserName();
     const { balance, income, expenses, loading, error } = useDashboardData();
     const { monthlyData, transactions, loading: monthlyLoading, error: monthlyError } = useMonthlyData();
     const [currency, setCurrency] = useState<Currency>("USD");
@@ -30,7 +32,7 @@ const Home = () => {
         <main className="home-container">
             <SideBar page="dashboard"/>
             <div className="home-content">
-                <Header title="Olá, Gabriel. Aqui você encontra o resumo de suas informações financeiras."/>
+                <Header title={`Olá, ${name}. Aqui você encontra o resumo de suas informações financeiras.`}/>
                 {loading ? (
                     <p>Loading dashboard...</p>
                 ) : (

@@ -20,6 +20,11 @@ export const getProfile = async (id: string) => {
     return response.data;
 };
 
+export const getMyProfile = async (): Promise<Profile> => {
+    const response = await apiClient.get('/profiles/me');
+    return response.data;
+};
+
 export const updateProfile = async (id: string, profile: Profile) => {
     const response = await apiClient.put(`/profiles/${id}`, profile);
     return response.data;

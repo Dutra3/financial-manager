@@ -1,14 +1,14 @@
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { ProfileModal } from "../../components/ProfileModal";
-import { getProfile, updateProfile, Profile as ProfileType } from "../../api/profileApi";
+import { getMyProfile, updateProfile, Profile as ProfileType } from "../../api/profileApi";
 import { getGoals, getCurrentBalance, Goal as GoalType } from "../../api/goalApi";
+import { getUserId } from "../../utils/auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Box, Typography, CircularProgress, Paper, LinearProgress } from "@mui/material";
 import "./Profile.css";
 
-const PLACEHOLDER_PROFILE_ID = "00000000-0000-0000-0000-000000000000";
 
 const formatCurrency = (value: number) => `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -17,25 +17,25 @@ const Profile = () => {
     const [modalOpen, setModalOpen] = useState(false);
 
     const { data: profile, isLoading, error } = useQuery<ProfileType>({
-        queryKey: ["profile", PLACEHOLDER_PROFILE_ID],
-        queryFn: () => getProfile(PLACEHOLDER_PROFILE_ID),
+        queryKey: ["profile", "me"],
+        queryFn: () => getMyProfile(),
         retry: false,
     });
 
     const { data: goals = [] } = useQuery<GoalType[]>({
-        queryKey: ["goals", PLACEHOLDER_PROFILE_ID],
-        queryFn: () => getGoals(PLACEHOLDER_PROFILE_ID),
+        queryKey: ["goals", getUserId()],
+        queryFn: () => getGoals(getUserId()),
         retry: false,
     });
 
     const { data: currentBalance = 0 } = useQuery<number>({
-        queryKey: ["currentBalance", PLACEHOLDER_PROFILE_ID],
-        queryFn: () => getCurrentBalance(PLACEHOLDER_PROFILE_ID),
+        queryKey: ["currentBalance", getUserId()],
+        queryFn: () => getCurrentBalance(getUserId()),
         retry: false,
     });
 
     const updateMutation = useMutation({
-        mutationFn: (p: ProfileType) => updateProfile(PLACEHOLDER_PROFILE_ID, p),
+        mutationFn: (p: ProfileType) => updateProfile(profile!.id, p),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["profile"] });
             queryClient.invalidateQueries({ queryKey: ["currentBalance"] });
