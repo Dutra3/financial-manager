@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Box, Typography, TextField, Button, Select, MenuItem, FormControl, InputLabel, Alert } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { format, parseISO } from "date-fns";
-import { createTransaction, updateTransaction, TransactionResponse } from "../../api/transactionApi";
+import { createTransaction, createRecurringTransactions, updateTransaction, TransactionResponse } from "../../api/transactionApi";
 import { getCategories, Category } from "../../api/categoryApi";
 import { getAccounts, Account } from "../../api/accountApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -39,6 +39,9 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
     const [paymentDate, setPaymentDate] = useState<Date | null>(null);
     const [categoryId, setCategoryId] = useState("");
     const [accountId, setAccountId] = useState("");
+    const [recurring, setRecurring] = useState(false);
+    const [occurrences, setOccurrences] = useState("2");
+    const [frequency, setFrequency] = useState("MONTHLY");
     const [message, setMessage] = useState("");
 
     const { data: categories = [], isLoading: categoriesLoading } = useQuery({
@@ -67,6 +70,9 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
             setPaymentDate(null);
             setCategoryId("");
             setAccountId("");
+            setRecurring(false);
+            setOccurrences("2");
+            setFrequency("MONTHLY");
         }
         setMessage("");
     }, [open, transaction, categories]);
@@ -83,6 +89,18 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
                 userId: getUserId(),
                 accountId: accountId || null,
             };
+            if (!isEdit && recurring) {
+                return createRecurringTransactions({
+                    name,
+                    description,
+                    amount: parseAmountInput(amount),
+                    firstPaymentDate: paymentDate ? format(paymentDate, "yyyy-MM-dd") : "",
+                    categoryId,
+                    accountId: accountId || null,
+                    occurrences: parseInt(occurrences) || 2,
+                    frequency,
+                });
+            }
             return isEdit
                 ? updateTransaction(transaction!.id, payload)
                 : createTransaction(payload);
@@ -217,6 +235,49 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
                                     ))}
                                 </Select>
                             </FormControl>
+                        )}
+                        {!isEdit && (
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                <input
+                                    type="checkbox"
+                                    id="recurring"
+                                    checked={recurring}
+                                    onChange={(e) => setRecurring(e.target.checked)}
+                                />
+                                <label htmlFor="recurring" style={{ color: "var(--text-color)", fontSize: "0.9rem" }}>
+                                    Repeat transaction
+                                </label>
+                            </Box>
+                        )}
+                        {!isEdit && recurring && (
+                            <Box sx={{ display: "flex", gap: 2 }}>
+                                <TextField
+                                    label="Occurrences"
+                                    value={occurrences}
+                                    onChange={(e) => setOccurrences(e.target.value.replace(/[^0-9]/g, "").slice(0, 3))}
+                                    required
+                                    size="small"
+                                    inputMode="numeric"
+                                    sx={{ flex: 1, input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
+                                />
+                                <FormControl size="small" sx={{ flex: 1 }}>
+                                    <InputLabel sx={{ color: "var(--text-color)" }}>Frequency</InputLabel>
+                                    <Select
+                                        value={frequency}
+                                        label="Frequency"
+                                        onChange={(e) => setFrequency(e.target.value)}
+                                        sx={{
+                                            color: "var(--text-color)",
+                                            "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
+                                            "& .MuiSvgIcon-root": { color: "var(--text-color)" },
+                                        }}
+                                    >
+                                        <MenuItem value="WEEKLY">Weekly</MenuItem>
+                                        <MenuItem value="MONTHLY">Monthly</MenuItem>
+                                        <MenuItem value="YEARLY">Yearly</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
                         )}
                         <Box sx={{ display: "flex", gap: 2, marginTop: 1 }}>
                             <Button type="submit" variant="contained" disabled={mutation.isPending || !paymentDate} sx={{ flex: 1 }}>

@@ -47,6 +47,22 @@ export const updateTransaction = async (id: string, transaction: Transaction) =>
     return response.data;
 };
 
+export interface RecurringTransaction {
+    name: string,
+    description: string,
+    amount: number,
+    firstPaymentDate: string,
+    categoryId: string,
+    accountId?: string | null,
+    occurrences: number,
+    frequency: string
+};
+
+export const createRecurringTransactions = async (payload: RecurringTransaction) => {
+    const response = await apiClient.post('/transactions/recurring', payload);
+    return response.data;
+};
+
 export const deleteTransaction = async (id: string) => {
     const response = await apiClient.delete(`/transactions/${id}`);
     return response.data;

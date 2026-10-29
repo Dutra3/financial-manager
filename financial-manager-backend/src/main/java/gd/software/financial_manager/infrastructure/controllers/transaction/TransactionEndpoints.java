@@ -8,6 +8,8 @@ import gd.software.financial_manager.domain.usecase.transaction.UpdateTransactio
 import gd.software.financial_manager.infrastructure.converts.DtoToTransaction;
 import gd.software.financial_manager.infrastructure.converts.TransactionToDTO;
 import gd.software.financial_manager.infrastructure.converts.TransactionToResponse;
+import gd.software.financial_manager.domain.usecase.transaction.CreateRecurringTransactions;
+import gd.software.financial_manager.infrastructure.dtos.RecurringTransactionDTO;
 import gd.software.financial_manager.infrastructure.dtos.TransactionDTO;
 import gd.software.financial_manager.infrastructure.dtos.TransactionResponse;
 import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
@@ -42,6 +44,9 @@ public class TransactionEndpoints {
     @Autowired
     private UpdateTransaction updateTransaction;
 
+    @Autowired
+    private CreateRecurringTransactions createRecurringTransactions;
+
     @PostMapping
     public ResponseEntity<TransactionDTO> save(@Valid @RequestBody TransactionDTO transactionDTO) {
         Transaction transaction = DtoToTransaction.convert(transactionDTO);
@@ -51,6 +56,16 @@ public class TransactionEndpoints {
         logger.info("Created transaction {}.", savedTransaction.name());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(TransactionToDTO.convert(savedTransaction));
+    }
+
+    @PostMapping("/recurring")
+    public ResponseEntity<List<TransactionDTO>> saveRecurring(@Valid @RequestBody RecurringTransactionDTO dto) {
+        List<Transaction> created = createRecurringTransactions.use(dto.name(), dto.description(), dto.amount(),
+                dto.firstPaymentDate(), dto.categoryId(), dto.accountId(), SecurityUtils.currentUserId(),
+                dto.occurrences(), dto.frequency());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(created.stream().map(TransactionToDTO::convert).toList());
     }
 
     @GetMapping("/{id}")
