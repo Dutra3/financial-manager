@@ -7,6 +7,6 @@ public class ProfileToDTO {
 
     public static ProfileDTO convert(Profile profile) {
         return new ProfileDTO(profile.id(), profile.name(), profile.profession(), profile.netSalary(), profile.payday(),
-                profile.initialBalance(), profile.financialGoal());
+                profile.initialBalance(), profile.financialGoal(), profile.currency(), profile.theme());
     }
 }

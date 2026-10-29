@@ -38,6 +38,12 @@ public class ProfileRow {
     @Column(precision = 13, scale = 4, nullable = false)
     private BigDecimal financialGoal;
 
+    @Column(length = 10)
+    private String currency;
+
+    @Column(length = 20)
+    private String theme;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserRow user;

@@ -14,7 +14,9 @@ public class ProfileToRow {
                 .netSalary(profile.netSalary())
                 .payday(profile.payday())
                 .initialBalance(profile.initialBalance())
-                .financialGoal(profile.financialGoal());
+                .financialGoal(profile.financialGoal())
+                .currency(profile.currency())
+                .theme(profile.theme());
 
         if (profile.userId() != null) {
             builder.user(UserRow.builder().id(profile.userId()).build());

@@ -30,7 +30,8 @@ public class UpdateProfile {
         SecurityUtils.requireOwner(existing.userId());
 
         Profile updated = new Profile(id, profile.name(), profile.profession(), profile.netSalary(),
-                profile.payday(), profile.initialBalance(), profile.financialGoal());
+                profile.payday(), profile.initialBalance(), profile.financialGoal(), existing.userId(),
+                profile.currency(), profile.theme());
 
         return allProfiles.save(updated);
     }

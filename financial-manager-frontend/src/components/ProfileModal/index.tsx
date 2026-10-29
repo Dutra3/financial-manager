@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Box, Typography, TextField, Button, Alert } from "@mui/material";
+import { Modal, Box, Typography, TextField, Button, Alert, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { Profile } from "../../api/profileApi";
 import { formatAmountInput, parseAmountInput } from "../../utils/formatAmount";
 
@@ -28,6 +28,8 @@ const ProfileModal = ({ open, onClose, profile, onSubmit }: ProfileModalProps) =
     const [salary, setSalary] = useState("");
     const [payDay, setPayDay] = useState("");
     const [initialBalance, setInitialBalance] = useState("");
+    const [currency, setCurrency] = useState("BRL");
+    const [theme, setTheme] = useState("light");
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,6 +40,8 @@ const ProfileModal = ({ open, onClose, profile, onSubmit }: ProfileModalProps) =
             setSalary(profile.salary ? profile.salary.toString() : "");
             setPayDay(profile.payDay ? String(profile.payDay) : "");
             setInitialBalance(profile.initialBalance ? profile.initialBalance.toString() : "");
+            setCurrency(profile.currency || "BRL");
+            setTheme(profile.theme || "light");
             setMessage("");
         }
     }, [open, profile]);
@@ -55,6 +59,8 @@ const ProfileModal = ({ open, onClose, profile, onSubmit }: ProfileModalProps) =
                 salary: parseAmountInput(salary),
                 payDay: parseInt(payDay) || 1,
                 initialBalance: parseAmountInput(initialBalance),
+                currency,
+                theme,
             });
             setMessage("Profile updated successfully!");
             setTimeout(() => onClose(), 1000);
@@ -115,6 +121,31 @@ const ProfileModal = ({ open, onClose, profile, onSubmit }: ProfileModalProps) =
                             inputMode="decimal"
                             sx={{ input: { color: "var(--text-color)" }, label: { color: "var(--text-color)" } }}
                         />
+                        <FormControl size="small" fullWidth>
+                            <InputLabel sx={{ color: "var(--text-color)" }}>Currency</InputLabel>
+                            <Select
+                                value={currency}
+                                label="Currency"
+                                onChange={(e) => setCurrency(e.target.value)}
+                                sx={{ color: "var(--text-color)", "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" } }}
+                            >
+                                <MenuItem value="BRL">BRL (R$)</MenuItem>
+                                <MenuItem value="USD">USD ($)</MenuItem>
+                                <MenuItem value="EUR">EUR (€)</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl size="small" fullWidth>
+                            <InputLabel sx={{ color: "var(--text-color)" }}>Theme</InputLabel>
+                            <Select
+                                value={theme}
+                                label="Theme"
+                                onChange={(e) => setTheme(e.target.value)}
+                                sx={{ color: "var(--text-color)", "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" } }}
+                            >
+                                <MenuItem value="light">Light</MenuItem>
+                                <MenuItem value="dark">Dark</MenuItem>
+                            </Select>
+                        </FormControl>
                         <Box sx={{ display: "flex", gap: 2, marginTop: 1 }}>
                             <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ flex: 1 }}>
                                 {isSubmitting ? "Saving..." : "Save"}

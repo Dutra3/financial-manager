@@ -7,7 +7,9 @@ export interface Profile {
     salary: number,
     payDay: number,
     initialBalance: number,
-    financialGoal: number
+    financialGoal: number,
+    currency?: string,
+    theme?: string
 };
 
 export const createProfile = async (profile: Profile) => {

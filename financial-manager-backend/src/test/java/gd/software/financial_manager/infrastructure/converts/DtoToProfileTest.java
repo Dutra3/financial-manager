@@ -21,7 +21,7 @@ class DtoToProfileTest {
 
     @Test
     void should_convert() {
-        ProfileDTO dto = new ProfileDTO(UUID, NAME, PROFESSION, SALARY, PAYDAY, INITIAL_BALANCE, FINANCIAL_GOAL);
+        ProfileDTO dto = new ProfileDTO(UUID, NAME, PROFESSION, SALARY, PAYDAY, INITIAL_BALANCE, FINANCIAL_GOAL, null, null);
         Profile profile = DtoToProfile.convert(dto);
 
         assertThat(profile).isNotNull();

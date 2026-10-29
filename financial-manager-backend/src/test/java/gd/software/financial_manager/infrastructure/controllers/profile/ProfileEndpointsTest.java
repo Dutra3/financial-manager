@@ -50,7 +50,7 @@ class ProfileEndpointsTest {
     @Test
     void should_create_profile_and_return_201() throws Exception {
         ProfileDTO request = new ProfileDTO(null, "Gabriel Dutra", "Developer",
-                new BigDecimal("5500.00"), 7, new BigDecimal("1200.00"), new BigDecimal("10000.00"));
+                new BigDecimal("5500.00"), 7, new BigDecimal("1200.00"), new BigDecimal("10000.00"), null, null);
         Profile saved = new Profile(PROFILE_ID, "Gabriel Dutra", "Developer",
                 new BigDecimal("5500.00"), 7, new BigDecimal("1200.00"), new BigDecimal("10000.00"));
         when(createProfile.use(any(Profile.class))).thenReturn(saved);
@@ -89,7 +89,7 @@ class ProfileEndpointsTest {
     @Test
     void should_update_profile_and_return_200() throws Exception {
         ProfileDTO request = new ProfileDTO(null, "Updated Name", "Updated Job",
-                new BigDecimal("6000.00"), 10, new BigDecimal("2000.00"), new BigDecimal("8000.00"));
+                new BigDecimal("6000.00"), 10, new BigDecimal("2000.00"), new BigDecimal("8000.00"), null, null);
         Profile updated = new Profile(PROFILE_ID, "Updated Name", "Updated Job",
                 new BigDecimal("6000.00"), 10, new BigDecimal("2000.00"), new BigDecimal("8000.00"));
         when(updateProfile.use(eq(PROFILE_ID), any(Profile.class))).thenReturn(updated);
@@ -112,7 +112,7 @@ class ProfileEndpointsTest {
         mockMvc.perform(put("/profiles/{id}", missingId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProfileDTO(null, "Name", "Job",
-                                new BigDecimal("1000.00"), 5, new BigDecimal("100.00"), new BigDecimal("1000.00")))))
+                                new BigDecimal("1000.00"), 5, new BigDecimal("100.00"), new BigDecimal("1000.00"), null, null))))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("Resource not found"));
     }
