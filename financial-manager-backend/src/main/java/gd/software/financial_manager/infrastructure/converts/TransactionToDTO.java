@@ -7,6 +7,6 @@ public class TransactionToDTO {
 
     public static TransactionDTO convert(Transaction transaction) {
         return new TransactionDTO(transaction.id(), transaction.name(), transaction.description(), transaction.amount(),
-                transaction.paymentDate(), transaction.category().id(), transaction.userId());
+                transaction.paymentDate(), transaction.category().id(), transaction.userId(), transaction.accountId());
     }
 }

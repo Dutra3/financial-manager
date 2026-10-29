@@ -74,7 +74,7 @@ class TransactionIntegrationTest {
     void should_return_404_when_updating_nonexistent_transaction() throws Exception {
         UUID randomId = UUID.randomUUID();
         TransactionDTO request = new TransactionDTO(randomId, "Lunch", "Restaurant",
-                new java.math.BigDecimal("50.00"), java.time.LocalDate.of(2025, 1, 10), UUID.randomUUID(), UUID.randomUUID());
+                new java.math.BigDecimal("50.00"), java.time.LocalDate.of(2025, 1, 10), UUID.randomUUID(), UUID.randomUUID(), null);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

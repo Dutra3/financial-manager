@@ -40,4 +40,8 @@ public class TransactionRow {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserRow user;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private AccountRow account;
 }

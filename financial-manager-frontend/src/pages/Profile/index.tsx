@@ -1,6 +1,7 @@
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { ProfileModal } from "../../components/ProfileModal";
+import { AccountsSection } from "../../components/AccountsSection";
 import { getMyProfile, updateProfile, Profile as ProfileType } from "../../api/profileApi";
 import { getGoals, getCurrentBalance, Goal as GoalType } from "../../api/goalApi";
 import { getUserId } from "../../utils/auth";
@@ -160,6 +161,7 @@ const Profile = () => {
                                 </Box>
                             </div>
                         )}
+                        <AccountsSection/>
                         <div className="profile-actions">
                             <button className="btn-primary" onClick={() => setModalOpen(true)}>Edit Perfil</button>
                         </div>

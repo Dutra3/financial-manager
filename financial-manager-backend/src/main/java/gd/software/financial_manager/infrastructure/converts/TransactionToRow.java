@@ -2,6 +2,7 @@ package gd.software.financial_manager.infrastructure.converts;
 
 import gd.software.financial_manager.domain.model.Transaction;
 import gd.software.financial_manager.infrastructure.persistence.relational.TransactionRow;
+import gd.software.financial_manager.infrastructure.persistence.relational.AccountRow;
 import gd.software.financial_manager.infrastructure.persistence.relational.UserRow;
 
 public class TransactionToRow {
@@ -17,6 +18,10 @@ public class TransactionToRow {
 
         if (transaction.userId() != null) {
             builder.user(UserRow.builder().id(transaction.userId()).build());
+        }
+
+        if (transaction.accountId() != null) {
+            builder.account(AccountRow.builder().id(transaction.accountId()).build());
         }
 
         return builder.build();

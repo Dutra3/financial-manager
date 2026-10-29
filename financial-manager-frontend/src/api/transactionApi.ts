@@ -7,7 +7,8 @@ export interface Transaction {
     amount: number,
     paymentDate: string,
     categoryId: string,
-    userId: string
+    userId: string,
+    accountId?: string | null
 };
 
 export interface TransactionResponse {

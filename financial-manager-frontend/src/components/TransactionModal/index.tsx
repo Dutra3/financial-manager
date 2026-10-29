@@ -4,6 +4,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { format, parseISO } from "date-fns";
 import { createTransaction, updateTransaction, TransactionResponse } from "../../api/transactionApi";
 import { getCategories, Category } from "../../api/categoryApi";
+import { getAccounts, Account } from "../../api/accountApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatAmountInput, parseAmountInput } from "../../utils/formatAmount";
 import { getUserId } from "../../utils/auth";
@@ -37,11 +38,17 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
     const [amount, setAmount] = useState("");
     const [paymentDate, setPaymentDate] = useState<Date | null>(null);
     const [categoryId, setCategoryId] = useState("");
+    const [accountId, setAccountId] = useState("");
     const [message, setMessage] = useState("");
 
     const { data: categories = [], isLoading: categoriesLoading } = useQuery({
         queryKey: ["categories"],
         queryFn: () => getCategories() as Promise<Category[]>,
+    });
+
+    const { data: accounts = [] } = useQuery({
+        queryKey: ["accounts", getUserId()],
+        queryFn: () => getAccounts(getUserId()) as Promise<Account[]>,
     });
 
     useEffect(() => {
@@ -52,12 +59,14 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
             setPaymentDate(parseISO(transaction.paymentDate));
             const matched = categories.find((c) => c.name === transaction.category);
             setCategoryId(matched?.id || "");
+            setAccountId((transaction as any).accountId || "");
         } else if (open) {
             setName("");
             setDescription("");
             setAmount("");
             setPaymentDate(null);
             setCategoryId("");
+            setAccountId("");
         }
         setMessage("");
     }, [open, transaction, categories]);
@@ -72,6 +81,7 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
                 paymentDate: paymentDate ? format(paymentDate, "yyyy-MM-dd") : "",
                 categoryId,
                 userId: getUserId(),
+                accountId: accountId || null,
             };
             return isEdit
                 ? updateTransaction(transaction!.id, payload)
@@ -186,6 +196,28 @@ const TransactionModal = ({ open, onClose, transaction }: TransactionModalProps)
                                 ))}
                             </Select>
                         </FormControl>
+                        {accounts.length > 0 && (
+                            <FormControl size="small" fullWidth>
+                                <InputLabel sx={{ color: "var(--text-color)" }}>Account</InputLabel>
+                                <Select
+                                    value={accountId}
+                                    onChange={(e) => setAccountId(e.target.value)}
+                                    label="Account"
+                                    sx={{
+                                        color: "var(--text-color)",
+                                        "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
+                                        "& .MuiSvgIcon-root": { color: "var(--text-color)" },
+                                    }}
+                                >
+                                    <MenuItem value=""><em>None</em></MenuItem>
+                                    {accounts.map((acc) => (
+                                        <MenuItem key={acc.id} value={acc.id}>
+                                            {acc.name} ({acc.type})
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
                         <Box sx={{ display: "flex", gap: 2, marginTop: 1 }}>
                             <Button type="submit" variant="contained" disabled={mutation.isPending || !paymentDate} sx={{ flex: 1 }}>
                                 {mutation.isPending ? "Saving..." : isEdit ? "Save Changes" : "Create"}

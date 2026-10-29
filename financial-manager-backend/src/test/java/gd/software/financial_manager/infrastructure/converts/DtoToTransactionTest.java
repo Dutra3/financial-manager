@@ -22,7 +22,7 @@ class DtoToTransactionTest {
 
     @Test
     void should_convert() {
-        TransactionDTO dto = new TransactionDTO(ID, NAME, DESCRIPTION, AMOUNT, PAYMENT_DATE, CATEGORY_ID, USER_ID);
+        TransactionDTO dto = new TransactionDTO(ID, NAME, DESCRIPTION, AMOUNT, PAYMENT_DATE, CATEGORY_ID, USER_ID, null);
         Transaction transaction = DtoToTransaction.convert(dto);
 
         assertThat(transaction).isNotNull();
@@ -36,7 +36,7 @@ class DtoToTransactionTest {
 
     @Test
     void should_convert_when_description_is_empty() {
-        TransactionDTO dto = new TransactionDTO(ID, NAME, "", AMOUNT, PAYMENT_DATE, CATEGORY_ID, USER_ID);
+        TransactionDTO dto = new TransactionDTO(ID, NAME, "", AMOUNT, PAYMENT_DATE, CATEGORY_ID, USER_ID, null);
         Transaction transaction = DtoToTransaction.convert(dto);
 
         assertThat(transaction).isNotNull();

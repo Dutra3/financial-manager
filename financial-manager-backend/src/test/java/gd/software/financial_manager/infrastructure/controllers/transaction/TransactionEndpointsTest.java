@@ -88,7 +88,7 @@ class TransactionEndpointsTest {
     @Test
     void should_return_400_when_transaction_body_is_invalid() throws Exception {
         TransactionDTO request = new TransactionDTO(null, "", "Missing name and category",
-                null, null, null, USER_ID);
+                null, null, null, USER_ID, null);
 
         mockMvc.perform(post("/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ class TransactionEndpointsTest {
     @Test
     void should_create_transaction_and_return_201() throws Exception {
         TransactionDTO request = new TransactionDTO(null, "Salary", "Monthly salary",
-                new BigDecimal("5000.00"), LocalDate.of(2025, 1, 5), CATEGORY_ID, USER_ID);
+                new BigDecimal("5000.00"), LocalDate.of(2025, 1, 5), CATEGORY_ID, USER_ID, null);
         Category category = new Category(CATEGORY_ID, "Income", CategoryType.CREDIT);
         Transaction saved = new Transaction(TRANSACTION_ID, "Salary", "Monthly salary",
                 new BigDecimal("5000.00"), LocalDate.of(2025, 1, 5), category);
@@ -145,7 +145,7 @@ class TransactionEndpointsTest {
     @Test
     void should_update_transaction_and_return_200() throws Exception {
         TransactionDTO request = new TransactionDTO(TRANSACTION_ID, "Lunch Updated", "Restaurant updated",
-                new BigDecimal("75.00"), LocalDate.of(2025, 1, 11), CATEGORY_ID, USER_ID);
+                new BigDecimal("75.00"), LocalDate.of(2025, 1, 11), CATEGORY_ID, USER_ID, null);
         Category category = new Category(CATEGORY_ID, "Food", CategoryType.DEBIT);
         Transaction updated = new Transaction(TRANSACTION_ID, "Lunch Updated", "Restaurant updated",
                 new BigDecimal("75.00"), LocalDate.of(2025, 1, 11), category);
@@ -164,7 +164,7 @@ class TransactionEndpointsTest {
     @Test
     void should_return_404_when_updating_nonexistent_transaction() throws Exception {
         TransactionDTO request = new TransactionDTO(TRANSACTION_ID, "Lunch", "Restaurant",
-                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), CATEGORY_ID, USER_ID);
+                new BigDecimal("50.00"), LocalDate.of(2025, 1, 10), CATEGORY_ID, USER_ID, null);
         when(updateTransaction.use(any(Transaction.class)))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Transaction not found with id " + TRANSACTION_ID));
 
