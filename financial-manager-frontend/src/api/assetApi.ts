@@ -75,6 +75,11 @@ export const getPortfolioHistory = async (userId: string): Promise<HistoryPoint[
     return response.data;
 };
 
+export const refreshPrices = async (): Promise<{ updated: number }> => {
+    const response = await apiClient.post('/assets/refresh-prices');
+    return response.data;
+};
+
 export const getAssetTransactions = async (userId: string): Promise<AssetTransaction[]> => {
     const response = await apiClient.get(`/asset-transactions/${userId}`);
     return response.data;

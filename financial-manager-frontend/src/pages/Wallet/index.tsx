@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { InvestmentModal } from "../../components/InvestmentModal";
-import { getAssets, createAssetTransaction, getPortfolio, getPortfolioHistory, Asset, AssetType, Position, HistoryPoint } from "../../api/assetApi";
+import { getAssets, createAssetTransaction, getPortfolio, getPortfolioHistory, refreshPrices, Asset, AssetType, Position, HistoryPoint } from "../../api/assetApi";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { getUserId } from "../../utils/auth";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Tabs, Tab } from "@mui/material";
 import { FiPlusCircle } from "react-icons/fi";
 import "./Wallet.css";
@@ -27,6 +27,15 @@ const Wallet = () => {
     const [activeTab, setActiveTab] = useState<AssetType>("STOCK");
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+
+    const refreshMutation = useMutation({
+        mutationFn: refreshPrices,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["portfolio", getUserId()] });
+            queryClient.invalidateQueries({ queryKey: ["portfolio-history", getUserId()] });
+            queryClient.invalidateQueries({ queryKey: ["assets"] });
+        },
+    });
 
     const { data: history = [] } = useQuery<HistoryPoint[]>({
         queryKey: ["portfolio-history", getUserId()],
@@ -76,7 +85,14 @@ const Wallet = () => {
 
                 {positions.length > 0 && (
                     <>
-                        <Typography variant="h6" sx={{ color: "var(--text-color)", marginBottom: 1 }}>My Positions</Typography>
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 1 }}>
+                            <Typography variant="h6" sx={{ color: "var(--text-color)" }}>My Positions</Typography>
+                            <Button size="small" variant="outlined" disabled={refreshMutation.isPending}
+                                onClick={() => refreshMutation.mutate()}
+                                sx={{ color: "var(--text-color)", borderColor: "var(--text-color)" }}>
+                                {refreshMutation.isPending ? "Refreshing..." : "Refresh Prices"}
+                            </Button>
+                        </Box>
                         <TableContainer component={Paper} sx={{ backgroundColor: "var(--primary-color)", marginBottom: 3 }}>
                             <Table size="small">
                                 <TableHead>

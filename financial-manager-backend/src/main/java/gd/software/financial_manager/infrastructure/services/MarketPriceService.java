@@ -5,6 +5,7 @@ import gd.software.financial_manager.infrastructure.persistence.repository.Asset
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,6 +35,8 @@ public class MarketPriceService {
         this.token = token;
     }
 
+    @Scheduled(initialDelayString = "${market.refresh-initial-delay-ms:60000}",
+            fixedDelayString = "${market.refresh-interval-ms:1800000}")
     public int refreshPrices() {
         List<AssetRow> assets = assetRepository.findAll().stream()
                 .filter(a -> a.getTicker() != null && !a.getTicker().isBlank())
