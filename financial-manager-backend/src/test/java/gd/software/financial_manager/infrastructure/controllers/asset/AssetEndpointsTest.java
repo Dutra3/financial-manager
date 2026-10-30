@@ -28,6 +28,9 @@ class AssetEndpointsTest {
     @MockBean
     private FetchAssets fetchAssets;
 
+    @MockBean
+    private gd.software.financial_manager.infrastructure.services.MarketPriceService marketPriceService;
+
     private static final UUID ASSET_ID = UUID.randomUUID();
 
     private Asset sampleAsset() {
