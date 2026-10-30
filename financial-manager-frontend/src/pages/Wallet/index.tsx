@@ -45,17 +45,18 @@ const Wallet = () => {
         setModalOpen(true);
     };
 
-    const handleAddInvestment = async (quantity: number, price: number, transactionDate: string) => {
+    const handleAddInvestment = async (quantity: number, price: number, transactionDate: string, type: string) => {
         if (!selectedAsset) return;
         await createAssetTransaction({
             assetId: selectedAsset.id,
             userId: getUserId(),
-            type: "BUY",
+            type: type as "BUY" | "SELL" | "DIVIDEND",
             quantity,
             price,
             transactionDate,
         });
         queryClient.invalidateQueries({ queryKey: ["asset-transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["portfolio", getUserId()] });
     };
 
     const assetLabel = TABS.find((t) => t.value === activeTab)?.label ?? activeTab;

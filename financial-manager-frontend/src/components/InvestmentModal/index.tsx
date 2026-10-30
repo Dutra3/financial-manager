@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Box, Typography, TextField, Button, Alert } from "@mui/material";
+import { Modal, Box, Typography, TextField, Button, Alert, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { format } from "date-fns";
 
@@ -9,7 +9,7 @@ interface InvestmentModalProps {
     title: string;
     itemName: string;
     itemPrice: number;
-    onSubmit: (quantity: number, price: number, transactionDate: string) => Promise<void>;
+    onSubmit: (quantity: number, price: number, transactionDate: string, type: string) => Promise<void>;
 }
 
 const modalStyle = {
@@ -28,6 +28,7 @@ const InvestmentModal = ({ open, onClose, title, itemName, itemPrice, onSubmit }
     const [quantity, setQuantity] = useState("");
     const [price, setPrice] = useState("");
     const [transactionDate, setTransactionDate] = useState<Date | null>(null);
+    const [type, setType] = useState("BUY");
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -36,6 +37,7 @@ const InvestmentModal = ({ open, onClose, title, itemName, itemPrice, onSubmit }
             setQuantity("");
             setPrice(itemPrice ? itemPrice.toString() : "");
             setTransactionDate(new Date());
+            setType("BUY");
             setMessage("");
         }
     }, [open, itemPrice]);
@@ -49,7 +51,8 @@ const InvestmentModal = ({ open, onClose, title, itemName, itemPrice, onSubmit }
             await onSubmit(
                 parseFloat(quantity),
                 parseFloat(price),
-                format(transactionDate, "yyyy-MM-dd")
+                format(transactionDate, "yyyy-MM-dd"),
+                type
             );
             setMessage("Transaction created successfully!");
             setTimeout(() => onClose(), 1000);
@@ -108,9 +111,26 @@ const InvestmentModal = ({ open, onClose, title, itemName, itemPrice, onSubmit }
                                 },
                             }}
                         />
+                        <FormControl size="small" fullWidth>
+                            <InputLabel sx={{ color: "var(--text-color)" }}>Type</InputLabel>
+                            <Select
+                                value={type}
+                                label="Type"
+                                onChange={(e) => setType(e.target.value)}
+                                sx={{
+                                    color: "var(--text-color)",
+                                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--text-color)" },
+                                    "& .MuiSvgIcon-root": { color: "var(--text-color)" },
+                                }}
+                            >
+                                <MenuItem value="BUY">Buy</MenuItem>
+                                <MenuItem value="SELL">Sell</MenuItem>
+                                <MenuItem value="DIVIDEND">Dividend</MenuItem>
+                            </Select>
+                        </FormControl>
                         <Box sx={{ display: "flex", gap: 2, marginTop: 1 }}>
                             <Button type="submit" variant="contained" disabled={isSubmitting || !transactionDate} sx={{ flex: 1 }}>
-                                {isSubmitting ? "Saving..." : "Add to Wallet"}
+                                {isSubmitting ? "Saving..." : type === "BUY" ? "Buy" : type === "SELL" ? "Sell" : "Add Dividend"}
                             </Button>
                             <Button variant="outlined" onClick={onClose} sx={{ flex: 1, color: "var(--text-color)", borderColor: "var(--text-color)" }}>
                                 Cancel
