@@ -87,4 +87,19 @@ class FetchPortfolioTest {
         when(allAssetTransactions.allBy(USER_ID)).thenReturn(List.of());
         assertThat(fetchPortfolio.byUser(USER_ID)).isEmpty();
     }
+
+    @Test
+    void should_compute_allocation_by_asset_type() {
+        Asset petr = asset("PETR4", "40.00");
+        Asset mxrf = new Asset(UUID.randomUUID(), "MXRF11", "Maxi", AssetType.REIT, null, null,
+                null, new BigDecimal("10.00"), null, null, null, null, null, null, null);
+        when(allAssetTransactions.allBy(USER_ID)).thenReturn(List.of(
+                tx(petr, AssetTransactionType.BUY, "10", "40.00"),
+                tx(mxrf, AssetTransactionType.BUY, "40", "10.00")));
+
+        var allocation = fetchPortfolio.allocationByType(USER_ID);
+
+        assertThat(allocation.get("STOCK")).isEqualByComparingTo("400.00");
+        assertThat(allocation.get("REIT")).isEqualByComparingTo("400.00");
+    }
 }

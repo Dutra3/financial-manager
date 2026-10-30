@@ -3,6 +3,7 @@ package gd.software.financial_manager.infrastructure.controllers.asset;
 import gd.software.financial_manager.domain.model.PortfolioPosition;
 import gd.software.financial_manager.domain.usecase.investment.FetchPortfolio;
 import gd.software.financial_manager.infrastructure.converts.PositionToResponse;
+import gd.software.financial_manager.infrastructure.dtos.AllocationResponse;
 import gd.software.financial_manager.infrastructure.dtos.PositionResponse;
 import gd.software.financial_manager.infrastructure.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,23 @@ public class PortfolioEndpoints {
         SecurityUtils.requireSameUser(userId);
         List<PortfolioPosition> positions = fetchPortfolio.byUser(userId);
         return ResponseEntity.ok(positions.stream().map(PositionToResponse::convert).toList());
+    }
+
+    @GetMapping("/{userId}/allocation")
+    public ResponseEntity<List<AllocationResponse>> fetchAllocation(@PathVariable UUID userId) {
+        SecurityUtils.requireSameUser(userId);
+        var byType = fetchPortfolio.allocationByType(userId);
+        java.math.BigDecimal total = byType.values().stream()
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+
+        List<AllocationResponse> response = byType.entrySet().stream()
+                .map(e -> new AllocationResponse(e.getKey(), e.getValue(),
+                        total.signum() > 0
+                                ? e.getValue().divide(total, 4, java.math.RoundingMode.HALF_UP)
+                                        .multiply(new java.math.BigDecimal("100"))
+                                : java.math.BigDecimal.ZERO))
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 }

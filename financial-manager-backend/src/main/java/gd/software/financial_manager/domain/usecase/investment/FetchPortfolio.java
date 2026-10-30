@@ -10,7 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,6 +39,15 @@ public class FetchPortfolio {
                 .map(this::toPosition)
                 .filter(p -> p.quantity().signum() > 0)
                 .toList();
+    }
+
+    public Map<String, BigDecimal> allocationByType(UUID userId) {
+        List<PortfolioPosition> positions = byUser(userId);
+        Map<String, BigDecimal> byType = new LinkedHashMap<>();
+        for (PortfolioPosition p : positions) {
+            byType.merge(p.asset().assetType().name(), p.currentValue(), BigDecimal::add);
+        }
+        return byType;
     }
 
     private PortfolioPosition toPosition(List<AssetTransaction> group) {
