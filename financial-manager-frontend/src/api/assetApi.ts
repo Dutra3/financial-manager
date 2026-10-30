@@ -70,6 +70,17 @@ export interface HistoryPoint {
     invested: number
 };
 
+export interface Allocation {
+    assetType: string,
+    currentValue: number,
+    percent: number
+};
+
+export const getAllocation = async (userId: string): Promise<Allocation[]> => {
+    const response = await apiClient.get(`/portfolio/${userId}/allocation`);
+    return response.data;
+};
+
 export const getPortfolioHistory = async (userId: string): Promise<HistoryPoint[]> => {
     const response = await apiClient.get(`/portfolio/${userId}/history`);
     return response.data;

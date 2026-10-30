@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { InvestmentModal } from "../../components/InvestmentModal";
-import { getAssets, createAssetTransaction, getPortfolio, getPortfolioHistory, refreshPrices, Asset, AssetType, Position, HistoryPoint } from "../../api/assetApi";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { getAssets, createAssetTransaction, getPortfolio, getPortfolioHistory, getAllocation, refreshPrices, Asset, AssetType, Position, HistoryPoint, Allocation } from "../../api/assetApi";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import { getUserId } from "../../utils/auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Tabs, Tab } from "@mui/material";
@@ -17,6 +17,8 @@ const TABS: { value: AssetType; label: string }[] = [
     { value: "ETF", label: "ETFs" },
     { value: "BOND", label: "Bonds" },
 ];
+
+const ALLOCATION_COLORS = ["#1976d2", "#4caf50", "#ff9800", "#9c27b0", "#00bcd4"];
 
 const formatPrice = (price: number) => `$${price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })}`;
 const formatMetric = (value: number | null | undefined) => value != null ? value.toFixed(2) : "—";
@@ -33,8 +35,14 @@ const Wallet = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["portfolio", getUserId()] });
             queryClient.invalidateQueries({ queryKey: ["portfolio-history", getUserId()] });
+            queryClient.invalidateQueries({ queryKey: ["portfolio-allocation", getUserId()] });
             queryClient.invalidateQueries({ queryKey: ["assets"] });
         },
+    });
+
+    const { data: allocation = [] } = useQuery<Allocation[]>({
+        queryKey: ["portfolio-allocation", getUserId()],
+        queryFn: () => getAllocation(getUserId()),
     });
 
     const { data: history = [] } = useQuery<HistoryPoint[]>({
@@ -119,6 +127,33 @@ const Wallet = () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                    </>
+                )}
+                {allocation.length > 0 && (
+                    <>
+                        <Typography variant="h6" sx={{ color: "var(--text-color)", marginBottom: 1 }}>Allocation</Typography>
+                        <Paper sx={{ backgroundColor: "var(--primary-color)", padding: 2, marginBottom: 3 }}>
+                            <ResponsiveContainer width="100%" height={280}>
+                                <PieChart>
+                                    <Pie
+                                        data={allocation as any}
+                                        dataKey="currentValue"
+                                        nameKey="assetType"
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={90}
+                                        label={(entry: any) => `${entry.assetType} ${entry.percent.toFixed(1)}%`}
+                                    >
+                                        {allocation.map((_, i) => (
+                                            <Cell key={i} fill={ALLOCATION_COLORS[i % ALLOCATION_COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip formatter={(value: any) => formatPrice(Number(value))}
+                                        contentStyle={{ backgroundColor: "var(--primary-color)", border: "1px solid var(--text-color)", color: "var(--text-color)" }} />
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </Paper>
                     </>
                 )}
                 {history.length > 1 && (
