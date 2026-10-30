@@ -65,6 +65,16 @@ export const getPortfolio = async (userId: string): Promise<Position[]> => {
     return response.data;
 };
 
+export interface HistoryPoint {
+    month: string,
+    invested: number
+};
+
+export const getPortfolioHistory = async (userId: string): Promise<HistoryPoint[]> => {
+    const response = await apiClient.get(`/portfolio/${userId}/history`);
+    return response.data;
+};
+
 export const getAssetTransactions = async (userId: string): Promise<AssetTransaction[]> => {
     const response = await apiClient.get(`/asset-transactions/${userId}`);
     return response.data;

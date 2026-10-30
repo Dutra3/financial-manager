@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { InvestmentModal } from "../../components/InvestmentModal";
-import { getAssets, createAssetTransaction, getPortfolio, Asset, AssetType, Position } from "../../api/assetApi";
+import { getAssets, createAssetTransaction, getPortfolio, getPortfolioHistory, Asset, AssetType, Position, HistoryPoint } from "../../api/assetApi";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { getUserId } from "../../utils/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Tabs, Tab } from "@mui/material";
@@ -26,6 +27,11 @@ const Wallet = () => {
     const [activeTab, setActiveTab] = useState<AssetType>("STOCK");
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+
+    const { data: history = [] } = useQuery<HistoryPoint[]>({
+        queryKey: ["portfolio-history", getUserId()],
+        queryFn: () => getPortfolioHistory(getUserId()),
+    });
 
     const { data: positions = [] } = useQuery<Position[]>({
         queryKey: ["portfolio", getUserId()],
@@ -57,6 +63,7 @@ const Wallet = () => {
         });
         queryClient.invalidateQueries({ queryKey: ["asset-transactions"] });
         queryClient.invalidateQueries({ queryKey: ["portfolio", getUserId()] });
+        queryClient.invalidateQueries({ queryKey: ["portfolio-history", getUserId()] });
     };
 
     const assetLabel = TABS.find((t) => t.value === activeTab)?.label ?? activeTab;
@@ -96,6 +103,25 @@ const Wallet = () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                    </>
+                )}
+                {history.length > 1 && (
+                    <>
+                        <Typography variant="h6" sx={{ color: "var(--text-color)", marginBottom: 1 }}>Invested Over Time</Typography>
+                        <Paper sx={{ backgroundColor: "var(--primary-color)", padding: 2, marginBottom: 3 }}>
+                            <ResponsiveContainer width="100%" height={280}>
+                                <LineChart data={history} margin={{ top: 5, right: 20, left: 30, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.3)" />
+                                    <XAxis dataKey="month" stroke="var(--text-color)" />
+                                    <YAxis stroke="var(--text-color)" />
+                                    <Tooltip
+                                        formatter={(value: any) => formatPrice(Number(value))}
+                                        contentStyle={{ backgroundColor: "var(--primary-color)", border: "1px solid var(--text-color)", color: "var(--text-color)" }}
+                                    />
+                                    <Line type="monotone" dataKey="invested" stroke="#4caf50" name="Invested" strokeWidth={2} />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </Paper>
                     </>
                 )}
                 <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)} sx={{ marginBottom: 2, "& .MuiTab-root": { color: "var(--text-color)" }, "& .MuiTabs-indicator": { backgroundColor: "var(--text-color)" } }}>
