@@ -18,7 +18,8 @@ export interface TransactionResponse {
     amount: number,
     paymentDate: string,
     type: string,
-    category: string
+    category: string,
+    accountId?: string | null
 };
 
 export interface Page<T> {

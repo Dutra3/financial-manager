@@ -11,5 +11,6 @@ public record TransactionResponse(
         BigDecimal amount,
         LocalDate paymentDate,
         String type,
-        String category
+        String category,
+        UUID accountId
 ) {}

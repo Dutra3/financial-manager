@@ -5,6 +5,7 @@ import { TransactionModal } from "../../components/TransactionModal";
 import { CategoryModal } from "../../components/CategoryModal";
 import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModal";
 import { getTransactions, TransactionResponse } from "../../api/transactionApi";
+import { getAccounts } from "../../api/accountApi";
 import { getCategories, Category } from "../../api/categoryApi";
 import { exportTransactions, downloadCSV } from "../../api/exportApi";
 import { useQuery } from "@tanstack/react-query";
@@ -36,6 +37,11 @@ const Transactions = () => {
     const { data: transactions = [], isLoading, error } = useQuery({
         queryKey: ["transactions", getUserId()],
         queryFn: ({ signal }) => getTransactions(getUserId(), signal),
+    });
+
+    const { data: accounts = [] } = useQuery({
+        queryKey: ["accounts", getUserId()],
+        queryFn: () => getAccounts(getUserId()),
     });
 
     const { data: categories = [] } = useQuery({
@@ -168,6 +174,7 @@ const Transactions = () => {
                                     <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Amount</TableCell>
                                     <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Date</TableCell>
                                     <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Category</TableCell>
+                                    <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Account</TableCell>
                                     <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }}>Type</TableCell>
                                     <TableCell sx={{ color: "var(--text-color)", fontWeight: "bold" }} align="right">Actions</TableCell>
                                 </TableRow>
@@ -186,6 +193,9 @@ const Transactions = () => {
                                         </TableCell>
                                         <TableCell sx={{ color: "var(--text-color)" }}>{formatDate(t.paymentDate)}</TableCell>
                                         <TableCell sx={{ color: "var(--text-color)" }}>{t.category}</TableCell>
+                                        <TableCell sx={{ color: "var(--text-color)", opacity: t.accountId ? 1 : 0.4 }}>
+                                            {t.accountId ? accounts.find((a) => a.id === t.accountId)?.name || "—" : "—"}
+                                        </TableCell>
                                         <TableCell sx={{ color: "var(--text-color)" }}>{t.type}</TableCell>
                                         <TableCell align="right">
                                             <IconButton onClick={() => openEditModal(t)} size="small" sx={{ color: "var(--text-color)" }}>
