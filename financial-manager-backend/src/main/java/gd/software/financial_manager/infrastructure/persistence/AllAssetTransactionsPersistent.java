@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -46,5 +47,15 @@ public class AllAssetTransactionsPersistent implements AllAssetTransactions {
     public List<AssetTransaction> allBy(UUID userId) {
         logger.info("Find all Asset Transactions by user id {}.", userId);
         return repository.findByUserId(userId).stream().map(RowToAssetTransaction::convert).toList();
+    }
+
+    @Override
+    public Optional<AssetTransaction> byId(UUID id) {
+        return repository.findById(id).map(RowToAssetTransaction::convert);
+    }
+
+    @Override
+    public void remove(UUID id) {
+        repository.deleteById(id);
     }
 }

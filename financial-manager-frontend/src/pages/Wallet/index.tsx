@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { InvestmentModal } from "../../components/InvestmentModal";
-import { getAssets, createAssetTransaction, getPortfolio, getPortfolioHistory, getAllocation, refreshPrices, Asset, AssetType, Position, HistoryPoint, Allocation } from "../../api/assetApi";
+import { getAssets, createAssetTransaction, getPortfolio, getPortfolioHistory, getAllocation, refreshPrices,
+    getAssetTransactions, deleteAssetTransaction, AssetTransaction, Asset, AssetType, Position, HistoryPoint, Allocation } from "../../api/assetApi";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import { getUserId } from "../../utils/auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Tabs, Tab } from "@mui/material";
-import { FiPlusCircle } from "react-icons/fi";
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Tabs, Tab, IconButton } from "@mui/material";
+import { FiPlusCircle, FiTrash2 } from "react-icons/fi";
 import "./Wallet.css";
 import { useUserName } from "../../hooks/useUserName";
 
@@ -37,6 +38,21 @@ const Wallet = () => {
             queryClient.invalidateQueries({ queryKey: ["portfolio-history", getUserId()] });
             queryClient.invalidateQueries({ queryKey: ["portfolio-allocation", getUserId()] });
             queryClient.invalidateQueries({ queryKey: ["assets"] });
+        },
+    });
+
+    const { data: assetTransactions = [] } = useQuery<AssetTransaction[]>({
+        queryKey: ["asset-transactions", getUserId()],
+        queryFn: () => getAssetTransactions(getUserId()),
+    });
+
+    const deleteTxMutation = useMutation({
+        mutationFn: deleteAssetTransaction,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["asset-transactions", getUserId()] });
+            queryClient.invalidateQueries({ queryKey: ["portfolio", getUserId()] });
+            queryClient.invalidateQueries({ queryKey: ["portfolio-history", getUserId()] });
+            queryClient.invalidateQueries({ queryKey: ["portfolio-allocation", getUserId()] });
         },
     });
 
@@ -236,6 +252,47 @@ const Wallet = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
+                )}
+                {assetTransactions.length > 0 && (
+                    <>
+                        <Typography variant="h6" sx={{ color: "var(--text-color)", marginTop: 3, marginBottom: 1 }}>Activity</Typography>
+                        <TableContainer component={Paper} sx={{ backgroundColor: "var(--primary-color)" }}>
+                            <Table size="small">
+                                <TableHead>
+                                    <TableRow>
+                                        {["Date", "Type", "Asset", "Qty", "Price", "Total", ""].map((h) => (
+                                            <TableCell key={h} sx={{ color: "var(--text-color)", fontWeight: "bold" }}>{h}</TableCell>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {[...assetTransactions]
+                                        .sort((a, b) => b.transactionDate.localeCompare(a.transactionDate))
+                                        .map((tx) => {
+                                            const asset = assets.find((a) => a.id === tx.assetId);
+                                            return (
+                                                <TableRow key={tx.id}>
+                                                    <TableCell sx={{ color: "var(--text-color)" }}>{tx.transactionDate}</TableCell>
+                                                    <TableCell sx={{ color: tx.type === "BUY" ? "#4caf50" : tx.type === "SELL" ? "#f44336" : "#ff9800", fontWeight: "bold" }}>
+                                                        {tx.type}
+                                                    </TableCell>
+                                                    <TableCell sx={{ color: "var(--text-color)" }}>{asset?.ticker || asset?.name || "—"}</TableCell>
+                                                    <TableCell sx={{ color: "var(--text-color)" }}>{tx.quantity}</TableCell>
+                                                    <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(tx.price)}</TableCell>
+                                                    <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(tx.quantity * tx.price)}</TableCell>
+                                                    <TableCell align="right">
+                                                        <IconButton size="small" onClick={() => deleteTxMutation.mutate(tx.id)}
+                                                            sx={{ color: "var(--text-color)" }}>
+                                                            <FiTrash2 size={16} />
+                                                        </IconButton>
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </>
                 )}
             </div>
 

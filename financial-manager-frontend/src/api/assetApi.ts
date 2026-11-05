@@ -95,3 +95,8 @@ export const getAssetTransactions = async (userId: string): Promise<AssetTransac
     const response = await apiClient.get(`/asset-transactions/${userId}`);
     return response.data;
 };
+
+export const deleteAssetTransaction = async (id: string) => {
+    const response = await apiClient.delete(`/asset-transactions/${id}`);
+    return response.data;
+};
