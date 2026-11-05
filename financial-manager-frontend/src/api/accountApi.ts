@@ -4,7 +4,8 @@ export interface Account {
     id: string,
     name: string,
     type: string,
-    initialBalance: number
+    initialBalance: number,
+    currentBalance?: number
 };
 
 export const getAccounts = async (userId: string, signal?: AbortSignal): Promise<Account[]> => {

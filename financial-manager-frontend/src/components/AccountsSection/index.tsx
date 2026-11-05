@@ -71,12 +71,12 @@ const AccountsSection = () => {
                     <Box>
                         <Typography sx={{ color: "var(--text-color)" }}>{acc.name}</Typography>
                         <Typography sx={{ color: "var(--text-color)", opacity: 0.6, fontSize: "0.8rem" }}>
-                            {acc.type}
+                            {acc.type} · initial {formatCurrency(acc.initialBalance)}
                         </Typography>
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                         <Typography sx={{ color: "var(--text-color)", fontWeight: "bold" }}>
-                            {formatCurrency(acc.initialBalance)}
+                            {formatCurrency(acc.currentBalance ?? acc.initialBalance)}
                         </Typography>
                         <IconButton size="small" onClick={() => deleteMutation.mutate(acc.id)}
                             sx={{ color: "var(--text-color)" }}>

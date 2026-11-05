@@ -47,7 +47,14 @@ public class AccountEndpoints {
     public ResponseEntity<List<AccountDTO>> fetchAccounts(@PathVariable UUID userId) {
         SecurityUtils.requireSameUser(userId);
         List<Account> accounts = fetchAccounts.byUserId(userId);
-        return ResponseEntity.ok(accounts.stream().map(AccountToDTO::convert).toList());
+        var deltas = fetchAccounts.balanceDeltaByAccount(userId);
+
+        List<AccountDTO> response = accounts.stream()
+                .map(a -> new AccountDTO(a.id(), a.name(), a.type().name(), a.initialBalance(),
+                        a.initialBalance().add(deltas.getOrDefault(a.id(), java.math.BigDecimal.ZERO))))
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

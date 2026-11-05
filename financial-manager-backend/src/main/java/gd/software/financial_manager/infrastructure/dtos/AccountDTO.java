@@ -11,5 +11,6 @@ public record AccountDTO(
         UUID id,
         @NotBlank String name,
         @NotBlank @Pattern(regexp = "CHECKING|SAVINGS|CASH|INVESTMENT") String type,
-        @NotNull BigDecimal initialBalance
+        @NotNull BigDecimal initialBalance,
+        BigDecimal currentBalance
 ) {}

@@ -24,6 +24,7 @@ public class MarketPriceService {
     private final RestTemplate restTemplate;
     private final String token;
 
+    @org.springframework.beans.factory.annotation.Autowired
     public MarketPriceService(AssetRepository assetRepository,
                               @Value("${market.brapi-token:}") String token) {
         this(assetRepository, token, new RestTemplate());
