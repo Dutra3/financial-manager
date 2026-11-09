@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,7 +34,8 @@ public class TransferBetweenAccounts {
         this.allTransactions = allTransactions;
     }
 
-    public void use(UUID fromAccountId, UUID toAccountId, BigDecimal amount, LocalDate date, String description) {
+    @Transactional
+public void use(UUID fromAccountId, UUID toAccountId, BigDecimal amount, LocalDate date, String description) {
         if (fromAccountId.equals(toAccountId)) {
             throw new IllegalArgumentException("Cannot transfer to the same account.");
         }

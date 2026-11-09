@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,7 +30,8 @@ public class CreateRecurringTransactions {
         this.allCategories = allCategories;
     }
 
-    public List<Transaction> use(String name, String description, BigDecimal amount, LocalDate firstPaymentDate,
+    @Transactional
+public List<Transaction> use(String name, String description, BigDecimal amount, LocalDate firstPaymentDate,
                                  UUID categoryId, UUID accountId, UUID userId, int occurrences, String frequency) {
         Category category = allCategories.by(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id " + categoryId));
