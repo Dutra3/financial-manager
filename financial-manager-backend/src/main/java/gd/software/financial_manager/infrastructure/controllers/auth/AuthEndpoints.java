@@ -3,7 +3,10 @@ package gd.software.financial_manager.infrastructure.controllers.auth;
 import gd.software.financial_manager.infrastructure.dtos.AuthResponse;
 import gd.software.financial_manager.infrastructure.dtos.GoogleLoginRequest;
 import gd.software.financial_manager.infrastructure.dtos.LoginRequest;
+import gd.software.financial_manager.domain.usecase.auth.PasswordResetService;
+import gd.software.financial_manager.infrastructure.dtos.ForgotPasswordRequest;
 import gd.software.financial_manager.infrastructure.dtos.RefreshTokenRequest;
+import gd.software.financial_manager.infrastructure.dtos.ResetPasswordRequest;
 import gd.software.financial_manager.infrastructure.persistence.relational.RefreshTokenRow;
 import gd.software.financial_manager.infrastructure.persistence.relational.UserRow;
 import gd.software.financial_manager.infrastructure.persistence.repository.UserRepository;
@@ -101,6 +104,21 @@ public class AuthEndpoints {
                 })
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<java.util.Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.requestReset(request.email());
+        return ResponseEntity.ok(java.util.Map.of("message", "If the email exists, a reset link was sent."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<java.util.Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request.token(), request.newPassword());
+        return ResponseEntity.ok(java.util.Map.of("message", "Password reset successfully."));
+    }
+
+    @Autowired
+    private PasswordResetService passwordResetService;
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request) {
