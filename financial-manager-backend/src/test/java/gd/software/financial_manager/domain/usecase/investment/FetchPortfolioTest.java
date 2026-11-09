@@ -37,8 +37,11 @@ class FetchPortfolioTest {
     }
 
     private AssetTransaction tx(Asset asset, AssetTransactionType type, String qty, String price) {
-        return new AssetTransaction(null, asset, USER_ID, type, new BigDecimal(qty), new BigDecimal(price),
-                LocalDate.of(2025, 1, 1));
+        return tx(asset, type, qty, price, LocalDate.of(2025, 1, 1));
+    }
+
+    private AssetTransaction tx(Asset asset, AssetTransactionType type, String qty, String price, LocalDate date) {
+        return new AssetTransaction(null, asset, USER_ID, type, new BigDecimal(qty), new BigDecimal(price), date);
     }
 
     @Test
@@ -101,5 +104,20 @@ class FetchPortfolioTest {
 
         assertThat(allocation.get("STOCK")).isEqualByComparingTo("400.00");
         assertThat(allocation.get("REIT")).isEqualByComparingTo("400.00");
+    }
+
+    @Test
+    void should_compute_realized_pnl_from_sells() {
+        Asset petr = asset("PETR4", "40.00");
+        when(allAssetTransactions.allBy(USER_ID)).thenReturn(List.of(
+                tx(petr, AssetTransactionType.BUY, "10", "30.00"),
+                tx(petr, AssetTransactionType.SELL, "5", "60.00", LocalDate.of(2025, 3, 1)),
+                tx(petr, AssetTransactionType.BUY, "10", "50.00", LocalDate.of(2025, 2, 1))));
+
+        List<PortfolioPosition> positions = fetchPortfolio.byUser(USER_ID);
+
+        // avg at sell time = (10*30 + 10*50)/20 = 40 -> realized = 5*(60-40) = 100
+        assertThat(positions.get(0).realizedPnL()).isEqualByComparingTo("100.0000");
+        assertThat(positions.get(0).quantity()).isEqualByComparingTo("15");
     }
 }

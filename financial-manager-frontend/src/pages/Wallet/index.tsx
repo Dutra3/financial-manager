@@ -121,7 +121,7 @@ const Wallet = () => {
                             <Table size="small">
                                 <TableHead>
                                     <TableRow>
-                                        {["Ticker", "Qty", "Avg Price", "Invested", "Current", "Dividends", "P&L"].map((h) => (
+                                        {["Ticker", "Qty", "Avg Price", "Invested", "Current", "Dividends", "Realized", "P&L"].map((h) => (
                                             <TableCell key={h} sx={{ color: "var(--text-color)", fontWeight: "bold" }}>{h}</TableCell>
                                         ))}
                                     </TableRow>
@@ -135,6 +135,9 @@ const Wallet = () => {
                                             <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(pos.totalInvested)}</TableCell>
                                             <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(pos.currentValue)}</TableCell>
                                             <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(pos.dividends)}</TableCell>
+                                            <TableCell sx={{ color: pos.realizedPnL >= 0 ? "#4caf50" : "#f44336" }}>
+                                                {pos.realizedPnL >= 0 ? "+" : ""}{formatPrice(pos.realizedPnL)}
+                                            </TableCell>
                                             <TableCell sx={{ color: pos.profitLoss >= 0 ? "#4caf50" : "#f44336", fontWeight: "bold" }}>
                                                 {pos.profitLoss >= 0 ? "+" : ""}{formatPrice(pos.profitLoss)} ({pos.profitLossPercent.toFixed(1)}%)
                                             </TableCell>

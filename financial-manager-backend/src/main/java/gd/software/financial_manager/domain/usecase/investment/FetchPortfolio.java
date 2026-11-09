@@ -56,8 +56,18 @@ public class FetchPortfolio {
         BigDecimal quantity = BigDecimal.ZERO;
         BigDecimal invested = BigDecimal.ZERO;
         BigDecimal dividends = BigDecimal.ZERO;
+        BigDecimal realizedPnL = BigDecimal.ZERO;
 
-        for (AssetTransaction t : group) {
+        List<AssetTransaction> sorted = group.stream()
+                .sorted((a, b) -> {
+                    if (a.transactionDate() == null || b.transactionDate() == null) {
+                        return 0;
+                    }
+                    return a.transactionDate().compareTo(b.transactionDate());
+                })
+                .toList();
+
+        for (AssetTransaction t : sorted) {
             BigDecimal qty = t.quantity() != null ? t.quantity() : BigDecimal.ZERO;
             BigDecimal price = t.price() != null ? t.price() : BigDecimal.ZERO;
             if (t.type() == AssetTransactionType.BUY) {
@@ -68,6 +78,10 @@ public class FetchPortfolio {
             } else if (t.type() == AssetTransactionType.SELL) {
                 quantity = quantity.subtract(qty);
                 invested = invested.subtract(qty.multiply(price));
+                BigDecimal currentAvg = buyQty.signum() > 0
+                        ? buyCost.divide(buyQty, 4, RoundingMode.HALF_UP)
+                        : BigDecimal.ZERO;
+                realizedPnL = realizedPnL.add(qty.multiply(price.subtract(currentAvg)));
             } else if (t.type() == AssetTransactionType.DIVIDEND) {
                 dividends = dividends.add(qty.multiply(price));
             }
@@ -77,6 +91,7 @@ public class FetchPortfolio {
                 ? buyCost.divide(buyQty, 4, RoundingMode.HALF_UP)
                 : BigDecimal.ZERO;
 
-        return new PortfolioPosition(group.get(0).asset(), quantity, averagePrice, invested, dividends);
+        return new PortfolioPosition(group.get(0).asset(), quantity, averagePrice, invested,
+                dividends, realizedPnL);
     }
 }

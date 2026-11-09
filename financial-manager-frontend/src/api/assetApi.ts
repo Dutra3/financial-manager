@@ -57,7 +57,8 @@ export interface Position {
     dividends: number,
     currentValue: number,
     profitLoss: number,
-    profitLossPercent: number
+    profitLossPercent: number,
+    realizedPnL: number
 };
 
 export const getPortfolio = async (userId: string): Promise<Position[]> => {

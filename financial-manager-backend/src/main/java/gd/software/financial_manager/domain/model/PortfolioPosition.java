@@ -11,14 +11,21 @@ public class PortfolioPosition {
     private final BigDecimal averagePrice;
     private final BigDecimal totalInvested;
     private final BigDecimal dividends;
+    private final BigDecimal realizedPnL;
 
     public PortfolioPosition(Asset asset, BigDecimal quantity, BigDecimal averagePrice,
                              BigDecimal totalInvested, BigDecimal dividends) {
+        this(asset, quantity, averagePrice, totalInvested, dividends, BigDecimal.ZERO);
+    }
+
+    public PortfolioPosition(Asset asset, BigDecimal quantity, BigDecimal averagePrice,
+                             BigDecimal totalInvested, BigDecimal dividends, BigDecimal realizedPnL) {
         this.asset = asset;
         this.quantity = quantity;
         this.averagePrice = averagePrice;
         this.totalInvested = totalInvested;
         this.dividends = dividends;
+        this.realizedPnL = realizedPnL;
     }
 
     public UUID assetId() {
@@ -43,6 +50,10 @@ public class PortfolioPosition {
 
     public BigDecimal dividends() {
         return dividends;
+    }
+
+    public BigDecimal realizedPnL() {
+        return realizedPnL;
     }
 
     public BigDecimal currentValue() {

@@ -14,5 +14,6 @@ public record PositionResponse(
         BigDecimal dividends,
         BigDecimal currentValue,
         BigDecimal profitLoss,
-        BigDecimal profitLossPercent
+        BigDecimal profitLossPercent,
+        BigDecimal realizedPnL
 ) {}

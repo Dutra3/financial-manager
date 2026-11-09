@@ -9,6 +9,6 @@ public class PositionToResponse {
         return new PositionResponse(position.assetId(), position.asset().ticker(), position.asset().name(),
                 position.asset().assetType().name(), position.quantity(), position.averagePrice(),
                 position.totalInvested(), position.dividends(), position.currentValue(),
-                position.profitLoss(), position.profitLossPercent());
+                position.profitLoss(), position.profitLossPercent(), position.realizedPnL());
     }
 }
