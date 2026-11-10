@@ -97,6 +97,11 @@ export const getAssetTransactions = async (userId: string): Promise<AssetTransac
     return response.data;
 };
 
+export const updateAssetTransaction = async (id: string, transaction: Omit<AssetTransaction, "id">) => {
+    const response = await apiClient.put(`/asset-transactions/${id}`, transaction);
+    return response.data;
+};
+
 export const deleteAssetTransaction = async (id: string) => {
     const response = await apiClient.delete(`/asset-transactions/${id}`);
     return response.data;

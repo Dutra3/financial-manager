@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import gd.software.financial_manager.domain.usecase.investment.DeleteAssetTransaction;
+import gd.software.financial_manager.domain.usecase.investment.UpdateAssetTransaction;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +51,20 @@ public class AssetTransactionEndpoints {
     }
 
     @Autowired
+    private UpdateAssetTransaction updateAssetTransaction;
+
+    @Autowired
     private DeleteAssetTransaction deleteAssetTransaction;
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AssetTransactionDTO> update(@PathVariable UUID id,
+                                                       @Valid @RequestBody AssetTransactionDTO dto) {
+        AssetTransaction updated = updateAssetTransaction.use(id,
+                gd.software.financial_manager.domain.model.AssetTransactionType.valueOf(dto.type()),
+                dto.quantity(), dto.price(), dto.transactionDate());
+
+        return ResponseEntity.ok(AssetTransactionToDTO.convert(updated));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {

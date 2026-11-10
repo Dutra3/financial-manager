@@ -9,7 +9,8 @@ interface InvestmentModalProps {
     title: string;
     itemName: string;
     itemPrice: number;
-    onSubmit: (quantity: number, price: number, transactionDate: string, type: string) => Promise<void>;
+    onSubmit: (quantity: number, price: number, transactionDate: string, type: string, id?: string) => Promise<void>;
+    editing?: { id: string; type: string; quantity: number; price: number; transactionDate: string } | null;
 }
 
 const modalStyle = {
@@ -24,7 +25,7 @@ const modalStyle = {
     p: 4,
 };
 
-const InvestmentModal = ({ open, onClose, title, itemName, itemPrice, onSubmit }: InvestmentModalProps) => {
+const InvestmentModal = ({ open, onClose, title, itemName, itemPrice, onSubmit, editing }: InvestmentModalProps) => {
     const [quantity, setQuantity] = useState("");
     const [price, setPrice] = useState("");
     const [transactionDate, setTransactionDate] = useState<Date | null>(null);
@@ -34,13 +35,13 @@ const InvestmentModal = ({ open, onClose, title, itemName, itemPrice, onSubmit }
 
     useEffect(() => {
         if (open) {
-            setQuantity("");
-            setPrice(itemPrice ? itemPrice.toString() : "");
-            setTransactionDate(new Date());
-            setType("BUY");
+            setQuantity(editing ? editing.quantity.toString() : "");
+            setPrice(editing ? editing.price.toString() : (itemPrice ? itemPrice.toString() : ""));
+            setTransactionDate(editing ? new Date(editing.transactionDate + "T12:00:00") : new Date());
+            setType(editing ? editing.type : "BUY");
             setMessage("");
         }
-    }, [open, itemPrice]);
+    }, [open, itemPrice, editing]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -52,7 +53,8 @@ const InvestmentModal = ({ open, onClose, title, itemName, itemPrice, onSubmit }
                 parseFloat(quantity),
                 parseFloat(price),
                 format(transactionDate, "yyyy-MM-dd"),
-                type
+                type,
+                editing?.id
             );
             setMessage("Transaction created successfully!");
             setTimeout(() => onClose(), 1000);

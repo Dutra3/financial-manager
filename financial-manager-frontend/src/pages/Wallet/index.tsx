@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { InvestmentModal } from "../../components/InvestmentModal";
-import { getAssets, createAssetTransaction, getPortfolio, getPortfolioHistory, getAllocation, refreshPrices,
+import { getAssets, createAssetTransaction, updateAssetTransaction, getPortfolio, getPortfolioHistory, getAllocation, refreshPrices,
     getAssetTransactions, deleteAssetTransaction, AssetTransaction, Asset, AssetType, Position, HistoryPoint, Allocation } from "../../api/assetApi";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import { getUserId } from "../../utils/auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Tabs, Tab, IconButton } from "@mui/material";
-import { FiPlusCircle, FiTrash2 } from "react-icons/fi";
+import { FiPlusCircle, FiTrash2, FiEdit2 } from "react-icons/fi";
 import "./Wallet.css";
 import { useUserName } from "../../hooks/useUserName";
 
@@ -30,6 +30,7 @@ const Wallet = () => {
     const [activeTab, setActiveTab] = useState<AssetType>("STOCK");
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+    const [editingTx, setEditingTx] = useState<AssetTransaction | null>(null);
 
     const refreshMutation = useMutation({
         mutationFn: refreshPrices,
@@ -84,7 +85,20 @@ const Wallet = () => {
         setModalOpen(true);
     };
 
-    const handleAddInvestment = async (quantity: number, price: number, transactionDate: string, type: string) => {
+    const handleAddInvestment = async (quantity: number, price: number, transactionDate: string, type: string, id?: string) => {
+        if (id) {
+            await updateAssetTransaction(id, {
+                assetId: editingTx!.assetId,
+                userId: getUserId(),
+                type: type as "BUY" | "SELL" | "DIVIDEND",
+                quantity,
+                price,
+                transactionDate,
+            });
+            queryClient.invalidateQueries({ queryKey: ["asset-transactions", getUserId()] });
+            queryClient.invalidateQueries({ queryKey: ["portfolio", getUserId()] });
+            return;
+        }
         if (!selectedAsset) return;
         await createAssetTransaction({
             assetId: selectedAsset.id,
@@ -284,6 +298,10 @@ const Wallet = () => {
                                                     <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(tx.price)}</TableCell>
                                                     <TableCell sx={{ color: "var(--text-color)" }}>{formatPrice(tx.quantity * tx.price)}</TableCell>
                                                     <TableCell align="right">
+                                                        <IconButton size="small" onClick={() => { setEditingTx(tx); setModalOpen(true); }}
+                                                            sx={{ color: "var(--text-color)" }}>
+                                                            <FiEdit2 size={16} />
+                                                        </IconButton>
                                                         <IconButton size="small" onClick={() => deleteTxMutation.mutate(tx.id)}
                                                             sx={{ color: "var(--text-color)" }}>
                                                             <FiTrash2 size={16} />
@@ -301,10 +319,13 @@ const Wallet = () => {
 
             <InvestmentModal
                 open={modalOpen}
-                onClose={() => setModalOpen(false)}
-                title={`Add ${assetLabel.replace(/s$/, "")} Transaction`}
-                itemName={selectedAsset ? `${selectedAsset.name}${selectedAsset.ticker ? ` (${selectedAsset.ticker})` : ""}` : ""}
-                itemPrice={selectedAsset?.price || 0}
+                onClose={() => { setModalOpen(false); setEditingTx(null); }}
+                title={editingTx ? "Edit Transaction" : `Add ${assetLabel.replace(/s$/, "")} Transaction`}
+                itemName={editingTx
+                    ? (assets.find((a) => a.id === editingTx.assetId)?.name || "")
+                    : (selectedAsset ? `${selectedAsset.name}${selectedAsset.ticker ? ` (${selectedAsset.ticker})` : ""}` : "")}
+                itemPrice={editingTx ? editingTx.price : (selectedAsset?.price || 0)}
+                editing={editingTx}
                 onSubmit={handleAddInvestment}
             />
         </main>
