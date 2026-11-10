@@ -1,37 +1,56 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { forgotPassword, resetPassword } from "../../api/authApi";
 import './ForgotPassword.css';
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState<string>('');
-    const [showMessage, setShowMessage] = useState<boolean>(false);
-    const [countdown, setCountdown] = useState<number>(5);
+    const [token, setToken] = useState<string>('');
+    const [newPassword, setNewPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [step, setStep] = useState<"request" | "reset" | "done">("request");
+    const [message, setMessage] = useState<string>('');
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
     const handleReturn = () => {
         navigate('/login');
     };
-    
-    const handleForgotPassword = (e: React.FormEvent<HTMLFormElement>): void => {
+
+    const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
-        console.log(`Send recovery email to: ${email}`);
-        setShowMessage(true);
-
-        setTimeout(() => {
-            navigate("/login");
-        }, 5000);
-    }
-
-    useEffect(() => {
-        if (showMessage && countdown > 0) {
-            const timer = setTimeout(() => {
-                setCountdown((prev) => prev - 1);
-            }, 1000);
-            return () => clearTimeout(timer);
+        setIsSubmitting(true);
+        setMessage('');
+        try {
+            await forgotPassword(email);
+            setStep("reset");
+        } catch (err: any) {
+            setMessage(err?.response?.data?.message || "Failed to request password reset");
+        } finally {
+            setIsSubmitting(false);
         }
-    }, [showMessage, countdown]);
+    };
+
+    const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+        e.preventDefault();
+        if (newPassword !== confirmPassword) {
+            setMessage("Passwords do not match");
+            return;
+        }
+        setIsSubmitting(true);
+        setMessage('');
+        try {
+            await resetPassword(token.trim(), newPassword);
+            setStep("done");
+            setTimeout(() => navigate("/login"), 3000);
+        } catch (err: any) {
+            setMessage(err?.response?.data?.error || "Invalid or expired token");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <div className="forgot-password-container">
@@ -42,24 +61,66 @@ const ForgotPassword: React.FC = () => {
                     </button>
                     <h2>Forgot my password</h2>
                 </div>
-                {showMessage ? (
+                {step === "done" ? (
                     <div className="confirmation-message">
                         <CheckCircleIcon style={{ color: 'green', fontSize: '48px' }} />
-                        <p>If the email is registered, you will receive a link to reset your password shortly.</p>
-                        <p>Redirecting to the login page in <strong>{countdown}</strong> seconds...</p>
+                        <p>Password reset successfully! Redirecting to login...</p>
                     </div>
-                ) : (
+                ) : step === "request" ? (
                     <form className="forgot-password-form" onSubmit={handleForgotPassword}>
                         <div className="forgot-form-group">
                             <label>Email:</label>
-                            <input 
+                            <input
                                 type="email"
-                                onChange={(e) => setEmail(e.target.value)} 
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Write your email"
                                 required />
                         </div>
-                        <button className="recovery-button" type="submit">Recovery password</button>
+                        <button className="recovery-button" type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? "Sending..." : "Recovery password"}
+                        </button>
+                        {message && <p className="error-message">{message}</p>}
                     </form>
+                ) : (
+                    <>
+                        <p style={{ marginBottom: "1rem" }}>
+                            If the email is registered, a reset token was issued. Enter it below with your new password.
+                        </p>
+                        <form className="forgot-password-form" onSubmit={handleResetPassword}>
+                            <div className="forgot-form-group">
+                                <label>Reset Token:</label>
+                                <input
+                                    type="text"
+                                    value={token}
+                                    onChange={(e) => setToken(e.target.value)}
+                                    placeholder="Paste the reset token"
+                                    required />
+                            </div>
+                            <div className="forgot-form-group">
+                                <label>New Password:</label>
+                                <input
+                                    type="password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    placeholder="Min 8 chars, uppercase, digit, special"
+                                    required />
+                            </div>
+                            <div className="forgot-form-group">
+                                <label>Confirm Password:</label>
+                                <input
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    placeholder="Repeat the new password"
+                                    required />
+                            </div>
+                            <button className="recovery-button" type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? "Resetting..." : "Reset password"}
+                            </button>
+                            {message && <p className="error-message">{message}</p>}
+                        </form>
+                    </>
                 )}
             </div>
         </div>

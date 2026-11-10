@@ -36,3 +36,13 @@ export const createUser = async (user: UserData) => {
 export const logoutSession = async (refreshToken: string) => {
     await apiClient.post('/auth/logout', { refreshToken });
 };
+
+export const forgotPassword = async (email: string) => {
+    const response = await apiClient.post('/auth/forgot-password', { email });
+    return response.data;
+};
+
+export const resetPassword = async (token: string, newPassword: string) => {
+    const response = await apiClient.post('/auth/reset-password', { token, newPassword });
+    return response.data;
+};
