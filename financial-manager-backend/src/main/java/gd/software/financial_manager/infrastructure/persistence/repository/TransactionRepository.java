@@ -16,6 +16,8 @@ public interface TransactionRepository extends JpaRepository<TransactionRow, UUI
 
     List<TransactionRow> findByUserId(UUID id);
 
+    List<TransactionRow> findByRecurringGroupIdAndUserId(UUID recurringGroupId, UUID userId);
+
     Page<TransactionRow> findByUserId(UUID id, Pageable pageable);
 
     @Query(value = """

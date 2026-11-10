@@ -24,6 +24,10 @@ public class TransactionToRow {
             builder.account(AccountRow.builder().id(transaction.accountId()).build());
         }
 
+        if (transaction.recurringGroupId() != null) {
+            builder.recurringGroupId(transaction.recurringGroupId());
+        }
+
         return builder.build();
     }
 }

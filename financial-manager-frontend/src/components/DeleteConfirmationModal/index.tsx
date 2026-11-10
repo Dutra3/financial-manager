@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Modal, Box, Typography, Button, Alert } from "@mui/material";
-import { deleteTransaction, TransactionResponse } from "../../api/transactionApi";
+import { deleteTransaction, deleteRecurringGroup, TransactionResponse } from "../../api/transactionApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUserId } from "../../utils/auth";
 
@@ -29,6 +29,18 @@ const DeleteConfirmationModal = ({ open, onClose, transaction }: DeleteConfirmat
     useEffect(() => {
         if (open) setMessage("");
     }, [open]);
+
+    const groupMutation = useMutation({
+        mutationFn: () => deleteRecurringGroup(transaction!.recurringGroupId!),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["transactions", getUserId()] });
+            setMessage("Recurring series deleted successfully!");
+            setTimeout(() => onClose(), 1000);
+        },
+        onError: (err: any) => {
+            setMessage(`Error: ${err?.response?.data?.message || "Failed to delete series"}`);
+        },
+    });
 
     const mutation = useMutation({
         mutationFn: () => deleteTransaction(transaction!.id),
@@ -70,6 +82,18 @@ const DeleteConfirmationModal = ({ open, onClose, transaction }: DeleteConfirmat
                         Cancel
                     </Button>
                 </Box>
+                {transaction?.recurringGroupId && (
+                    <Button
+                        variant="outlined"
+                        color="warning"
+                        disabled={groupMutation.isPending}
+                        onClick={() => groupMutation.mutate()}
+                        fullWidth
+                        sx={{ marginTop: 1.5 }}
+                    >
+                        {groupMutation.isPending ? "Deleting..." : "Delete entire recurring series"}
+                    </Button>
+                )}
                 {message && (
                     <Alert severity={message.startsWith("Error") ? "error" : "success"} sx={{ marginTop: 2 }}>
                         {message}

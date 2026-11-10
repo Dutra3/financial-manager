@@ -14,6 +14,7 @@ public class Transaction {
     private Category category;
     private UUID userId;
     private UUID accountId;
+    private UUID recurringGroupId;
 
     public Transaction(UUID id, String name, String description, BigDecimal amount, LocalDate paymentDate, Category category) {
         this(id, name, description, amount, paymentDate, category, null);
@@ -33,6 +34,12 @@ public class Transaction {
         this.category = category;
         this.userId = userId;
         this.accountId = accountId;
+    }
+
+    public Transaction(UUID id, String name, String description, BigDecimal amount, LocalDate paymentDate, Category category,
+                       UUID userId, UUID accountId, UUID recurringGroupId) {
+        this(id, name, description, amount, paymentDate, category, userId, accountId);
+        this.recurringGroupId = recurringGroupId;
     }
 
     public UUID id() {
@@ -89,5 +96,13 @@ public class Transaction {
 
     public UUID accountId() {
         return accountId;
+    }
+
+    public UUID recurringGroupId() {
+        return recurringGroupId;
+    }
+
+    public void setRecurringGroupId(UUID recurringGroupId) {
+        this.recurringGroupId = recurringGroupId;
     }
 }

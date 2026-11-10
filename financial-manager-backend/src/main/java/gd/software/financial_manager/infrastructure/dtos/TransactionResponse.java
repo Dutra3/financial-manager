@@ -12,5 +12,6 @@ public record TransactionResponse(
         LocalDate paymentDate,
         String type,
         String category,
-        UUID accountId
+        UUID accountId,
+        UUID recurringGroupId
 ) {}

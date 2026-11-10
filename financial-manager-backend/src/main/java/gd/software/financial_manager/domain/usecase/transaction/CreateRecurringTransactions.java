@@ -37,6 +37,7 @@ public List<Transaction> use(String name, String description, BigDecimal amount,
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id " + categoryId));
 
         UUID owner = SecurityUtils.resolveUserId(userId);
+        UUID groupId = UUID.randomUUID();
         List<Transaction> created = new ArrayList<>();
 
         for (int i = 0; i < occurrences; i++) {
@@ -46,7 +47,7 @@ public List<Transaction> use(String name, String description, BigDecimal amount,
                 default -> firstPaymentDate.plusMonths(i);
             };
             created.add(allTransactions.save(new Transaction(null, name, description, amount, date,
-                    category, owner, accountId)));
+                    category, owner, accountId, groupId)));
         }
 
         logger.info("Created {} recurring transactions {} for user {}.", occurrences, name, owner);

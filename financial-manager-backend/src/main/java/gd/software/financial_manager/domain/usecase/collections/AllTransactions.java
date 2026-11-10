@@ -19,6 +19,8 @@ public interface AllTransactions {
 
     void remove(UUID id);
 
+    int removeByRecurringGroup(UUID recurringGroupId, UUID userId);
+
     List<Installment> byUserIdAndType(UUID id, CategoryType type);
 
     Optional<Transaction> byId(UUID id);

@@ -8,7 +8,8 @@ export interface Transaction {
     paymentDate: string,
     categoryId: string,
     userId: string,
-    accountId?: string | null
+    accountId?: string | null,
+    recurringGroupId?: string | null
 };
 
 export interface TransactionResponse {
@@ -19,7 +20,8 @@ export interface TransactionResponse {
     paymentDate: string,
     type: string,
     category: string,
-    accountId?: string | null
+    accountId?: string | null,
+    recurringGroupId?: string | null
 };
 
 export interface Page<T> {
@@ -61,6 +63,11 @@ export interface RecurringTransaction {
 
 export const createRecurringTransactions = async (payload: RecurringTransaction) => {
     const response = await apiClient.post('/transactions/recurring', payload);
+    return response.data;
+};
+
+export const deleteRecurringGroup = async (groupId: string) => {
+    const response = await apiClient.delete(`/transactions/recurring/${groupId}`);
     return response.data;
 };
 

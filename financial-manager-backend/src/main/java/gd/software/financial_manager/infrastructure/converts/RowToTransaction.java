@@ -8,6 +8,7 @@ public class RowToTransaction {
     public static Transaction convert(TransactionRow row) {
         return new Transaction(row.getId(), row.getName(), row.getDescription(), row.getAmount(), row.getPaymentDate(),
                 RowToCategory.convert(row.getCategory()), row.getUser() != null ? row.getUser().getId() : null,
-                row.getAccount() != null ? row.getAccount().getId() : null);
+                row.getAccount() != null ? row.getAccount().getId() : null,
+                row.getRecurringGroupId());
     }
 }

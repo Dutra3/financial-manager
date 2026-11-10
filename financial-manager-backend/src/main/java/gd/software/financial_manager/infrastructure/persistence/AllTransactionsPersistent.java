@@ -61,6 +61,13 @@ public class AllTransactionsPersistent implements AllTransactions {
     }
 
     @Override
+    public int removeByRecurringGroup(UUID recurringGroupId, UUID userId) {
+        var rows = repository.findByRecurringGroupIdAndUserId(recurringGroupId, userId);
+        repository.deleteAll(rows);
+        return rows.size();
+    }
+
+    @Override
     public List<Installment> byUserIdAndType(UUID id, CategoryType type) {
         return repository.findByUserIdAndType(id, CategoryTypeRow.valueOf(type.name())).stream()
                 .map(Installment::new)

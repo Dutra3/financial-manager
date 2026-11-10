@@ -44,4 +44,7 @@ public class TransactionRow {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private AccountRow account;
+
+    @Column(name = "recurring_group_id")
+    private UUID recurringGroupId;
 }
