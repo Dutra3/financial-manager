@@ -29,6 +29,7 @@
     "yarn": "^1.22.22"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^16",
     "@types/react": "^18.3.12",
