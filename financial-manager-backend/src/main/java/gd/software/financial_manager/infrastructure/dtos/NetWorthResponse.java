@@ -1,0 +1,9 @@
+package gd.software.financial_manager.infrastructure.dtos;
+
+import java.math.BigDecimal;
+
+public record NetWorthResponse(
+        BigDecimal accountsBalance,
+        BigDecimal investmentsValue,
+        BigDecimal total
+) {}

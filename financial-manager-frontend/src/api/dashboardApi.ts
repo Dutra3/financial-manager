@@ -17,3 +17,14 @@ export const getCredits = async (userId: string, signal?: AbortSignal): Promise<
     const response = await apiClient.get(`/dashboards/credits/${userId}`, { signal });
     return response.data;
 };
+
+export interface NetWorth {
+    accountsBalance: number,
+    investmentsValue: number,
+    total: number
+};
+
+export const getNetWorth = async (userId: string): Promise<NetWorth> => {
+    const response = await apiClient.get(`/dashboards/net-worth/${userId}`);
+    return response.data;
+};

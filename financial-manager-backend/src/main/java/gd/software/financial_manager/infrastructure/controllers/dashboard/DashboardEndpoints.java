@@ -2,6 +2,8 @@ package gd.software.financial_manager.infrastructure.controllers.dashboard;
 
 import gd.software.financial_manager.domain.model.Installment;
 import gd.software.financial_manager.domain.usecase.credit.FetchCredit;
+import gd.software.financial_manager.domain.usecase.dashboard.NetWorth;
+import gd.software.financial_manager.infrastructure.dtos.NetWorthResponse;
 import gd.software.financial_manager.domain.usecase.debit.FetchDebit;
 import gd.software.financial_manager.infrastructure.dtos.CreditResponse;
 import gd.software.financial_manager.infrastructure.dtos.DebitResponse;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +29,18 @@ public class DashboardEndpoints {
 
     @Autowired
     private FetchCredit fetchCredit;
+
+    @Autowired
+    private NetWorth netWorth;
+
+    @GetMapping("/net-worth/{userId}")
+    public ResponseEntity<NetWorthResponse> fetchNetWorth(@PathVariable UUID userId) {
+        SecurityUtils.requireSameUser(userId);
+        BigDecimal accounts = netWorth.accountsBalance(userId);
+        BigDecimal investments = netWorth.investmentsValue(userId);
+
+        return ResponseEntity.ok(new NetWorthResponse(accounts, investments, accounts.add(investments)));
+    }
 
     @GetMapping("/debits/{id}")
     public ResponseEntity<List<DebitResponse>> fetchAllDebits(@PathVariable UUID id) {

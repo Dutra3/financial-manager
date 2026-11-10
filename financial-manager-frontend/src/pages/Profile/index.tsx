@@ -4,6 +4,7 @@ import { ProfileModal } from "../../components/ProfileModal";
 import { AccountsSection } from "../../components/AccountsSection";
 import { getMyProfile, updateProfile, Profile as ProfileType } from "../../api/profileApi";
 import { getGoals, getCurrentBalance, Goal as GoalType } from "../../api/goalApi";
+import { getNetWorth, NetWorth } from "../../api/dashboardApi";
 import { getUserId } from "../../utils/auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -26,6 +27,12 @@ const Profile = () => {
     const { data: goals = [] } = useQuery<GoalType[]>({
         queryKey: ["goals", getUserId()],
         queryFn: () => getGoals(getUserId()),
+        retry: false,
+    });
+
+    const { data: netWorth } = useQuery<NetWorth>({
+        queryKey: ["net-worth", getUserId()],
+        queryFn: () => getNetWorth(getUserId()),
         retry: false,
     });
 
@@ -123,6 +130,12 @@ const Profile = () => {
                                     <label>Current Balance</label>
                                     <span className="balance-amount">{formatCurrency(currentBalance)}</span>
                                 </div>
+                                {netWorth && (
+                                    <div className="info-item">
+                                        <label>Net Worth</label>
+                                        <span className="balance-amount">{formatCurrency(netWorth.total)}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {goals.length > 0 && (
